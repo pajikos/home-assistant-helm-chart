@@ -38,53 +38,47 @@ The command removes all the Kubernetes components associated with the chart and 
 
 The following table lists the configurable parameters of the Home Assistant chart and their default values.
 
-| Parameter                            | Description                                                                 | Default                                                 |
-| ------------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `image.repository`                   | Home Assistant image repository                                             | `homeassistant/home-assistant`                          |
-| `image.tag`                          | Home Assistant image tag (immutable tags are recommended)                   | `0.118.5`                                               |
-| `image.pullPolicy`                   | Home Assistant image pull policy                                            | `IfNotPresent`                                          |
-| `image.pullSecrets`                  | Specify docker-registry secret names as an array                            | `[]` (does not add image pull secrets to deployed pods) |
-| `nameOverride`                       | String to partially override home-assistant.fullname template with a string | `nil`                                                   |
-| `fullnameOverride`                   | String to fully override home-assistant.fullname template with a string     | `nil`                                                   |
-| `service.type`                       | Kubernetes Service type                                                     | `ClusterIP`                                             |
-| `service.port`                       | Home Assistant port                                                         | `8123`                                                  |
-| `service.nodePort`                   | Kubernetes Service nodePort                                                 | `nil`                                                   |
-| `service.annotations`                | Service annotations                                                         | `{}`                                                    |
-| `service.loadBalancerIP`             | LoadBalancerIP if service type is `LoadBalancer`                            | `nil`                                                   |
-| `service.loadBalancerSourceRanges`   | Address that are allowed when service is LoadBalancer                       | `[]`                                                    |
-| `service.externalTrafficPolicy`      | Enable client source IP preservation                                        | `Cluster`                                               |
-| `service.clusterIP`                  | Kubernetes Service clusterIP                                                | `nil`                                                   |
-| `service.externalIPs`                | Kubernetes Service externalIPs                                              | `[]`                                                    |
-| `service.healthCheckNodePort`        | Kubernetes Service healthCheckNodePort                                      | `nil`                                                   |
-| `service.externalName`               | Kubernetes Service externalName                                             | `nil`                                                   |
-| `service.loadBalancerSourceRanges`   | Kubernetes Service loadBalancerSourceRanges                                 | `[]`                                                    |
-| `service.loadBalancerIP`             | Kubernetes Service loadBalancerIP                                           | `nil`                                                   |
-| `service.annotations`                | Kubernetes Service annotations                                              | `{}`                                                    |
-| `ingress.enabled`                    | Enable ingress controller resource                                          | `false`                                                 |
-| `ingress.annotations`                | Ingress annotations                                                         | `[]`                                                    |
-| `ingress.hosts`                      | Ingress accepted hostnames                                                  | `[]`                                                    |
-| `ingress.tls`                        | Ingress TLS configuration                                                   | `[]`                                                    |
-| `resources`                          | CPU/Memory resource requests/limits                                         | `{}`                                                    |
-| `nodeSelector`                       | Node labels for pod assignment                                              | `{}`                                                    |
-| `tolerations`                        | Toleration labels for pod assignment                                        | `[]`                                                    |
-| `affinity`                           | Affinity settings for pod assignment                                        | `{}`                                                    |
-| `securityContext`                    | Security context for pod assignment                                         | `{}`                                                    |
-| `podAnnotations`                     | Pod annotations                                                             | `{}`                                                    |
-| `podLabels`                          | Pod labels                                                                  | `{}`                                                    |
-| `priorityClassName`                  | Priority class name                                                         | `nil`                                                   |
-| `livenessProbe.enabled`              | Enable livenessProbe                                                        | `true`                                                  |
-| `livenessProbe.initialDelaySeconds`  | Initial delay seconds for livenessProbe                                     | `30`                                                    |
-| `livenessProbe.periodSeconds`        | Period seconds for livenessProbe                                            | `30`                                                    |
-| `livenessProbe.timeoutSeconds`       | Timeout seconds for livenessProbe                                           | `5`                                                     |
-| `livenessProbe.failureThreshold`     | Failure threshold for livenessProbe                                         | `3`                                                     |
-| `livenessProbe.successThreshold`     | Success threshold for livenessProbe                                         | `1`                                                     |
-| `readinessProbe.enabled`             | Enable readinessProbe                                                       | `true`                                                  |
-| `readinessProbe.initialDelaySeconds` | Initial delay seconds for readinessProbe                                    | `30`                                                    |
-| `readinessProbe.periodSeconds`       | Period seconds for readinessProbe                                           | `30`                                                    |
-| `readinessProbe.timeoutSeconds`      | Timeout seconds for readinessProbe                                          | `5`                                                     |
-| `readinessProbe.failureThreshold`    | Failure threshold for readinessProbe                                        | `3`                                                     |
-| `readinessProbe.successThreshold`    | Success threshold for readinessProbe                                        | `1`                                                     |
-| `extraEnvs`                          | Extra environment variables to be set on Home Assistant container           | `[]`                                                    |
-| `extraVolumeMounts`                  | Extra volume mounts to be set on Home Assistant container                   | `[]`                                                    |
-
-
+| Parameter                        | Description                                                                                                        | Default                                  |
+|----------------------------------|--------------------------------------------------------------------------------------------------------------------|------------------------------------------|
+| `replicaCount`                   | Number of replicas for the deployment                                                                              | `1`                                      |
+| `image.repository`               | Repository for the Home Assistant image                                                                            | `ghcr.io/home-assistant/home-assistant`  |
+| `image.pullPolicy`               | Image pull policy                                                                                                  | `IfNotPresent`                           |
+| `image.tag`                      | Overrides the image tag whose default is the chart appVersion                                                      | `""`                                     |
+| `imagePullSecrets`               | List of imagePullSecrets for private image repositories                                                            | `[]`                                     |
+| `nameOverride`                   | Override the default name of the Helm chart                                                                        | `""`                                     |
+| `fullnameOverride`               | Override the default full name of the Helm chart                                                                   | `""`                                     |
+| `serviceAccount.create`          | Specifies whether a service account should be created                                                              | `true`                                   |
+| `serviceAccount.annotations`     | Annotations to add to the service account                                                                          | `{}`                                     |
+| `serviceAccount.name`            | The name of the service account to use                                                                             | `""`                                     |
+| `podAnnotations`                 | Annotations to add to the pod                                                                                      | `{}`                                     |
+| `podSecurityContext`             | Pod security context settings                                                                                      | `{}`                                     |
+| `env`                             | Environment variables                                                                                              | `[]`                                     |
+| `envFrom`                         | Use environment variables from ConfigMaps or Secrets                                                               | `[]`                                     |
+| `securityContext`                | Container security context settings                                                                                | `{}`                                     |
+| `service.type`                   | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)                                                 | `ClusterIP`                              |
+| `service.port`                   | Service port
+| `ingress.enabled`                     | Enable or disable ingress                                                                  | `false`                      |
+| `ingress.className`                   | Ingress class name                                                                         | `""`                         |
+| `ingress.annotations`                 | Ingress annotations                                                                        | `{}`                         |
+| `ingress.hosts`                       | Ingress hosts configuration                                                                | `[chart-example.local]`      |
+| `ingress.paths`                       | Ingress paths configuration                                                                | `[{"path": "/", "pathType": "ImplementationSpecific"}]` |
+| `ingress.tls`                         | Ingress TLS configuration                                                                  | `[]`                         |
+| `resources`                           | Resource settings for the container                                                        | `{}`                         |
+| `nodeSelector`                        | Node selector settings for scheduling the pod on specific nodes                            | `{}`                         |
+| `tolerations`                         | Tolerations settings for scheduling the pod based on node taints                           | `[]`                         |
+| `affinity`                            | Affinity settings for controlling pod scheduling                                           | `{}`                         |
+| `persistence.enabled`                 | Enable or disable persistence                                                              | `true`                       |
+| `persistence.accessMode`              | Access mode for the persistent volume claim                                                | `ReadWriteOnce`              |
+| `persistence.size`                    | Size of the persistent volume claim                                                        | `5Gi`                        |
+| `persistence.storageClass`            | Storage class for the persistent volume claim                                              | `""`                         |
+| `addons.codeserver.enabled`           | Enable or disable the code-server addon                                                    | `false`                      |
+| `addons.codeserver.resources`         | Resource settings for the code-server container                                            | `{}`                         |
+| `addons.codeserver.image.repository`  | Repository for the code-server image                                                       | `ghcr.io/coder/code-server`  |
+| `addons.codeserver.image.pullPolicy`  | Image pull policy for the code-server image                                                | `IfNotPresent`               |
+| `addons.codeserver.image.tag`         | Tag for the code-server image                                                              | `"4.7.1"`                    |
+| `addons.codeserver.ingress.enabled`   | Enable or disable the ingress for the code-server addon                                    | `false`                      |
+| `addons.codeserver.ingress.className` | Ingress class name for the code-server addon                                               | `""`                         |
+| `addons.codeserver.ingress.annotations` | Ingress annotations for the code-server addon                                            | `{}`                         |
+| `addons.codeserver.ingress.hosts`     | Ingress hosts configuration for the code-server addon                                      | `[chart-example.local]`      |
+| `addons.codeserver.ingress.paths`     | Ingress paths configuration for the code-server addon                                      | `[{"path": "/", "pathType": "ImplementationSpecific"}]` |
+| `addons.codeserver.ingress.tls`       | Ingress TLS configuration for the code-server addon                                        | `[]`                         |
