@@ -81,6 +81,7 @@ service:
 
 # Ingress settings
 ingress:
+  # Enable ingress for home assistant
   enabled: false
   className: ""
   annotations: {}
