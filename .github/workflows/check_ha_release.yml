@@ -17,7 +17,7 @@ jobs:
       - name: Fetch code server release version
         run: |
           CODE_SERVER_VERSION=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
-          echo "Setting code server version to $CODE_SERVER_VERSION 
+          echo "Setting code server version to $CODE_SERVER_VERSION"
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
       - name: Check for modified files
         id: git-check
