@@ -8,7 +8,7 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: Fetch ha release version
         run: |
           HA_VERSION=$(curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | jq -r ".tag_name")
@@ -17,6 +17,7 @@ jobs:
       - name: Fetch code server release version
         run: |
           CODE_SERVER_VERSION=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
+          echo "Setting code server version to $CODE_SERVER_VERSION 
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
       - name: Check for modified files
         id: git-check
@@ -27,5 +28,5 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add .
-          git commit -m "Update tag in YAML file"
+          git commit -m "Update tags in YAML files"
           git push
