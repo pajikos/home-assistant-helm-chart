@@ -33,5 +33,5 @@ def update_version_in_yaml(file_path, version_part):
 
 if __name__ == "__main__":
     version_part = sys.argv[1] if len(sys.argv) > 1 else "patch"
-    config_file_path = Path("charts/home-asistant/Chart.yaml")
+    config_file_path = Path("charts/home-assistant/Chart.yaml")
     update_version_in_yaml(config_file_path, version_part)
