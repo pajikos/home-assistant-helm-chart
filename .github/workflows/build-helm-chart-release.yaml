@@ -51,3 +51,11 @@ jobs:
         uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Commit latest release version
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add charts/home-assistant/Chart.yaml
+          git commit -m "Update tags in YAML files"
+          git push
