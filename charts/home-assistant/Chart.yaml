@@ -1,6 +1,6 @@
 apiVersion: v2
-name: home-assistant
-description: A Helm chart for Home Assistant
-type: application
-version: 0.0.2
 appVersion: 2023.5.0
+description: A Helm chart for Home Assistant
+name: home-assistant
+type: application
+version: 0.1.0
