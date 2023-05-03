@@ -4,6 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'charts/**'
+      # - 'README.md'
+  workflow_dispatch:
+    inputs:
+      version_part:
+        description: 'Which part of the version to increment? (major, minor, patch)'
+        required: true
+        default: 'patch'
 
 jobs:
   release:
@@ -22,6 +31,18 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
+
+      - name: Install Python dependencies
+        run: pip install pyyaml
+
+      - name: Update SemVer in config.yaml
+        run: python .github/workflows/update_version.py ${{ github.event.inputs.version_part }}
+
 
       - name: Install Helm
         uses: azure/setup-helm@v3

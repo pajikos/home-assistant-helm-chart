@@ -1,0 +1,31 @@
+name: Get HA latest release version
+on:
+  schedule:
+    - cron:  '0 10 * * *'
+jobs:
+  get-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Fetch ha release version
+        run: |
+          curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | \
+          HA_VERSION=$(jq -r ".tag_name")
+          echo "Setting appVersion to $HA_VERSION in Chart.yaml"
+          sed -i "s/^appVersion:.*/appVersion: $HA_VERSION/" charts/home-assistant/Chart.yaml
+      - name: Fetch code server release version
+        run: |
+          curl -sL https://api.github.com/repos/coder/code-server/releases/latest | \
+          CODE_SERVER_VERSION=$(jq -r ".tag_name")
+          sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/templates/values.yaml
+      - name: Check for modified files
+        id: git-check
+        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+      - name: Commit latest release version
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
+          git add .
+          git commit -m "Update tag in YAML file"
+          git push
