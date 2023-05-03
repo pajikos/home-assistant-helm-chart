@@ -3,7 +3,7 @@ on:
   schedule:
     - cron:  '0 10 * * *'
   workflow_dispatch:
-  
+
 jobs:
   get-version:
     runs-on: ubuntu-latest
@@ -11,15 +11,13 @@ jobs:
       - uses: actions/checkout@v1
       - name: Fetch ha release version
         run: |
-          curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | \
-          HA_VERSION=$(jq -r ".tag_name")
+          HA_VERSION=$(curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | jq -r ".tag_name")
           echo "Setting appVersion to $HA_VERSION in Chart.yaml"
           sed -i "s/^appVersion:.*/appVersion: $HA_VERSION/" charts/home-assistant/Chart.yaml
       - name: Fetch code server release version
         run: |
-          curl -sL https://api.github.com/repos/coder/code-server/releases/latest | \
-          CODE_SERVER_VERSION=$(jq -r ".tag_name")
-          sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/templates/values.yaml
+          CODE_SERVER_VERSION=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
+          sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
       - name: Check for modified files
         id: git-check
         run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
