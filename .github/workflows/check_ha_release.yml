@@ -8,7 +8,9 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
       - name: Fetch ha release version
         run: |
           HA_VERSION=$(curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | jq -r ".tag_name")
@@ -21,7 +23,7 @@ jobs:
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
       - name: Check for modified files
         id: git-check
-        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
       - name: Commit latest release version
         if: steps.git-check.outputs.modified == 'true'
         run: |
