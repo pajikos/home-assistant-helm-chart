@@ -21,14 +21,10 @@ jobs:
           CODE_SERVER_VERSION=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
           echo "Setting code server version to $CODE_SERVER_VERSION"
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
-      - name: Check for modified files
-        id: git-check
-        run: echo "modified=$(if git diff-index --quiet HEAD --; then echo 'false'; else echo 'true'; fi)" >> $GITHUB_OUTPUT
       - name: Commit latest release version
-        if: steps.git-check.outputs.modified == 'true'
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git add .
-          git commit -m "Update tags in YAML files"
+          git commit -m "Update tags in YAML files" || echo "ignore commit failure, proceed"
           git push
