@@ -3,4 +3,4 @@ appVersion: null
 description: A Helm chart for Home Assistant
 name: home-assistant
 type: application
-version: 0.1.6
+version: 0.1.7
