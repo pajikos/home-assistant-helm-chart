@@ -145,7 +145,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "v4.12.0"
+      tag: "null"
     # Ingress settings for the code-server addon
     ingress:
       # Enable or disable the ingress for the code-server addon
