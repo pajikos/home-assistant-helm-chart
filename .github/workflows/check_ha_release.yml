@@ -29,7 +29,7 @@ jobs:
       - name: Fetch code server release version
         run: |
           CODE_SERVER_VERSION_WITH_PREFIX=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
-          if [ -z "$HA_VERSION" ]; then
+          if [ -z "$CODE_SERVER_VERSION_WITH_PREFIX" ]; then
             echo "Returned Code Server version is null or empty, exiting."
             exit 1
           fi
