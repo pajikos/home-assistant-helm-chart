@@ -11,20 +11,35 @@ jobs:
       - uses: actions/checkout@v3
         with:
           token: ${{ secrets.REPO_SCOPED_TOKEN }}
+      - name: Prepare git
+        run: |
+          git config user.name "GitHub Action"
+          git config user.email "action@github.com"
       - name: Fetch ha release version
         run: |
           HA_VERSION=$(curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | jq -r ".tag_name")
+          if [ -z "$HA_VERSION" ]; then
+            echo "Returned HA version is null or empty, exiting."
+            exit 1
+          fi
           echo "Setting appVersion to $HA_VERSION in Chart.yaml"
           sed -i "s/^appVersion:.*/appVersion: $HA_VERSION/" charts/home-assistant/Chart.yaml
+          git add charts/home-assistant/Chart.yaml
+          git commit -m "Updated Home Assistant version to $HA_VERSION" || echo "ignore commit failure, proceed"
       - name: Fetch code server release version
         run: |
-          CODE_SERVER_VERSION=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
+          CODE_SERVER_VERSION_WITH_PREFIX=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
+          if [ -z "$HA_VERSION" ]; then
+            echo "Returned Code Server version is null or empty, exiting."
+            exit 1
+          fi
+          CODE_SERVER_VERSION=$(echo $CODE_SERVER_VERSION_WITH_PREFIX | sed 's/^v//')
           echo "Setting code server version to $CODE_SERVER_VERSION"
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
+          git add charts/home-assistant/values.yaml
+          git commit -m "Updated code-server version to $CODE_SERVER_VERSION" || echo "ignore commit failure, proceed"
       - name: Commit latest release version
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
-          git add .
-          git commit -m "Update tags in YAML files" || echo "ignore commit failure, proceed"
           git push

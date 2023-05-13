@@ -38,10 +38,23 @@ jobs:
           python-version: 3.x
 
       - name: Install Python dependencies
-        run: pip install pyyaml
+        run: pip install pyyaml yq
 
       - name: Update SemVer in config.yaml
         run: python .github/workflows/update_version.py ${{ github.event.inputs.version_part }}
+
+      - name: Get latest release version
+        id: get_latest_release
+        run: |
+          VERSION=$(yq e '.version' charts/home-assistant/Chart.yaml)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version: $VERSION"
+
+      - name: Commit latest release version
+        run: |
+          git add charts/home-assistant/Chart.yaml
+          git commit -m "Released version ${{ env.VERSION }} of the helm chart"
+          git push
 
 
       - name: Install Helm
@@ -54,10 +67,4 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Commit latest release version
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git add charts/home-assistant/Chart.yaml
-          git commit -m "Update tags in YAML files"
-          git push
+
