@@ -46,7 +46,7 @@ jobs:
       - name: Get latest release version
         id: get_latest_release
         run: |
-          VERSION=$(yq e '.version' charts/home-assistant/Chart.yaml)
+          VERSION=$(yq '.version' charts/home-assistant/Chart.yaml)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
 
