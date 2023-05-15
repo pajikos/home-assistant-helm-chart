@@ -3,4 +3,4 @@ appVersion: 2023.5.3
 description: A Helm chart for Home Assistant
 name: home-assistant
 type: application
-version: 0.1.10
+version: 0.1.11
