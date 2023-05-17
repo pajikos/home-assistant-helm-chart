@@ -55,12 +55,6 @@ jobs:
           git add charts/home-assistant/Chart.yaml
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
-      
-      - name: Generate changelog
-        id: gen_changelog
-        uses: bdashrad/git-chglog-action@v2.0.3
-        with:
-          next_version: "${{ env.VERSION }}"
 
       - name: Install Helm
         env:
@@ -71,5 +65,11 @@ jobs:
         uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Generate changelog
+        id: gen_changelog
+        uses: bdashrad/git-chglog-action@v2.0.3
+        with:
+          next_version: "${{ env.VERSION }}"
 
 
