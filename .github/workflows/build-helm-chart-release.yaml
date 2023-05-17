@@ -55,6 +55,12 @@ jobs:
           git add charts/home-assistant/Chart.yaml
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
+      
+      - name: Install git-chglog
+        run: |
+          curl -L https://github.com/git-chglog/git-chglog/releases/download/0.14.2/git-chglog_linux_amd64 -o git-chglog
+          chmod +x git-chglog
+          sudo mv git-chglog /usr/local/bin/
 
       - name: Generate Changelog
         run: |
