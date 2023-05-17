@@ -56,6 +56,9 @@ jobs:
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
 
+      - name: Generate Changelog
+        run: |
+          git-chglog -o CHANGELOG.md
 
       - name: Install Helm
         env:
@@ -66,6 +69,5 @@ jobs:
         uses: helm/chart-releaser-action@v1.5.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_GENERATE_RELEASE_NOTES: "true"
 
 
