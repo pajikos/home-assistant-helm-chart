@@ -66,10 +66,4 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Generate changelog
-        id: gen_changelog
-        uses: bdashrad/git-chglog-action@v2.0.3
-        with:
-          next_version: "home-assistant-${{ env.VERSION }}"
-
 
