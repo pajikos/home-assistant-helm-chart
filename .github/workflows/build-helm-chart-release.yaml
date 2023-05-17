@@ -1,12 +1,12 @@
 name: Release Charts
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'charts/**'
-      # - 'README.md'
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'charts/**'
+  #     # - 'README.md'
   workflow_dispatch:
     inputs:
       version_part:

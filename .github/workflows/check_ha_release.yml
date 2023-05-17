@@ -16,6 +16,7 @@ jobs:
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
       - name: Fetch ha release version
+        id: ha-version
         run: |
           HA_VERSION=$(curl -sL https://api.github.com/repos/home-assistant/home-assistant/releases/latest | jq -r ".tag_name")
           if [ -z "$HA_VERSION" ]; then
@@ -25,8 +26,16 @@ jobs:
           echo "Setting appVersion to $HA_VERSION in Chart.yaml"
           sed -i "s/^appVersion:.*/appVersion: $HA_VERSION/" charts/home-assistant/Chart.yaml
           git add charts/home-assistant/Chart.yaml
-          git commit -m "Updated Home Assistant version to $HA_VERSION" || echo "ignore commit failure, proceed"
+          echo "UPDATED=true" >> $GITHUB_ENV
+          git commit -m "Updated Home Assistant version to $HA_VERSION" || EXIT_CODE=$?
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "Probably no changes to commit, exiting."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Fetch code server release version
+        id: code-server-version
         run: |
           CODE_SERVER_VERSION_WITH_PREFIX=$(curl -sL https://api.github.com/repos/coder/code-server/releases/latest | jq -r ".tag_name")
           if [ -z "$CODE_SERVER_VERSION_WITH_PREFIX" ]; then
@@ -37,9 +46,20 @@ jobs:
           echo "Setting code server version to $CODE_SERVER_VERSION"
           sed -i '/^addons:/,/^\w/{ s/\(tag: \).*$/\1"'$CODE_SERVER_VERSION'"/ }' charts/home-assistant/values.yaml
           git add charts/home-assistant/values.yaml
-          git commit -m "Updated code-server version to $CODE_SERVER_VERSION" || echo "ignore commit failure, proceed"
+          git commit -m "Updated code-server version to $CODE_SERVER_VERSION" || EXIT_CODE=$?
+          if [ "$EXIT_CODE" -ne 0 ]; then
+            echo "Probably no changes to commit, exiting."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
       - name: Commit latest release version
         run: |
           git config user.name "GitHub Action"
           git config user.email "action@github.com"
           git push
+      - name: Run second step if the previous was successful
+        if: steps.ha-version.outputs.changed == 'true' || steps.code-server-version.outputs.changed == 'true'
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: Release Charts
