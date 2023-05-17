@@ -56,9 +56,11 @@ jobs:
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
       
-      - uses: actions/install-git-chglog@v1
-        name: Install git-chglog
-      - run: git-chglog -o CHANGELOG.md
+      - name: Generate changelog
+        id: gen_changelog
+        uses: bdashrad/git-chglog-action@v2.0.3
+        with:
+          next_version: "${{ env.VERSION }}"
 
       - name: Install Helm
         env:
