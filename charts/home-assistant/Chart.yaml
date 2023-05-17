@@ -4,3 +4,8 @@ description: A Helm chart for Home Assistant
 name: home-assistant
 type: application
 version: 0.1.11
+
+
+maintainers:
+- name: Pavel Sklenar
+  email: sklenar.pav@gmail.com
