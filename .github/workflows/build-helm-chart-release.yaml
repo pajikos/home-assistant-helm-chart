@@ -56,10 +56,9 @@ jobs:
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
       
-      - uses: actions/setup-git-chglog@v1
-        with:
-          git-chglog-version: '0.15.4' # The git-chglog version to download (if necessary) and use.
-      - run: git-chglog --version
+      - uses: actions/install-git-chglog@v1
+        name: Install git-chglog
+      - run: git-chglog -o CHANGELOG.md
 
       - name: Install Helm
         env:
