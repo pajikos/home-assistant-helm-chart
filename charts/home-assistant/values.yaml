@@ -63,6 +63,11 @@ envFrom: []
 # - secretRef:
 #     name: secret-name
 
+hostPort:
+  # -- Enable 'hostPort' or not
+  enabled: false
+  port: 8123
+
 # Container security context settings
 securityContext: {}
   # capabilities:

@@ -43,6 +43,9 @@ spec:
             - name: http
               containerPort: 8123
               protocol: TCP
+              {{- if .Values.hostPort.enabled }}
+              hostPort: {{ .Values.hostPort.port }}
+              {{- end }}
           livenessProbe:
             httpGet:
               path: /
