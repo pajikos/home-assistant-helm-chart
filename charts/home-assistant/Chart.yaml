@@ -1,11 +1,9 @@
 apiVersion: v2
 appVersion: 2023.5.3
 description: A Helm chart for Home Assistant
+maintainers:
+- email: sklenar.pav@gmail.com
+  name: pajikos
 name: home-assistant
 type: application
-version: 0.1.11
-
-
-maintainers:
-- name: pajikos
-  email: sklenar.pav@gmail.com
+version: 0.1.12
