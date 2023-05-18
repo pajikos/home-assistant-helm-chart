@@ -19,7 +19,7 @@ jobs:
                     "method": "semver",
                     "transformer": {
                       "pattern": "home-assistant-(.+)",
-                      "target": "$1",
+                      "target": "$1"
                     }
                 },
               }
