@@ -12,6 +12,17 @@ jobs:
       - name: Build Changelog
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v3
+        with:
+            configurationJson: |
+              {
+                "tag_resolver": {
+                    "method": "semver",
+                    "transformer": {
+                      "pattern": "home-assistant-(.+)",
+                      "target": "$1",
+                    }
+                },
+              }
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
