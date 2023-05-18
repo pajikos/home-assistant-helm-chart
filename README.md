@@ -18,6 +18,7 @@ To install the chart with the release name `my-release`:
 
 ```console
 $ helm repo add pajikos http://pajikos.github.io/home-assistant-helm-chart/
+$ helm repo update
 $ helm install my-release pajikos/home-assistant
 ```
 
