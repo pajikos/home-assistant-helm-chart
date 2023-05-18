@@ -14,12 +14,12 @@ This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment o
   
 ## Installing the Chart
 
-To install the chart with the release name `my-release`:
+To install the chart with the release name `home-assistant`:
 
 ```console
 $ helm repo add pajikos http://pajikos.github.io/home-assistant-helm-chart/
 $ helm repo update
-$ helm install my-release pajikos/home-assistant
+$ helm install home-assistant pajikos/home-assistant
 ```
 
 The command deploys Home Assistant on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
