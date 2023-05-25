@@ -26,6 +26,9 @@ jobs:
             commitMode: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Print output
+        run: echo "Generated changelog: ${{steps.github_release.outputs.changelog}}"
 
       - name: Create Release
         uses: mikepenz/action-gh-release@v0.2.0-a03 #softprops/action-gh-release
