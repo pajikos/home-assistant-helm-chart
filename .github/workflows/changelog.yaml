@@ -16,7 +16,7 @@ jobs:
             configurationJson: |
               {
                 "template": "#{{CHANGELOG}}\n\n## Other changes\n\n#{{UNCATEGORIZED}}\n",
-                "pr_template": "- ${{TITLE}}",
+                "pr_template": "- #{{TITLE}}",
                 "tag_resolver": {
                     "method": "semver",
                     "transformer": {
