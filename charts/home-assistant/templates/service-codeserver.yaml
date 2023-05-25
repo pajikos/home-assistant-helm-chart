@@ -1,0 +1,17 @@
+{{- if and .Values.addons.codeserver .Values.addons.codeserver.ingress.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-codeserver
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: 12321
+      targetPort: codeserver
+      protocol: TCP
+      name: codeserver
+  selector:
+    {{- include "home-assistant.selectorLabels" . | nindent 4 }}
+{{- end }}

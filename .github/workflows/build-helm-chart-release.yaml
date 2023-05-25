@@ -1,0 +1,69 @@
+name: Release Charts
+
+on:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'charts/**'
+  #     # - 'README.md'
+  workflow_dispatch:
+    inputs:
+      version_part:
+        description: 'Which part of the version to increment? (major, minor, patch)'
+        required: true
+        default: 'patch'
+
+jobs:
+  release:
+    # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
+    # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+
+      - name: Install Python dependencies
+        run: pip install pyyaml yq
+
+      - name: Update SemVer in config.yaml
+        run: python .github/workflows/update_version.py ${{ github.event.inputs.version_part }}
+
+      - name: Get latest release version
+        id: get_latest_release
+        run: |
+          VERSION=$(yq '.version' charts/home-assistant/Chart.yaml)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Version: $VERSION"
+
+      - name: Commit latest release version
+        run: |
+          git add charts/home-assistant/Chart.yaml
+          git commit -m "Released version ${{ env.VERSION }} of the helm chart"
+          git push
+
+      - name: Install Helm
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: azure/setup-helm@v3
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
+        env:
+          CR_TOKEN: ${{ secrets.REPO_SCOPED_TOKEN }}
+
+
