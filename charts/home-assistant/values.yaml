@@ -64,7 +64,7 @@ envFrom: []
 #     name: secret-name
 
 hostPort:
-  # -- Enable 'hostPort' or not
+  # Enable 'hostPort' or not
   enabled: false
   port: 8123
 
