@@ -1,7 +1,7 @@
 # Helm chart for Home Assistant
 
 ![Helm Chart Release](https://github.com/pajikos/home-assistant-helm-chart/actions/workflows/build-helm-chart-release.yaml/badge.svg)
-
+![Auto-update latest HA version](https://github.com/pajikos/home-assistant-helm-chart/actions/workflows/check_ha_release.yml/badge.svg)
 
 Home Assistant is an open-source home automation platform running on Python 3.
 It is able to track and control all devices at home and offer a platform for automating control.
