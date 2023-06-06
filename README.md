@@ -10,12 +10,6 @@ It is able to track and control all devices at home and offer a platform for aut
 ## Introduction
 
 This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
-
-## Prerequisites
-
-- Kubernetes 1.4+ with Beta APIs enabled
-- PV provisioner support in the underlying infrastructure
-- Helm 3
   
 ## Installing the Chart
 
@@ -33,10 +27,10 @@ The command deploys Home Assistant on the Kubernetes cluster in the default conf
 
 ## Uninstalling the Chart
 
-To uninstall/delete the `my-release` deployment:
+To uninstall/delete the `home-assistant` deployment:
 
 ```console
-$ helm delete my-release
+$ helm delete home-assistant
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -83,5 +77,37 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.resources` | Resource settings for the code-server container | `{}` |
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
 | `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image | `IfNotPresent` |
-| `addons.codeserver.image.tag` | Tag for the code-server image | `"4.12.0"` |
+| `addons.codeserver.image.tag` | Tag for the code-server image | `latest released version, automatically updated` |
+| `addons.codeserver.service.type` | Service type for the code-server addon | `ClusterIP` |
+| `addons.codeserver.service.port` | Service port for the code-server addon | `12321` |
 | `addons.codeserver.ingress.enabled` | Enable or disable the ingress for the code-server addon | `false` |
+| `addons.codeserver.ingress.hosts` | Hosts for the code-server addon | `[]` |
+| `addons.codeserver.ingress.tls` | TLS settings for the code-server addon | `[]` |
+| `addons.codeserver.ingress.annotations` | Annotations for the code-server addon | `{}` |
+
+## Persistence
+
+The default configuration of this chart uses an emptyDir volume for persistence, which is lost when the pod is removed.
+To enable persistence, set `persistence.enabled` to `true`. In addition, you can specify the `persistence.storageClass` or `persistence.accessMode` values. The default values are `ReadWriteOnce` and `""` respectively.
+
+## Ingress
+
+To enable ingress for Home Assistant, set `ingress.enabled` to `true`. In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
+The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when ingress is not available in your cluster)
+
+## HostPort and HostNetwork
+
+To enable hostPort, set `hostPort.enabled` to `true`. In addition, you can specify the `hostPort.port` value. The default value is `8123`.
+To enable hostNetwork, set `hostNetwork` to `true`.
+HostNetwork is required for auto-discovery of Home Assistant, when not using auto-discovery, hostNetwork is not required and not recommended.
+
+## Addons
+
+The Home Assistant chart supports the following addons:
+
+* [code-server](https://github.com/coder/code-server)
+
+### code-server
+
+To enable the code-server addon, set `addons.codeserver.enabled` to `true`. In addition, you can specify the `addons.codeserver.resources` values. The default value is `{}`.
+To be able to access the code-server addon, you need to enable the ingress for the code-server addon by setting `addons.codeserver.ingress.enabled` to `true` or setting `service.type` to `NodePort` or `LoadBalancer`.
