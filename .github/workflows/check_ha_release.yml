@@ -1,4 +1,4 @@
-name: Get HA latest release version
+name: Auto-update latest HA version
 on:
   schedule:
     - cron:  '0 10 * * *'
