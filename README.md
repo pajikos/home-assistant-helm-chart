@@ -60,6 +60,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `podSecurityContext` | Pod security context settings | `{}` |
 | `env` | Environment variables | `[]` |
 | `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
+| `hostNetwork` | Specifies if the containers should be started in `hostNetwork` mode. | `false` |
 | `hostPort.enabled` | Enable 'hostPort' or not | `false` |
 | `hostPort.port` | Port number | `8123` |
 | `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
