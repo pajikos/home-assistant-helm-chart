@@ -68,6 +68,11 @@ hostPort:
   enabled: false
   port: 8123
 
+# Specifies if the containers should be started in hostNetwork mode.
+#
+# Required for use auto-discovery feature of Home Assistant
+hostNetwork: false
+
 # Container security context settings
 securityContext: {}
   # capabilities:
