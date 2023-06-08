@@ -2,6 +2,19 @@ apiVersion: v1
 entries:
   home-assistant:
   - apiVersion: v2
+    appVersion: 2023.6.0
+    created: "2023-06-08T10:06:28.123071531Z"
+    description: A Helm chart for Home Assistant
+    digest: cd299f41fc4826dc23167de5cf0791cf148b903fffa383309bb4941aedf65a80
+    maintainers:
+    - email: sklenar.pav@gmail.com
+      name: pajikos
+    name: home-assistant
+    type: application
+    urls:
+    - https://github.com/pajikos/home-assistant-helm-chart/releases/download/home-assistant-0.1.45/home-assistant-0.1.45.tgz
+    version: 0.1.45
+  - apiVersion: v2
     appVersion: 2023.5.4
     created: "2023-06-06T18:18:35.013300551Z"
     description: A Helm chart for Home Assistant
@@ -65,4 +78,4 @@ entries:
     urls:
     - https://github.com/pajikos/home-assistant-helm-chart/releases/download/home-assistant-0.1.40/home-assistant-0.1.40.tgz
     version: 0.1.40
-generated: "2023-06-06T18:18:35.013323051Z"
+generated: "2023-06-08T10:06:28.123099629Z"
