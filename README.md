@@ -73,6 +73,8 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.accessMode` | Access mode for the persistent volume claim | `ReadWriteOnce` |
 | `persistence.size` | Size of the persistent volume claim | `5Gi` |
 | `persistence.storageClass` | Storage class for the persistent volume claim | `""` |
+| `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
+| `additionalVolumeMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `addons.codeserver.enabled` | Enable or disable the code-server addon | `false` |
 | `addons.codeserver.resources` | Resource settings for the code-server container | `{}` |
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
@@ -106,6 +108,26 @@ HostNetwork is required for auto-discovery of Home Assistant, when not using aut
 The Home Assistant chart supports the following addons:
 
 * [code-server](https://github.com/coder/code-server)
+
+## Additional volumes and volume mounts
+
+To add additional volumes and volume mounts, you can use the `additionalVolumes` and `additionalVolumeMounts` values. The default values are `[]`.
+Example mounting usb devices:
+
+```yaml
+
+additionalVolumes:
+  - hostPath:
+      path: >-
+        /dev/serial/by-id/usb-ITEAD_SONOFF_Zigbee_3.0_USB_Dongle_Plus_V2_20230509111242-if00
+      type: CharDevice
+    name: usb
+
+additionalMounts:
+  - mountPath: /dev/ttyACM0
+    name: usb
+
+    ```
 
 ### code-server
 

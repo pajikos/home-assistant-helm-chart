@@ -35,7 +35,8 @@ serviceAccount:
 podAnnotations: {}
 
 # Pod security context settings
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # runAsUser: 568
   # runAsGroup: 568
   # fsGroup: 568
@@ -74,7 +75,8 @@ hostPort:
 hostNetwork: false
 
 # Container security context settings
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -94,7 +96,8 @@ ingress:
   # Enable ingress for home assistant
   enabled: false
   className: ""
-  annotations: {}
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -108,7 +111,8 @@ ingress:
   #      - chart-example.local
 
 # Resource settings for the container
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -139,6 +143,18 @@ persistence:
   size: 5Gi
   # Storage class for the persistent volume claim
   storageClass: ""
+
+# if you need any additional volumes, you can define them here
+additionalVolumes: []
+  # - hostPath:
+  #     path: >-
+  #       /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+  #     type: CharDevice
+  #   name: usb
+# if you need any additional volume mounts, you can define them here
+additionalMounts: []
+  # - mountPath: /dev/ttyACM0
+  #   name: usb
 
 # Addons configuration for additional services
 addons:

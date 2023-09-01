@@ -64,6 +64,9 @@ spec:
           volumeMounts:
           - mountPath: /config
             name: {{ include "home-assistant.fullname" . }}
+          {{- if .Values.additionalMounts }}
+            {{- .Values.additionalMounts | toYaml | nindent 10 }}
+          {{- end }}
         {{- if .Values.addons.codeserver.enabled }}
         - name: codeserver
           args:
@@ -103,11 +106,16 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      {{- if not .Values.persistence.enabled }}
+    {{- if or (not .Values.persistence.enabled) .Values.additionalVolumes }}
       volumes:
+      {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}
         emptyDir: {}
       {{- end }}
+      {{- if .Values.additionalVolumes }}
+        {{- .Values.additionalVolumes | toYaml | nindent 8 }}
+      {{- end }}
+    {{- end }}
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
   - metadata:
