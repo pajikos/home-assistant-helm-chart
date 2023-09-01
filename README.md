@@ -127,7 +127,9 @@ additionalMounts:
   - mountPath: /dev/ttyACM0
     name: usb
 
-    ```
+```
+
+Note: When mounting usb devices, you need to set the `securityContext.privileged` value to `true`. 
 
 ### code-server
 
