@@ -171,7 +171,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.16.1"
+      tag: "4.17.0"
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
