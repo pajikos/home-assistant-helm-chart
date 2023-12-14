@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 2023.12.1
+appVersion: 2023.12.2
 description: A Helm chart for Home Assistant
 maintainers:
 - email: sklenar.pav@gmail.com
