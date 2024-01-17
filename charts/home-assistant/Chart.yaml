@@ -18,3 +18,11 @@ sources:
 - https://github.com/pajikos/home-assistant-helm-chart/tree/main/charts/home-assistant
 type: application
 version: 0.2.26
+annotations:
+  artifacthub.io/links: |
+    - name: Helm Repo
+      url: https://github.com/pajikos/home-assistant-helm-chart
+    - name: Home assistant source repo
+      url: https://github.com/home-assistant
+
+
