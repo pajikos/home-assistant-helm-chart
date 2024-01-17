@@ -49,10 +49,14 @@ jobs:
           VERSION=$(yq '.version' charts/home-assistant/Chart.yaml)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Version: $VERSION"
+          
+      - name: Copy README.md to charts/home-assistant
+        run: cp README.md charts/home-assistant/README.md
 
       - name: Commit latest release version
         run: |
           git add charts/home-assistant/Chart.yaml
+          git add charts/home-assistant/README.md
           git commit -m "Released version ${{ env.VERSION }} of the helm chart"
           git push
 
