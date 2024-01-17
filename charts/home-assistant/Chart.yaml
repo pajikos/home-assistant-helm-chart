@@ -1,3 +1,6 @@
+annotations:
+  artifacthub.io/links: "- name: Helm Repo\n  url: https://github.com/pajikos/home-assistant-helm-chart\n\
+    - name: Home assistant source repo\n  url: https://github.com/home-assistant\n"
 apiVersion: v2
 appVersion: 2024.1.3
 description: A Helm chart for Home Assistant
@@ -17,12 +20,4 @@ sources:
 - https://github.com/cdr/code-server
 - https://github.com/pajikos/home-assistant-helm-chart/tree/main/charts/home-assistant
 type: application
-version: 0.2.26
-annotations:
-  artifacthub.io/links: |
-    - name: Helm Repo
-      url: https://github.com/pajikos/home-assistant-helm-chart
-    - name: Home assistant source repo
-      url: https://github.com/home-assistant
-
-
+version: 0.2.27
