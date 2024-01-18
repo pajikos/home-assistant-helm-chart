@@ -5,12 +5,11 @@
 ![Auto-update latest HA version](https://github.com/pajikos/home-assistant-helm-chart/actions/workflows/check_ha_release.yml/badge.svg)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/helm-hass)](https://artifacthub.io/packages/search?repo=helm-hass)
 
-Home Assistant is an open-source home automation platform running on Python 3.
-It is able to track and control all devices at home and offer a platform for automating control.
-
 ## Introduction
 
-This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
+This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager. 
+
+It is updated **automatically** with each new release of Home Assistant, ensuring you always have access to the latest features and improvements.
   
 ## Installing the Chart
 
