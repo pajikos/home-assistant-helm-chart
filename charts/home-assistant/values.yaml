@@ -90,7 +90,7 @@ service:
   type: ClusterIP
   # Service port
   port: 8080
-  # Annotations to add to the service 
+  # Annotations to add to the service
   annotations: {}
 
 # Ingress settings
