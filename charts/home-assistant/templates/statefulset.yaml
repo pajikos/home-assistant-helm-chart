@@ -113,7 +113,7 @@ spec:
         emptyDir: {}
       {{- end }}
       {{- if .Values.additionalVolumes }}
-        {{- .Values.additionalVolumes | toYaml | nindent 8 }}
+        {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
     {{- end }}
   {{- if .Values.persistence.enabled }}
