@@ -64,6 +64,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `hostPort.port` | Port number | `8123` |
 | `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
 | `service.port` | Service port | `8080` |
+| `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
