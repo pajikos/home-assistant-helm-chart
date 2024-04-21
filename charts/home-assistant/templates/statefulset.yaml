@@ -73,6 +73,8 @@ spec:
           {{- end }}
         {{- if .Values.addons.codeserver.enabled }}
         - name: codeserver
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
           args:
           - --auth
           - none
@@ -85,7 +87,6 @@ spec:
           - "/config"
           image: "{{ .Values.addons.codeserver.image.repository }}:{{ .Values.addons.codeserver.image.tag }}"
           imagePullPolicy: "{{ .Values.addons.codeserver.image.pullPolicy }}"
-          name: codeserver
           ports:
           - containerPort: 12321
             name: codeserver
