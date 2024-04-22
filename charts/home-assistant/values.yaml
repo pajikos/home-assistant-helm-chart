@@ -171,6 +171,21 @@ additionalMounts: []
   # - mountPath: /dev/ttyACM0
   #   name: usb
 
+# if you need to expose additional ports
+additionalPorts: []
+#  - name: sia
+#    containerPort: 8124
+#    protocol: TCP
+
+# if you need to expose additional services
+additionalServices: []
+#  - name: sia
+#    port: 8124
+#    targetPort: sia
+#    type: NodePort
+#    protocol: TCP
+#    nodePort: 30124
+
 # Addons configuration for additional services
 addons:
   # Code-server addon configuration

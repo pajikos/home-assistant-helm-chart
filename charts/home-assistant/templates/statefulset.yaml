@@ -53,6 +53,9 @@ spec:
               {{- if .Values.hostPort.enabled }}
               hostPort: {{ .Values.hostPort.port }}
               {{- end }}
+          {{- if .Values.additionalPorts }}
+            {{- .Values.additionalPorts | toYaml | nindent 12 }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: /
