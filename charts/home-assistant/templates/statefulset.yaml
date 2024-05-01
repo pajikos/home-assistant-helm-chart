@@ -116,26 +116,18 @@ spec:
     {{- end }}
     {{- if or (not .Values.persistence.enabled) .Values.additionalVolumes }}
       volumes:
-      {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}
+      {{- if not .Values.persistence.enabled }}
         emptyDir: {}
+      {{- else }}
+        persistentVolumeClaim:
+      {{- if .Values.persistence.existingClaim }}
+          claimName: {{ .Values.persistence.existingClaim }}
+      {{- else }}
+          claimName: {{include "home-assistant.fullname" . }}
+      {{- end }}
       {{- end }}
       {{- if .Values.additionalVolumes }}
         {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
     {{- end }}
-  {{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "home-assistant.fullname" . }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.accessMode }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.size }}
-      {{- if .Values.persistence.storageClass }}
-      storageClassName: {{ .Values.persistence.storageClass }}
-      {{- end }}
-  {{- end }}
-  

@@ -1,0 +1,38 @@
+{{- if and .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name:  {{ include "home-assistant.fullname" . }}
+  labels:
+      {{- include "home-assistant.labels" . | nindent 4 }}
+    {{- with .Values.persistence.annotations }}
+    annotations:
+      {{- toYaml . | nindent 4 }}
+    {{ end }}
+spec:
+  accessModes:
+  {{- range .Values.persistence.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size | quote }}
+  {{- if .Values.persistence.storageClass }}
+  {{- if (eq "-" .Values.persistence.storageClass) }}
+  storageClassName: ""
+  {{- else }}
+  storageClassName: "{{ .Values.persistence.storageClass }}"
+  {{- end }}
+  {{- end }}
+  {{- if or .Values.persistence.matchLabels (.Values.persistence.matchExpressions) }}
+  selector:
+  {{- if .Values.persistence.matchLabels }}
+    matchLabels:
+{{ toYaml .Values.persistence.matchLabels | indent 8 }}
+  {{- end -}}
+  {{- if .Values.persistence.matchExpressions }}
+    matchExpressions:
+{{ toYaml .Values.persistence.matchExpressions | indent 8 }}
+  {{- end -}}
+  {{- end }}
+{{- end -}}
