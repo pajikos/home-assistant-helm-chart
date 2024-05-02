@@ -114,7 +114,6 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if or (.Values.persistence.enabled) .Values.additionalVolumes }}
       volumes:
       - name: {{ include "home-assistant.fullname" . }}
       {{- if not .Values.persistence.enabled }}
@@ -130,4 +129,3 @@ spec:
       {{- if .Values.additionalVolumes }}
         {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
-    {{- end }}
