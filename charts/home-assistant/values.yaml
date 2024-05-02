@@ -161,11 +161,11 @@ persistence:
   # Name of the existing persistent volume claim for the stateful set, this option can be used to use existing volumes
   existingClaim: ""
   # Annotations to add to the pvc
-  annotations: { }
+  annotations: {}
   ## Persistent Volume selectors
   ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
-  matchLabels: { }
-  matchExpressions: { }
+  matchLabels: {}
+  matchExpressions: {}
 
 # if you need any additional volumes, you can define them here
 additionalVolumes: []
