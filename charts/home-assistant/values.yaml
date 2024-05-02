@@ -186,6 +186,11 @@ additionalServices: []
 #    protocol: TCP
 #    nodePort: 30124
 
+serviceMonitor:
+  # requires HA integration:  https://www.home-assistant.io/integrations/prometheus/
+  enabled: false
+  scrapeInterval: 30s
+
 # Addons configuration for additional services
 addons:
   # Code-server addon configuration
