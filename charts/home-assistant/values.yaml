@@ -158,6 +158,12 @@ persistence:
   size: 5Gi
   # Storage class for the persistent volume claim
   storageClass: ""
+  # Name of the existing volume claim for the stateful set, this option can be used to use existing volumes
+  existingVolume: ""
+  ## Persistent Volume selectors
+  ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
+  matchLabels: {}
+  matchExpressions: {}
 
 # if you need any additional volumes, you can define them here
 additionalVolumes: []
