@@ -71,10 +71,13 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
 | `affinity` | Affinity settings for controlling pod scheduling | `{}` |
-| `persistence.enabled` | Enable or disable persistence | `true` |
-| `persistence.accessMode` | Access mode for the persistent volume claim | `ReadWriteOnce` |
-| `persistence.size` | Size of the persistent volume claim | `5Gi` |
-| `persistence.storageClass` | Storage class for the persistent volume claim | `""` |
+| `persistence.enabled` | Enables the creation of a Persistent Volume Claim (PVC) for Home Assistant. | `false` |
+| `persistence.accessMode` | The access mode of the PVC. | `ReadWriteOnce` |
+| `persistence.size` | The size of the PVC to create. | `5Gi` |
+| `persistence.storageClass` | The storage class to use for the PVC. If empty, the default storage class is used. | `""` |
+| `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning. | `""` |
+| `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
+| `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
 | `additionalVolumeMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `addons.codeserver.enabled` | Enable or disable the code-server addon | `false` |
@@ -91,8 +94,49 @@ This document provides detailed configuration options for the Home Assistant Hel
 
 ## Persistence
 
-The default configuration of this chart uses an emptyDir volume for persistence, which is lost when the pod is removed.
-To enable persistence, set `persistence.enabled` to `true`. In addition, you can specify the `persistence.storageClass` or `persistence.accessMode` values. The default values are `ReadWriteOnce` and `""` respectively.
+The default configuration of this chart uses an `emptyDir` volume for persistence, which means that data is lost when the pod is removed. To enable persistent storage that survives pod restarts and redeployments, you can configure the chart to use a Persistent Volume Claim (PVC).
+
+### Enabling Persistence
+
+To enable persistence, set `persistence.enabled` to `true`. You can also specify the desired `accessMode` and `size` for the PVC. By default, the `accessMode` is set to `ReadWriteOnce`, and there is no default storage class (`storageClass: ""`), meaning the cluster's default storage class will be used.
+
+```yaml
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 5Gi
+  storageClass: ""
+```
+
+### Using an Existing Volume
+
+If you already have a Persistent Volume (PV) that you wish to use, you can specify the name of this existing volume in the `persistence.existingVolume` field. This will direct the chart to use the specified PV, bypassing dynamic volume provisioning.
+
+```yaml
+persistence:
+  enabled: true
+  existingVolume: "my-existing-volume"
+```
+
+When using an existing volume, ensure that the `accessMode` and `size` specified in the chart values match the capabilities and capacity of the existing PV.
+
+### Selectors
+
+You can further refine the selection of an existing PV using `matchLabels` or `matchExpressions` under the `persistence` section. These selectors will be used to match the existing PVs based on their labels.
+
+```yaml
+persistence:
+  enabled: true
+  matchLabels:
+    type: fast-ssd
+  matchExpressions:
+    - key: "failure-domain.beta.kubernetes.io/zone"
+      operator: "In"
+      values: ["us-west-1a"]
+```
+
+> **Note**: When specifying an `existingVolume`, ensure that the PV is not already bound to another PVC, as a PV can only be bound to a single PVC at a time.
+
 
 ## Ingress
 
