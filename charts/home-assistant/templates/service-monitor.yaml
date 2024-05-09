@@ -1,0 +1,19 @@
+{{- if and .Values.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "home-assistant.fullname" . }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  endpoints:
+    - interval: {{ .Values.serviceMonitor.scrapeInterval }}
+      targetPort: {{ .Values.service.port }}
+      path: /api/prometheus
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  selector:
+    matchLabels:
+      {{- include "home-assistant.labels" . | nindent 6 }}
+{{- end }}
