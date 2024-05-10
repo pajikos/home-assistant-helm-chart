@@ -102,6 +102,16 @@ spec:
           - mountPath: /config
             name: {{ include "home-assistant.fullname" . }}
         {{- end }}
+    {{- if and .Values.ingress.enabled .Values.ingress.configureHA }}
+      initContainers:
+        - name: enable-ingress-configuration.yaml
+          image: {{ .Values.yq.repository}}/{{ .Values.yq.tag }}
+          command: [ "/bin/sh" ]
+          args: [ "-c", "touch /config/configuration.yaml; yq -i '.http.use_x_forwarded_for = true' configuration.yaml; /config/configuration.yaml; yq -i '.http.trusted_proxies = [ \"10.0.0.0/8\", \"172.16.0.0/12\", \"192.168.0.0/16\" ]' /config/configuration.yaml"  ]
+          volumeMounts:
+          - mountPath: /config
+            name: {{ include "home-assistant.fullname" . }}
+    {{-end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

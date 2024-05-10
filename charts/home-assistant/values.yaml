@@ -14,6 +14,10 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
+yq:
+  repository: mikefarah/yq
+  tag: latest
+
 # List of imagePullSecrets for private image repositories
 imagePullSecrets: []
 # Override the default name of the Helm chart
@@ -110,6 +114,9 @@ service:
 ingress:
   # Enable ingress for home assistant
   enabled: false
+  # Configure home assistant - patch configuration.yaml of home assistant, so it allows all private addresses
+  # as origins of proxied traffic
+  configureHA: false
   className: ""
   annotations:
     {}
