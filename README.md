@@ -10,10 +10,16 @@
 This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager. 
 
 It is updated **automatically** with each new release of Home Assistant, ensuring you always have access to the latest features and improvements.
-  
-## Installing the Chart
 
-To install the chart with the release name `home-assistant`:
+## Features
+
+- **Automatic Updates**: The chart is updated with each new release of Home Assistant.
+- **Flexibility**: Extensive configuration options to tailor Home Assistant to your needs.
+- **Addons Support**: Extend Home Assistant's functionality with supported addons, such as code-server.
+  
+## Quick Start
+
+To deploy Home Assistant using this Helm chart, follow these steps:
 
 ```console
 $ helm repo add pajikos http://pajikos.github.io/home-assistant-helm-chart/
@@ -21,7 +27,8 @@ $ helm repo update
 $ helm install home-assistant pajikos/home-assistant
 ```
 
-The command deploys Home Assistant on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
+This will deploy Home Assistant with the default configuration. See the [Configuration](#configuration) section for details on customizing the deployment.
+
 
 > **Tip**: List all releases using `helm list`
 
@@ -80,6 +87,13 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
 | `additionalVolumeMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
+| `initContainers` | List of initialization containers | `[]` |
+| `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
+| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `true` |
+| `configuration.trusted_proxies` | List of trusted proxies in CIDR notation | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
+| `configuration.templateConfig` | Template for the `configuration.yaml` file | See Advanced Configuration |
+| `configuration.initScript` | Init script for Home Assistant initialization | See values.yaml for the complete configuration options  |
+| `configuration.initContainer` | Configuration for the init container | See values.yaml for the complete configuration options |
 | `addons.codeserver.enabled` | Enable or disable the code-server addon | `false` |
 | `addons.codeserver.resources` | Resource settings for the code-server container | `{}` |
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
@@ -177,7 +191,62 @@ additionalMounts:
 
 Note: When mounting usb devices, you need to set the `securityContext.privileged` value to `true`. 
 
-### code-server
+## Advanced Configuration
+
+### Init Containers
+
+Use init containers to perform tasks before starting Home Assistant, such as waiting for a dependency:
+
+```yaml
+initContainers:
+  - name: init-myservice
+    image: busybox
+    command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+```
+
+### Home Assistant Configuration
+
+Customize Home Assistant's configuration directly through the Helm chart:
+
+```yaml
+# Configuration for Home Assistant
+configuration:
+  # Enable or disable the configuration setup for Home Assistant
+  enabled: true
+  # Force init will merge the current configuration file with the default configuration on every start
+  # This is useful when you want to ensure that the configuration file is always up to date
+  forceInit: true
+  # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
+  # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
+  trusted_proxies:
+    - 10.42.0.0/16      # Add the IP address of your cluster CIDR
+  # Editing templateConfig allows you to customize the configuration.yaml file
+  # You can use Go template functions to customize the configuration
+  templateConfig: |-
+    # Loads default set of integrations. Do not remove.
+    default_config:
+
+    {{- if .Values.ingress.enabled }}
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        {{- range .Values.configuration.trusted_proxies }}
+        - {{ . }}
+        {{- end }}
+    {{- end}}
+    # Load frontend themes from the themes folder
+    frontend:
+      themes: !include_dir_merge_named themes
+
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+```
+
+This allows for dynamic configuration based on your Helm values.
+
+
+## code-server
 
 To enable the code-server addon, set `addons.codeserver.enabled` to `true`. In addition, you can specify the `addons.codeserver.resources` values. The default value is `{}`.
 To be able to access the code-server addon, you need to enable the ingress for the code-server addon by setting `addons.codeserver.ingress.enabled` to `true` or setting `service.type` to `NodePort` or `LoadBalancer`.

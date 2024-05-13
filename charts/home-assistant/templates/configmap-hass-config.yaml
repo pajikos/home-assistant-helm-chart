@@ -1,0 +1,10 @@
+{{- if .Values.configuration.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hass-configuration
+  namespace: {{ .Release.Namespace }}
+data:
+  configuration.yaml: |
+    {{- tpl .Values.configuration.templateConfig . | nindent 4 }}
+{{- end -}}

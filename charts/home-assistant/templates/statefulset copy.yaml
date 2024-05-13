@@ -23,19 +23,19 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-    {{- if .Values.hostNetwork }}
+      {{- if .Values.hostNetwork }}
       hostNetwork: true
-    {{- end }}
-    {{- with .Values.imagePullSecrets }}
+      {{- end }}
+      {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-    {{- if .Values.dnsConfig }}
-      dnsConfig: 
+      {{- if .Values.dnsConfig }}
+      dnsConfig:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
-    {{- end }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -57,9 +57,6 @@ spec:
               {{- if .Values.hostPort.enabled }}
               hostPort: {{ .Values.hostPort.port }}
               {{- end }}
-          {{- if .Values.additionalPorts }}
-            {{- .Values.additionalPorts | toYaml | nindent 12 }}
-          {{- end }}
           livenessProbe:
             httpGet:
               path: /
@@ -73,38 +70,26 @@ spec:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-          - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            - mountPath: /config
+              name: {{ include "home-assistant.fullname" . }}
           {{- if .Values.additionalMounts }}
-            {{- .Values.additionalMounts | toYaml | nindent 10 }}
+            {{- toYaml .Values.additionalMounts | nindent 12 }}
           {{- end }}
         {{- if .Values.addons.codeserver.enabled }}
         - name: codeserver
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          args:
-          - --auth
-          - none
-          - --user-data-dir
-          - "/config/.vscode"
-          - --extensions-dir
-          - "/config/.vscode"
-          - --port
-          - "12321"
-          - "/config"
           image: "{{ .Values.addons.codeserver.image.repository }}:{{ .Values.addons.codeserver.image.tag }}"
           imagePullPolicy: "{{ .Values.addons.codeserver.image.pullPolicy }}"
           ports:
-          - containerPort: 12321
-            name: codeserver
-            protocol: TCP
+            - containerPort: 12321
+              name: codeserver
+              protocol: TCP
           {{- with .Values.addons.codeserver.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
           volumeMounts:
-          - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            - mountPath: /config
+              name: {{ include "home-assistant.fullname" . }}
         {{- end }}
       {{- if or (.Values.configuration.enabled) .Values.initContainers }}
       initContainers:
@@ -144,56 +129,43 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.affinity }}
+      {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.tolerations }}
+      {{- end }}
+      {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
-    {{- end }}
+      {{- end }}
+      {{- if or (not .Values.persistence.enabled) .Values.additionalVolumes .Values.configuration.enabled }}
       volumes:
-      {{- if .Values.configuration.enabled }}
-      - name: init-volume
-        configMap:
-          name: init-script
-      - name: config-volume
-        configMap:
-          name: hass-configuration
-      {{- end }}
-      {{- if not .Values.persistence.enabled }}
-      - name: {{ include "home-assistant.fullname" . }}
-        emptyDir: {}
-      {{- end }}
-      {{- if .Values.additionalVolumes }}
-        {{- .Values.additionalVolumes | toYaml | nindent 6 }}
+        {{- if .Values.configuration.enabled }}
+        - name: init-volume
+          configMap:
+            name: init-script
+        - name: config-volume
+          configMap:
+            name: hass-configuration
+        {{- end }}
+        {{- if not .Values.persistence.enabled }}
+        - name: {{ include "home-assistant.fullname" . }}
+          emptyDir: {}
+        {{- end }}
+        {{- if .Values.additionalVolumes }}
+        {{- toYaml .Values.additionalVolumes | nindent 6 }}
+        {{- end }}
       {{- end }}
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
-  - metadata:
-      name: {{ include "home-assistant.fullname" . }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.accessMode }}
-      {{- if .Values.persistence.existingVolume }}
-      volumeName: {{ .Values.persistence.existingVolume }}
-      {{- end }}
-      {{- if or .Values.persistence.matchLabels (.Values.persistence.matchExpressions) }}
-      selector:
-      {{- if .Values.persistence.matchLabels }}
-        matchLabels:
-        {{ toYaml .Values.persistence.matchLabels | indent 8 }}
-      {{- end -}}
-      {{- if .Values.persistence.matchExpressions }}
-        matchExpressions:
-          {{ toYaml .Values.persistence.matchExpressions | indent 8 }}
-        {{- end -}}
-      {{- end }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.size }}
-      {{- if .Values.persistence.storageClass }}
-      storageClassName: {{ .Values.persistence.storageClass }}
-      {{- end }}
+    - metadata:
+        name: {{ include "home-assistant.fullname" . }}
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass }}
+        {{- end }}
   {{- end }}
-  

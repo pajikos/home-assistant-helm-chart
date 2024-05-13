@@ -43,3 +43,15 @@ jobs:
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
+
+      # Additional step to deploy with ingress.enabled=true and configuration.enabled=true
+      - name: Deploy with custom values and run tests
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          ct install --target-branch ${{ github.event.repository.default_branch }} --set ingress.enabled=true,configuration.enabled=true
+          helm test {{ include "home-assistant.fullname" . }}
+
+      - name: Get test logs
+        if: failure() # This assumes you want to collect logs only if the previous step failed
+        run: kubectl logs -l "helm.sh/hook=test" --all-containers=true
+
