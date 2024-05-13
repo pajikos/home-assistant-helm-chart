@@ -48,7 +48,7 @@ jobs:
       - name: Deploy with custom values and run tests
         if: steps.list-changed.outputs.changed == 'true'
         run: |
-          ct install --target-branch ${{ github.event.repository.default_branch }} --set ingress.enabled=true,configuration.enabled=true
+          ct install --target-branch ${{ github.event.repository.default_branch }}  --helm-extra-set-args "--set ingress.enabled=true,configuration.enabled=true"
           helm test {{ include "home-assistant.fullname" . }}
 
       - name: Get test logs
