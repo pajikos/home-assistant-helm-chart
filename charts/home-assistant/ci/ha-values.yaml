@@ -1,9 +1,1 @@
 replicaCount: 3
-image:
-  tag: "latest"
-serviceAccount:
-  create: true
-hostNetwork: true
-persistence:
-  enabled: true
-  size: "10Gi"
