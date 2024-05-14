@@ -44,15 +44,4 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
 
-      # Additional step to deploy with ingress.enabled=true and configuration.enabled=true
-      - name: Deploy with ingress and configuration enabled
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          ct install --target-branch ${{ github.event.repository.default_branch }}  --helm-extra-set-args "--set ingress.enabled=true,configuration.enabled=true"
-
-      # Additional step to deploy with addons.codeserver.enabled=true
-      - name: Deploy with codeserver enabled
-        if: steps.list-changed.outputs.changed == 'true'
-        run: |
-          ct install --target-branch ${{ github.event.repository.default_branch }}  --helm-extra-set-args "--set addons.codeserver.enabled=true"
 
