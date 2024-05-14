@@ -1,0 +1,13 @@
+persistence:
+  enabled: true
+  size: "8Gi"
+addons:
+  codeserver:
+    enabled: true
+    resources:
+      limits:
+        cpu: "1"
+        memory: "1Gi"
+      requests:
+        cpu: "500m"
+        memory: "512Mi"

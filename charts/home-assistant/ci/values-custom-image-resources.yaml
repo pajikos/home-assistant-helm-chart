@@ -1,0 +1,11 @@
+image:
+  repository: mycustomrepo/home-assistant
+  tag: "1.2.3"
+  pullPolicy: Always
+resources:
+  requests:
+    cpu: "250m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
