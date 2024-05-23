@@ -1,0 +1,5 @@
+env:
+  - name: TZ
+    value: "America/New_York"
+  - name: DEBUG_MODE
+    value: "true"

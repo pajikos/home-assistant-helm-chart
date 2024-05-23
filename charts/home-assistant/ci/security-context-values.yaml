@@ -1,0 +1,5 @@
+securityContext:
+  runAsUser: 1000
+  runAsNonRoot: true
+podAnnotations:
+  hello: world

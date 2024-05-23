@@ -1,0 +1,11 @@
+hostNetwork: true
+dnsConfig:
+  nameservers:
+    - 8.8.8.8
+    - 8.8.4.4
+  options:
+    - name: ndots
+      value: "1"
+hostPort:
+  enabled: true
+  port: 8123

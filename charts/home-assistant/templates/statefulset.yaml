@@ -14,8 +14,12 @@ spec:
     metadata:
       labels:
         {{- include "home-assistant.selectorLabels" . | nindent 8 }}
-      {{- with .Values.podAnnotations }}
       annotations:
+        {{- if .Values.configuration.enabled }}
+        checksum/init-script: {{ include (print $.Template.BasePath "/configmap-init-script.yaml") . | sha256sum }}
+        checksum/hass-configuration: {{ include (print $.Template.BasePath "/configmap-hass-config.yaml") . | sha256sum }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -102,6 +106,40 @@ spec:
           - mountPath: /config
             name: {{ include "home-assistant.fullname" . }}
         {{- end }}
+      {{- if or (.Values.configuration.enabled) .Values.initContainers }}
+      initContainers:
+        {{- if .Values.initContainers }}
+        {{- toYaml .Values.initContainers | nindent 8 }}
+        {{- end }}
+        {{- if .Values.configuration.enabled }}
+        - name: {{ .Values.configuration.initContainer.name }}
+          image: {{ .Values.configuration.initContainer.image }}
+          {{- if .Values.configuration.initContainer.securityContext }}
+          securityContext:
+            {{- toYaml .Values.configuration.initContainer.securityContext | nindent 12 }}
+          {{- end }}
+          {{- if .Values.configuration.initContainer.command }}
+          command: {{ toYaml .Values.configuration.initContainer.command | nindent 12 }}
+          {{- end }}
+          {{- if .Values.configuration.initContainer.args }}
+          args: {{ toYaml .Values.configuration.initContainer.args | nindent 12 }}
+          {{- end }}
+          {{- if .Values.configuration.initContainer.env }}
+          env:
+            {{- toYaml .env | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- range .Values.configuration.initContainer.volumeMounts }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: {{ .subPath }}
+              {{ end }}
+            {{- end }}
+            - mountPath: /config
+              name: {{ include "home-assistant.fullname" $ }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
@@ -115,6 +153,14 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       volumes:
+      {{- if .Values.configuration.enabled }}
+      - name: init-volume
+        configMap:
+          name: init-script
+      - name: config-volume
+        configMap:
+          name: hass-configuration
+      {{- end }}
       {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}
         emptyDir: {}

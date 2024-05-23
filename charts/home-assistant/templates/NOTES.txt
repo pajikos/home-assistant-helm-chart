@@ -20,3 +20,20 @@
   echo "Visit http://127.0.0.1:8123 to use your application"
   kubectl --namespace {{ .Release.Namespace }} port-forward $POD_NAME 8123:$CONTAINER_PORT
 {{- end }}
+
+{{- if .Values.configuration.enabled }}
+  {{- if or (has "10.0.0.0/8" .Values.configuration.trusted_proxies) (has "172.16.0.0/12" .Values.configuration.trusted_proxies) (has "192.168.0.0/16" .Values.configuration.trusted_proxies) (has "127.0.0.0/8" .Values.configuration.trusted_proxies) }}
+WARNING: You have enabled configuration setup for Home Assistant and are using widely trusted proxy IP ranges. Please ensure that this is intended and secure for your environment. Misconfiguration can lead to security vulnerabilities.
+  {{- end }}
+{{- end }}
+
+{{- if and .Values.ingress.enabled (not .Values.configuration.enabled) }}
+WARNING: Ingress is enabled for Home Assistant, but the configuration setup is disabled. If you are using a reverse proxy, it is recommended to configure trusted proxies to ensure Home Assistant functions correctly and securely. For more information on configuring trusted proxies, visit: https://www.home-assistant.io/integrations/http/#reverse-proxies
+{{- end }}
+
+{{- if and .Values.configuration.enabled (or .Values.securityContext .Values.podSecurityContext) }}
+WARNING: You have enabled the configuration setup for Home Assistant and defined a securityContext or podSecurityContext. Please ensure to update the configuration.initContainer.securityContext to have the same user setup to avoid running the init container as the root user. This is crucial for maintaining the security of your deployment.
+{{- end }}
+
+
+

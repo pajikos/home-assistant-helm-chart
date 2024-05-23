@@ -148,6 +148,119 @@ tolerations: []
 # Affinity settings for controlling pod scheduling
 affinity: {}
 
+initContainers: []
+  # - name: init-myservice
+  #   image: busybox
+  #   command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+
+# Configuration for Home Assistant
+configuration:
+  # Enable or disable the configuration setup for Home Assistant
+  enabled: false
+  # Force init will merge the current configuration file with the default configuration on every start
+  # This is useful when you want to ensure that the configuration file is always up to date
+  forceInit: false
+  # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
+  # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
+  trusted_proxies:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+    - 127.0.0.0/8
+  # Template for the configuration.yaml file
+  # Used the `tpl` function to render the template, so you can use Go template functions
+  templateConfig: |-
+    # Loads default set of integrations. Do not remove.
+    default_config:
+
+    {{- if .Values.ingress.enabled }}
+    http:
+      use_x_forwarded_for: true
+      trusted_proxies:
+        {{- range .Values.configuration.trusted_proxies }}
+        - {{ . }}
+        {{- end }}
+    {{- end}}
+    # Load frontend themes from the themes folder
+    frontend:
+      themes: !include_dir_merge_named themes
+
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+
+  # Init script for the Home Assistant initialization, you can use Go template functions
+  # Script is executed before the Home Assistant container starts and is used to prepare the configuration
+  # Will be executed only if the configuration.enabled is set to true
+  initScript: |-
+    #!/bin/bash
+    set -e
+
+    # Check if the configuration file exists
+    if [ ! -f /config/configuration.yaml ]; then
+      echo "Configuration file not found, creating a new one"
+      cp /config-templates/configuration.yaml /config/configuration.yaml
+    fi
+
+    # Check if the force init is enabled
+    forceInit="{{ .Values.configuration.forceInit }}"
+    if [ "$forceInit" = "true" ]; then
+      echo "Force init is enabled, overwriting the configuration file"
+      current_time=$(date +%Y%m%d_%H%M%S)
+      echo "Backup the current configuration file to configuration.yaml.$current_time"
+      cp /config/configuration.yaml /config/configuration.yaml.$current_time
+      echo "The current configuration file will be merged with the default configuration file with this content:"
+      cat /config-templates/configuration.yaml
+      if [[ ! -s /config/configuration.yaml ]]; then
+        # If /config/configuration.yaml is empty, use the content of /config-templates/configuration.yaml
+        cat /config-templates/configuration.yaml > /config/configuration.yaml
+      else
+        # Perform the merge operation if /config/configuration.yaml is not empty
+        yq eval-all --inplace 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
+      fi
+    fi
+
+    # Check if the automations file exists
+    if [ ! -f /config/automations.yaml ]; then
+      echo "Automations file not found, creating a new one"
+      touch /config/automations.yaml
+      echo "[]" >> /config/automations.yaml
+    fi
+
+    # Check if the scripts file exists
+    if [ ! -f /config/scripts.yaml ]; then
+      echo "Scripts file not found, creating a new one"
+      touch /config/scripts.yaml
+    fi
+
+    # Check if the scenes file exists
+    if [ ! -f /config/scenes.yaml ]; then
+      echo "Scenes file not found, creating a new one"
+      touch /config/scenes.yaml
+    fi
+
+  initContainer:
+    name: setup-config
+    image: mikefarah/yq:4
+    securityContext:
+      runAsUser: 0
+    command: ["/bin/sh", "-c"]
+    args:
+    - /bin/sh /mnt/init/init.sh
+    # env:
+    # - name: FORCE_INIT
+    #   valueFrom:
+    #     configMapKeyRef:
+    #       name: init-script
+    #       key: forceInit
+    # Home Assistant configuration volume will be mounted to /config automatically
+    volumeMounts:
+      - name: init-volume
+        mountPath: /mnt/init/init.sh
+        subPath: init.sh
+      - name: config-volume
+        mountPath: /config-templates
+
 # Persistence values for the Home Assistant instance
 persistence:
   # Enable or disable persistence
