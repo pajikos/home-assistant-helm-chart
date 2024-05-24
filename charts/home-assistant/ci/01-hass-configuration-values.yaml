@@ -1,0 +1,4 @@
+# test case 01: Test the default values of the configuration
+configuration:
+  enabled: true
+  forceInit: false

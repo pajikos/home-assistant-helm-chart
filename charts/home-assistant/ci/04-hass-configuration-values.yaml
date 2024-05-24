@@ -1,0 +1,8 @@
+# Test case 04: Test for setting custom trusted_proxies and use_x_forwarded_for
+ingress:
+  enabled: true
+configuration:
+  enabled: true
+  forceInit: true
+  trusted_proxies:
+    - 172.16.100.0/24

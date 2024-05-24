@@ -1,0 +1,5 @@
+# Test case 02: Test for setting trusted_proxies and use_x_forwarded_for
+ingress:
+  enabled: true
+configuration:
+  enabled: true
