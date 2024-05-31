@@ -1,0 +1,4 @@
+# test case 03: Test the configuration with forceInit set to true
+configuration:
+  enabled: true
+  forceInit: true

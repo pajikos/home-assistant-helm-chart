@@ -1,0 +1,12 @@
+# Test case 05: Test for setting custom template configuration and init script
+configuration:
+  enabled: true
+  forceInit: false
+  templateConfig: |-
+    default_config:
+    automation: !include automations.yaml
+    script: !include scripts.yaml
+    scene: !include scenes.yaml
+  initScript: |-
+    #!/bin/bash
+    echo "Custom trusted proxies init script"
