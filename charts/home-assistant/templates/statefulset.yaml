@@ -105,6 +105,9 @@ spec:
           volumeMounts:
           - mountPath: /config
             name: {{ include "home-assistant.fullname" . }}
+          {{- if .Values.addons.codeserver.additionalMounts }}
+            {{- .Values.addons.codeserver.additionalMounts | toYaml | nindent 10 }}
+          {{- end }}
         {{- end }}
       {{- if or (.Values.configuration.enabled) .Values.initContainers }}
       initContainers:
