@@ -348,3 +348,7 @@ addons:
               pathType: ImplementationSpecific
       # Ingress TLS configuration
       tls: []
+    # if you need any additional volume mounts, you can define them here
+    additionalMounts: []
+      # - mountPath: /home/coder/.ssh/id_rsa
+      #   name: id-rsa
