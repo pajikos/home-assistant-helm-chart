@@ -1,0 +1,13 @@
+# Addons configuration for additional services
+addons:
+  # Code-server addon configuration
+  codeserver:
+    # if you need any additional volume mounts, you can define them here
+    additionalMounts:
+      - mountPath: /home/coder/.ssh/id_rsa
+        name: id-rsa
+
+# empty dir volume for id_rsa
+additionalVolumes:
+  - name: id-rsa
+    emptyDir: {}
