@@ -305,6 +305,35 @@ additionalServices: []
 #    protocol: TCP
 #    nodePort: 30124
 
+livenessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
+    scheme: HTTP
+  periodSeconds: 20
+  successThreshold: 1
+  timeoutSeconds: 2
+readinessProbe:
+  failureThreshold: 3
+  httpGet:
+    path: /
+    port: http
+    scheme: HTTP
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 1
+startupProbe: {}
+  # initialDelaySeconds: 1
+  # periodSeconds: 5
+  # timeoutSeconds: 1
+  # successThreshold: 1
+  # failureThreshold: 1
+  # httpGet:
+  #   scheme: HTTP
+  #   path: /
+  #   port: http
+
 serviceMonitor:
   # requires HA integration:  https://www.home-assistant.io/integrations/prometheus/
   enabled: false
