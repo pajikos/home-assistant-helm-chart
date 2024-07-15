@@ -67,6 +67,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `env` | Environment variables | `[]` |
 | `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
 | `hostNetwork` | Specifies if the containers should be started in `hostNetwork` mode. | `false` |
+| `dnsPolicy` | Specifies the [`dnsPolicy`](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy) for the pod. | `false` |
 | `hostPort.enabled` | Enable 'hostPort' or not | `false` |
 | `hostPort.port` | Port number | `8123` |
 | `dnsConfig` | Override the default dnsConfig and set your own nameservers or ndots, among other options | `{}` |
