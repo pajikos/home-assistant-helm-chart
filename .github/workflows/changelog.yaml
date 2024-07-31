@@ -24,7 +24,7 @@ jobs:
                     }
                 }
               }
-            commitMode: true
+            mode: "COMMIT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
