@@ -5,7 +5,9 @@ metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
-    release: prometheus-operator
+    {{- with .Values.serviceMonitor.labels }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   endpoints:
     - interval: {{ .Values.serviceMonitor.scrapeInterval }}
