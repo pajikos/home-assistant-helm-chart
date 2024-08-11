@@ -5,15 +5,16 @@ metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
+    release: prometheus-operator
 spec:
   endpoints:
     - interval: {{ .Values.serviceMonitor.scrapeInterval }}
-      targetPort: {{ .Values.service.port }}
+      port: http
       path: /api/prometheus
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
   selector:
     matchLabels:
-      {{- include "home-assistant.labels" . | nindent 6 }}
+      {{- include "home-assistant.selectorLabels" . | nindent 6 }}
 {{- end }}
