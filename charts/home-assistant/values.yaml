@@ -338,6 +338,7 @@ serviceMonitor:
   # requires HA integration:  https://www.home-assistant.io/integrations/prometheus/
   enabled: false
   scrapeInterval: 30s
+  labels: {}
 
 # Addons configuration for additional services
 addons:

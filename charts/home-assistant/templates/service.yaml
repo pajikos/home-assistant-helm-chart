@@ -36,6 +36,9 @@ metadata:
   {{ end }}
 spec:
   type: {{ .type }}
+  {{- if .loadBalancerClass}}
+  loadBalancerClass: {{.loadBalancerClass}}
+  {{- end}}
   ports:
     - port: {{ .port }}
       targetPort: {{ .targetPort }}
