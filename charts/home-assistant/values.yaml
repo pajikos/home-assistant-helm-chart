@@ -74,6 +74,10 @@ hostPort:
 # Required for use auto-discovery feature of Home Assistant
 hostNetwork: false
 
+# Set the dnsPolicy (you'll want ClusterFirstWithHostNet if running on hostNetwork to reac
+# other k8s services via DNS
+# dnsPolicy: ClusterFirst
+
 # Container security context settings
 securityContext:
   {}
