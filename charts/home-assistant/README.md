@@ -1,3 +1,10 @@
+# Local Development Adoptions
+
+
+```console
+$  helm upgrade home-assistant-rpu home-assistant --values home-assistant/values.yaml
+```
+
 # Helm chart for Home Assistant
 
 ![Latest Released Version](https://img.shields.io/github/v/tag/pajikos/home-assistant-helm-chart?sort=semver)
