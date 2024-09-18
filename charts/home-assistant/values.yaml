@@ -112,13 +112,11 @@ service:
 ingress:
   # Enable ingress for home assistant
   enabled: true
-  className: ""
-  annotations:
-    kubernetes.io/ingress.class: "traefik"
+  className: "traefik"
+  annotations: {}
     # kubernetes.io/tls-acme: "true"
   hosts:
-    #- host: chart-example.local
-    -  paths:
+    - paths:
         - path: /
           pathType: ImplementationSpecific
   tls: []
@@ -157,15 +155,14 @@ initContainers: []
 # Configuration for Home Assistant
 configuration:
   # Enable or disable the configuration setup for Home Assistant
-  enabled: false
+  enabled: true
   # Force init will merge the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
   forceInit: false
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   trusted_proxies:
-    - 10.0.0.0/8
-    - 172.16.0.0/12
+    - 10.42.0.0/16 # rpu internal address- how to dynamically configure
     - 192.168.0.0/16
     - 127.0.0.0/8
   # Template for the configuration.yaml file
@@ -346,7 +343,7 @@ addons:
   # Code-server addon configuration
   codeserver:
     # Enable or disable the code-server addon
-    enabled: false
+    enabled: true
     # Resource settings for the code-server container
     resources: {}
     # Image settings for the code-server addon
@@ -366,16 +363,15 @@ addons:
     # Ingress settings for the code-server addon
     ingress:
       # Enable or disable the ingress for the code-server addon
-      enabled: false
+      enabled: true
       # Ingress class name
-      className: ""
+      className: "traefik"
       # Ingress annotations
       annotations: {}
       # Ingress hosts configuration
       hosts:
-        - host: chart-example.local
-          paths:
-            - path: /
+        - paths:
+            - path: /code
               pathType: ImplementationSpecific
       # Ingress TLS configuration
       tls: []
