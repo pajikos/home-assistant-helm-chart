@@ -162,7 +162,7 @@ configuration:
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   trusted_proxies:
-    - 10.42.0.0/16 # rpu internal address- how to dynamically configure
+    - 10.0.0.0/8 # rpu internal address- how to dynamically configure
     - 192.168.0.0/16
     - 127.0.0.0/8
   # Template for the configuration.yaml file
@@ -262,7 +262,7 @@ configuration:
 # Persistence values for the Home Assistant instance
 persistence:
   # Enable or disable persistence
-  enabled: false
+  enabled: true
   # Access mode for the persistent volume claim
   accessMode: ReadWriteOnce
   # Size of the persistent volume claim

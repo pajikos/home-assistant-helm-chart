@@ -2,8 +2,15 @@
 
 
 ```console
-$  helm upgrade home-assistant-rpu home-assistant --values home-assistant/values.yaml
+$  helm upgrade home-assistant-rpu home-assistant --values home-assistant/values.yaml --install 
 ```
+
+## Copy Backup to k8s
+
+```bash
+$  kubectl cp ./backup/core_2024_9_1/homeassistant/data/ homeassistant/home-assistant-rpu-0:/config-bu -c home-assistant
+```
+
 
 # Helm chart for Home Assistant
 
