@@ -284,11 +284,9 @@ persistence:
 
 # if you need any additional volumes, you can define them here
 additionalVolumes: []
-   - hostPath:
-       path: >-
-         /dev/ttyUSB0
-       type: CharDevice
-     name: usb
+   - name: zigbee-usb
+     hostPath:
+       path: /dev/ttyUSB0
 # if you need any additional volume mounts, you can define them here
 additionalMounts: []
   # - mountPath: /dev/ttyACM0
