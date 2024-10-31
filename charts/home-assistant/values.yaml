@@ -284,11 +284,11 @@ persistence:
 
 # if you need any additional volumes, you can define them here
 additionalVolumes: []
-  # - hostPath:
-  #     path: >-
-  #       /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
-  #     type: CharDevice
-  #   name: usb
+   - hostPath:
+       path: >-
+         /dev/ttyUSB0
+       type: CharDevice
+     name: usb
 # if you need any additional volume mounts, you can define them here
 additionalMounts: []
   # - mountPath: /dev/ttyACM0
