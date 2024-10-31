@@ -66,7 +66,7 @@ envFrom: []
 
 hostPort:
   # Enable 'hostPort' or not
-  enabled: false
+  enabled: true
   port: 8123
 
 # Specifies if the containers should be started in hostNetwork mode.
@@ -268,11 +268,11 @@ configuration:
 # Persistence values for the Home Assistant instance
 persistence:
   # Enable or disable persistence
-  enabled: false
+  enabled: true
   # Access mode for the persistent volume claim
   accessMode: ReadWriteOnce
   # Size of the persistent volume claim
-  size: 5Gi
+  size: 10Gi
   # Storage class for the persistent volume claim
   storageClass: ""
   # Name of the existing volume claim for the stateful set, this option can be used to use existing volumes
