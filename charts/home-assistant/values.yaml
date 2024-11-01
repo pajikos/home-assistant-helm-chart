@@ -283,10 +283,12 @@ persistence:
   matchExpressions: {}
 
 # if you need any additional volumes, you can define them here
-additionalVolumes: []
-#  - name: zigbee-usb
-#     hostPath:
-#       path: /dev/ttyUSB0
+additionalVolumes:
+  - hostPath:
+      path: >-
+        /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_a846b9666112ef11a35f78b8bf9df066-if00-port0
+      type: CharDevice
+    name: usb
 # if you need any additional volume mounts, you can define them here
 additionalMounts: []
   # - mountPath: /dev/ttyACM0
