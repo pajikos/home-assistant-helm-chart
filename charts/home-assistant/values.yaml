@@ -172,8 +172,8 @@ configuration:
   notify:
     - name: pushover
       platform: pushover
-      api_key: {{ .Values.env.PUSHOVER_APP_KEY }}
-      user_key: {{ .Values.env.PUSHOVER_USER_KEY }}
+      api_key: ${PUSHOVER_APP_KEY}
+      user_key: ${PUSHOVER_USER_KEY}
       
   trusted_proxies:
     - 10.0.0.0/8
