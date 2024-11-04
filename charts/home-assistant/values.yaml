@@ -63,7 +63,7 @@ env:
        key: pushover-user       
 
 # Use environment variables from ConfigMaps or Secrets
-envFrom:[]
+envFrom: []
 # - configMapRef:
 #     name: config-map-name   
 
