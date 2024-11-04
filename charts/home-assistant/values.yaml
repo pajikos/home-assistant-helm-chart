@@ -80,7 +80,7 @@ hostNetwork: false
 
 # Container security context settings
 securityContext:
-  {}
+  privileged: true
   # capabilities:
   #   drop:
   #   - ALL
