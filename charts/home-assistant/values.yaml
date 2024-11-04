@@ -43,7 +43,7 @@ podSecurityContext:
   # fsGroupChangePolicy: "OnRootMismatch"
 
 # Environment variables
-env: []
+env:
 # - name: TZ
 #   value: Europe/Prague
 # - name: SOME_VAR_FROM_CONFIG_MAP
@@ -51,18 +51,21 @@ env: []
 #     configMapRef:
 #       name: configmap-name
 #       key: config-key
-# - name: SOME_SECRET
-#   valueFrom:
-#     secretKeyRef:
-#       name: secret-name
-#       key: secret-key
+ - name: PUSHOVER_APP_KEY
+    valueFrom:
+      secretKeyRef:
+        name: pushover-app-key   # Name of the secret
+        key: pushover-app
+ - name: PUSHOVER_USER_KEY
+    valueFrom:
+      secretKeyRef:
+        name: pushover-user-key   # Name of the secret
+        key: pushover-user       
 
 # Use environment variables from ConfigMaps or Secrets
-envFrom: []
+envFrom:[]
 # - configMapRef:
-#     name: config-map-name
-# - secretRef:
-#     name: secret-name
+#     name: config-map-name   
 
 hostPort:
   # Enable 'hostPort' or not
