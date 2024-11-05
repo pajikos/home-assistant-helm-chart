@@ -113,17 +113,6 @@ service:
   # Annotations to add to the service
   annotations: {}
 
-nodePortService:
-  enabled: true
-  # Define the NodePort service type
-  type: NodePort
-  # Set the nodePort manually or leave it empty to let Kubernetes assign one
-  nodePort: 30080
-  # Define the service port for NodePort (should match the main service port)
-  port: 8123
-  # Additional annotations if needed
-  annotations: {}  
-
 # Ingress settings
 ingress:
   # Enable ingress for home assistant
