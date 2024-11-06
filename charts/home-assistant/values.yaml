@@ -172,7 +172,7 @@ initContainers:
     command: ["bash", "-c", "cd /config && wget -O - https://get.hacs.xyz | bash -"]
     volumeMounts:
       - mountPath: /config
-        name: home-assistant
+        name: flora-home-assistant-flora-home-assistant-0
   # - name: init-myservice
   #   image: busybox
   #   command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
