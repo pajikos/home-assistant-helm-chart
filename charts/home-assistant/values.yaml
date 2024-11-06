@@ -166,7 +166,7 @@ tolerations: []
 # Affinity settings for controlling pod scheduling
 affinity: {}
 
-initContainers:[]
+initContainers: []
   # - name: init-hacs
   #   image: bash
   #   command: ["bash", "-c", "cd /config && wget -O - https://get.hacs.xyz | bash -"]
