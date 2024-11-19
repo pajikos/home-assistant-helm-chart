@@ -33,9 +33,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      {{- if .Values.serviceAccount.create }}
-      serviceAccountName: {{ .Values.serviceAccount.name | default (include "home-assistant.serviceAccountName" .) }}
-      {{- end }}
+      serviceAccountName: {{ include "home-assistant.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
     {{- if .Values.dnsConfig }}
