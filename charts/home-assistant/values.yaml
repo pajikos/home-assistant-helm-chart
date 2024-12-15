@@ -129,6 +129,7 @@ ingress:
   # Enable ingress for home assistant
   enabled: false
   className: ""
+  labels: {}
   annotations:
     {}
     # kubernetes.io/ingress.class: nginx
@@ -389,7 +390,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.93.1"
+      tag: "4.95.3"
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
