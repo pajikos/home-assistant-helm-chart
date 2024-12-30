@@ -213,7 +213,7 @@ configuration:
       - platform: mqtt
         name: "Stairs Motion Sensor"
         state_topic: "florahome/florasensornode1"
-        value_template: "{{ value_json.motion }}"
+        value_template: "{{ '{{ value_json.motion }}' }}"
         qos: 1
     {{- if .Values.ingress.enabled }}
     http:
