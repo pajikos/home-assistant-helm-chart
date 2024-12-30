@@ -204,6 +204,17 @@ configuration:
   templateConfig: |-
     # Loads default set of integrations. Do not remove.
     default_config:
+    mqtt:
+      broker: "192.168.0.219"
+      port: 32146
+      username: "florahome"
+      password: "flora_home"
+    sensor:
+      - platform: mqtt
+        name: "Stairs Motion Sensor"
+        state_topic: "florahome/florasensornode1"
+        value_template: "{{ value_json.motion }}"
+        qos: 1
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
