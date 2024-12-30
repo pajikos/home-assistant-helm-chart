@@ -204,13 +204,6 @@ configuration:
   templateConfig: |-
     # Loads default set of integrations. Do not remove.
     default_config:
-    # MQTT Integration
-    mqtt:
-      sensor:
-        - name: "Stairs MQTT Motion"
-          state_topic: "florahome/florasensornode1"
-          value_template: "{{ value_json.motion }}"
-
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
