@@ -182,14 +182,8 @@ initContainers:
 
 # Configuration for Home Assistant
 configuration:
-  mqtt:
-    sensor:
-      - name: "Stairs MQTT Motion"
-        state_topic: "florahome/florasensornode1"
-        value_template: "{{ value_json.motion }}"
-        unique_id: mqtt_stairs_motion
   # Enable or disable the configuration setup for Home Assistant
-  enabled: false
+  enabled: true
   # Force init will merge the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
   forceInit: false
@@ -200,7 +194,12 @@ configuration:
       platform: pushover
       api_key: ${PUSHOVER_APP_KEY}
       user_key: ${PUSHOVER_USER_KEY}
-      
+  mqtt:
+    sensor:
+      - name: "Stairs MQTT Motion"
+        state_topic: "florahome/florasensornode1"
+        value_template: "{{ value_json.motion }}"
+        unique_id: mqtt_stairs_motion    
   trusted_proxies:
     - 10.0.0.0/8
     - 172.16.0.0/12
