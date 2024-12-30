@@ -193,56 +193,7 @@ configuration:
     - name: pushover
       platform: pushover
       api_key: ${PUSHOVER_APP_KEY}
-      user_key: ${PUSHOVER_USER_KEY}
-  mqtt:  
-  broker: 192.168.0.219  
-  port: 32146  
-  client_id: home-assistant-1  
-  username: florahome  
-  password: flora_home  
-  
-  light:  
-    - platform: mqtt_json  
-      name: "SN1 LED"  
-      state_topic: "florahome/florasensornode1"  
-      command_topic: "florahome/florasensornode1/set"  
-      brightness: true  
-      flash: true  
-      rgb: true  
-      optimistic: false  
-      qos: 0  
-  
-  
-  sensor:  
-    - platform: mqtt  
-      state_topic: "florahome/florasensornode1"  
-      name: "SN1 Humidity"  
-      unit_of_measurement: "%"  
-      value_template: '{{ value_json.humidity | round(1) }}'  
-  
-    - platform: mqtt  
-      state_topic: "florahome/florasensornode1"  
-      name: "SN1 LDR"
-      ##This sensor is not calibrated to actual LUX. Rather, this a map of the input voltage ranging from 0 - 1023.
-      unit_of_measurement: "LUX"  
-      value_template: '{{ value_json.ldr }}'  
-  
-    - platform: mqtt  
-      state_topic: "florahome/florasensornode1"  
-      name: "SN1 PIR"  
-      value_template: '{{ value_json.motion }}'  
-  
-    - platform: mqtt  
-      state_topic: "florahome/florasensornode1"  
-      name: "SN1 Temperature"  
-      unit_of_measurement: "°F"  
-      value_template: '{{ value_json.temperature | round(1) }}'  
-
-    - platform: mqtt
-      state_topic: "florahome/florasensornode1"
-      name: "SN1 Real Feel"
-      unit_of_measurement: "°F"
-      value_template: '{{ value_json.heatIndex | round(1) }}'    
+      user_key: ${PUSHOVER_USER_KEY}     
   trusted_proxies:
     - 10.0.0.0/8
     - 172.16.0.0/12
@@ -253,6 +204,12 @@ configuration:
   templateConfig: |-
     # Loads default set of integrations. Do not remove.
     default_config:
+    # MQTT Integration
+    mqtt:
+      sensor:
+        - name: "Stairs MQTT Motion"
+          state_topic: "florahome/florasensornode1"
+          value_template: "{{ value_json.motion }}"
 
     {{- if .Values.ingress.enabled }}
     http:
