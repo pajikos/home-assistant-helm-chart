@@ -182,6 +182,12 @@ initContainers:
 
 # Configuration for Home Assistant
 configuration:
+  mqtt:
+    sensor:
+      - name: "Stairs MQTT Motion"
+        state_topic: "florahome/florasensornode1"
+        value_template: "{{ value_json.motion }}"
+        unique_id: mqtt_stairs_motion
   # Enable or disable the configuration setup for Home Assistant
   enabled: false
   # Force init will merge the current configuration file with the default configuration on every start
