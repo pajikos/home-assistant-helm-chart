@@ -186,14 +186,14 @@ configuration:
   enabled: true
   # Force init will merge the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
-  forceInit: false
+  forceInit: true
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   notify:
     - name: pushover
       platform: pushover
       api_key: ${PUSHOVER_APP_KEY}
-      user_key: ${PUSHOVER_USER_KEY}     
+      user_key: ${PUSHOVER_USER_KEY}    
   trusted_proxies:
     - 10.0.0.0/8
     - 172.16.0.0/12
@@ -205,16 +205,7 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
     mqtt:
-      broker: "192.168.0.219"
-      port: 32146
-      username: "florahome"
-      password: "flora_home"
-    sensor:
-      - platform: mqtt
-        name: "Stairs Motion Sensor"
-        state_topic: "florahome/florasensornode1"
-        value_template: "{{ `{{ value_json.motion }}` }}"
-        qos: 1
+      discovery_prefix: florahome
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
