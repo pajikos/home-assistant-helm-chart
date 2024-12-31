@@ -204,7 +204,7 @@ configuration:
   templateConfig: |-
     # Loads default set of integrations. Do not remove.
     default_config:
-      mqtt:
+    mqtt:
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
