@@ -205,12 +205,6 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
       mqtt:
-        broker: 192.168.0.219
-        port: 32146
-        username: florahome
-        password: flora_home
-        discovery: true
-        discovery_prefix: florahome
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
