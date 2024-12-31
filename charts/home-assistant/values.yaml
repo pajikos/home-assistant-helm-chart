@@ -209,7 +209,7 @@ configuration:
       - platform: mqtt  
         state_topic: "florahome/florasensornode1"  
         name: "SN1 PIR"  
-        value_template: '{{ value_json.motion }}'
+        value_template: "{{ `{{ value_json.motion }}` }}"
     {{- if .Values.ingress.enabled }}
     http:
       use_x_forwarded_for: true
