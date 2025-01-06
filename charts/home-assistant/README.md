@@ -62,6 +62,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `serviceAccount.create` | Specifies whether a service account should be created | `true` |
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
 | `serviceAccount.name` | The name of the service account to use | `""` |
+| `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `podAnnotations` | Annotations to add to the pod | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
 | `env` | Environment variables | `[]` |
