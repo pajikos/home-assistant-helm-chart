@@ -63,6 +63,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
 | `serviceAccount.name` | The name of the service account to use | `""` |
 | `podAnnotations` | Annotations to add to the pod | `{}` |
+| `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
 | `env` | Environment variables | `[]` |
 | `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
