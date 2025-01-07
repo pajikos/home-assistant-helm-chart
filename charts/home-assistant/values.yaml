@@ -387,3 +387,6 @@ addons:
     additionalMounts: []
       # - mountPath: /home/coder/.ssh/id_rsa
       #   name: id-rsa
+
+# Annotations to add to the stateful set
+statefulSetAnnotations: {}
