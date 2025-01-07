@@ -2,6 +2,30 @@ apiVersion: v1
 entries:
   home-assistant:
   - apiVersion: v2
+    appVersion: 2025.1.1
+    created: "2025-01-07T10:07:43.915989159Z"
+    description: Automatically Updated Helm Chart for Home Assistant
+    digest: 587e37ff6c7db14ef2c6308c7bba6003edb7a9381596b21f5f65d9459fc0885e
+    home: https://github.com/pajikos/home-assistant-helm-chart
+    icon: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/519px-Home_Assistant_Logo.svg.png
+    keywords:
+    - home-assistant
+    - hass
+    - homeassistant
+    kubeVersion: '>=1.16.0-0'
+    maintainers:
+    - email: sklenar.pav@gmail.com
+      name: pajikos
+    name: home-assistant
+    sources:
+    - https://github.com/pajikos/home-assistant-helm-chart
+    - https://github.com/cdr/code-server
+    - https://github.com/pajikos/home-assistant-helm-chart/tree/main/charts/home-assistant
+    type: application
+    urls:
+    - https://github.com/pajikos/home-assistant-helm-chart/releases/download/home-assistant-0.2.99/home-assistant-0.2.99.tgz
+    version: 0.2.99
+  - apiVersion: v2
     appVersion: 2025.1.0
     created: "2025-01-07T08:17:13.525992612Z"
     description: Automatically Updated Helm Chart for Home Assistant
@@ -2388,4 +2412,4 @@ entries:
     urls:
     - https://github.com/pajikos/home-assistant-helm-chart/releases/download/home-assistant-0.1.40/home-assistant-0.1.40.tgz
     version: 0.1.40
-generated: "2025-01-07T08:17:13.526360169Z"
+generated: "2025-01-07T10:07:43.917153172Z"
