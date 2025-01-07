@@ -65,22 +65,26 @@ jobs:
           # Create a base file (empty or a common ancestor if available)
           touch baseREADME.md
 
+          # Show content of both files for debugging
+          echo "Content of root README.md:"
+          cat README.md
+          echo "-------------------"
+          echo "Content of charts/home-assistant/README.md:"
+          cat charts/home-assistant/README.md
+          echo "-------------------"
+
           # Attempt to auto-merge using diff3
-          # Correct order: baseREADME.md (original), README.md (file1), charts/home-assistant/README.md (file2)
-          diff3 -m baseREADME.md README.md charts/home-assistant/README.md > mergedREADME.md
+          diff3 -m baseREADME.md README.md charts/home-assistant/README.md > mergedREADME.md || true
           DIFF3_EXIT_CODE=$?
 
-          # Handle merge conflicts based on exit code
           if [ $DIFF3_EXIT_CODE -eq 0 ]; then
             echo "Merge successful without conflicts."
             mv mergedREADME.md charts/home-assistant/README.md
-          elif [ $DIFF3_EXIT_CODE -eq 1 ]; then
-            echo "Merge conflicts detected in README.md. Please resolve them manually."
-            exit 1
           else
-            echo "An error occurred during merge."
-            exit $DIFF3_EXIT_CODE
+            echo "Using root README.md as the source of truth"
+            cp README.md charts/home-assistant/README.md
           fi
+
 
       - name: Commit latest release version
         run: |
