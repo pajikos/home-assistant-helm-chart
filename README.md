@@ -91,7 +91,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
 | `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
-| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `true` |
+| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `false` |
 | `configuration.trusted_proxies` | List of trusted proxies in CIDR notation | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
 | `configuration.templateConfig` | Template for the `configuration.yaml` file | See Advanced Configuration |
 | `configuration.initScript` | Init script for Home Assistant initialization | See values.yaml for the complete configuration options  |
