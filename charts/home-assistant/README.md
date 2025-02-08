@@ -173,7 +173,7 @@ The Home Assistant chart supports the following addons:
 
 ## Additional volumes and volume mounts
 
-To add additional volumes and volume mounts, you can use the `additionalVolumes` and `additionalVolumeMounts` values. The default values are `[]`.
+To add additional volumes and volume mounts, you can use the `additionalVolumes` and `additionalMounts` values. The default values are `[]`.
 Example mounting usb devices:
 
 ```yaml
