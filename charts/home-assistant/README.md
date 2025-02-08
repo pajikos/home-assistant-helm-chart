@@ -88,7 +88,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
-| `additionalVolumeMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
+| `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
 | `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
 | `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `true` |
