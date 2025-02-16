@@ -214,6 +214,12 @@ configuration:
       current_time=$(date +%Y%m%d_%H%M%S)
       echo "Backup the current configuration file to configuration.yaml.$current_time"
       cp /config/configuration.yaml /config/configuration.yaml.$current_time
+      echo "Before cleanup - all backup files:"
+      ls -l /config/configuration.yaml.*
+      echo "Cleaning up - keeping only 10 most recent backups..."
+      ls -t /config/configuration.yaml.* 2>/dev/null | tail -n +11 | xargs -r rm
+      echo "After cleanup - remaining backup files:"
+      ls -l /config/configuration.yaml.*
       echo "The current configuration file will be merged with the default configuration file with this content:"
       cat /config-templates/configuration.yaml
       if [[ ! -s /config/configuration.yaml ]]; then
