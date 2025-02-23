@@ -1,4 +1,5 @@
 {{- if .Values.ingress.enabled -}}
+{{- include "home-assistant.validateIngress" . }}
 {{- $fullName := include "home-assistant.fullname" . -}}
 {{- $svcPort := .Values.service.port -}}
 {{- if and .Values.ingress.className (not (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion)) }}
