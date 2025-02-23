@@ -60,3 +60,12 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+{{/*
+Validate ingress configuration
+*/}}
+{{- define "home-assistant.validateIngress" -}}
+{{- if and .Values.ingress.enabled .Values.ingress.external -}}
+{{- fail "ingress.enabled and ingress.external cannot both be true" -}}
+{{- end -}}
+{{- end -}}

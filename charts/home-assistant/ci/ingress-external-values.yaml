@@ -1,0 +1,3 @@
+ingress:
+  enabled: false
+  external: true

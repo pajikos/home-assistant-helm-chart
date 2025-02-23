@@ -114,6 +114,8 @@ service:
 ingress:
   # Enable ingress for home assistant
   enabled: false
+  # Enable external ingress (cannot be true when ingress.enabled is true)
+  external: false
   className: ""
   labels: {}
   annotations:
@@ -178,7 +180,7 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
 
-    {{- if .Values.ingress.enabled }}
+    {{- if or .Values.ingress.enabled .Values.ingress.external }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
