@@ -50,64 +50,66 @@ The following table lists the configurable parameters of the Home Assistant char
 
 This document provides detailed configuration options for the Home Assistant Helm chart.
 
-| Parameter | Description | Default |
-| --------- | ----------- | ------- |
-| `replicaCount` | Number of replicas for the deployment | `1` |
-| `image.repository` | Repository for the Home Assistant image | `ghcr.io/home-assistant/home-assistant` |
-| `image.pullPolicy` | Image pull policy | `IfNotPresent` |
-| `image.tag` | Overrides the image tag (default is the chart appVersion) | `""` |
-| `image.imagePullSecrets` | List of imagePullSecrets for private image repositories | `[]` |
-| `nameOverride` | Override the default name of the Helm chart | `""` |
-| `fullnameOverride` | Override the default full name of the Helm chart | `""` |
-| `serviceAccount.create` | Specifies whether a service account should be created | `true` |
-| `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
-| `serviceAccount.name` | The name of the service account to use | `""` |
-| `podAnnotations` | Annotations to add to the pod | `{}` |
-| `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
-| `podSecurityContext` | Pod security context settings | `{}` |
-| `env` | Environment variables | `[]` |
-| `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
-| `hostNetwork` | Specifies if the containers should be started in `hostNetwork` mode. | `false` |
+| Parameter | Description                                                                                                                         | Default |
+| --------- |-------------------------------------------------------------------------------------------------------------------------------------| ------- |
+| `replicaCount` | Number of replicas for the deployment                                                                                               | `1` |
+| `image.repository` | Repository for the Home Assistant image                                                                                             | `ghcr.io/home-assistant/home-assistant` |
+| `image.pullPolicy` | Image pull policy                                                                                                                   | `IfNotPresent` |
+| `image.tag` | Overrides the image tag (default is the chart appVersion)                                                                           | `""` |
+| `image.imagePullSecrets` | List of imagePullSecrets for private image repositories                                                                             | `[]` |
+| `nameOverride` | Override the default name of the Helm chart                                                                                         | `""` |
+| `fullnameOverride` | Override the default full name of the Helm chart                                                                                    | `""` |
+| `serviceAccount.create` | Specifies whether a service account should be created                                                                               | `true` |
+| `serviceAccount.annotations` | Annotations to add to the service account                                                                                           | `{}` |
+| `serviceAccount.name` | The name of the service account to use                                                                                              | `""` |
+| `podAnnotations` | Annotations to add to the pod                                                                                                       | `{}` |
+| `statefulSetAnnotations` | Annotations to add to the StatefulSet                                                                                               | `{}` |
+| `podSecurityContext` | Pod security context settings                                                                                                       | `{}` |
+| `env` | Environment variables                                                                                                               | `[]` |
+| `envFrom` | Use environment variables from ConfigMaps or Secrets                                                                                | `[]` |
+| `hostNetwork` | Specifies if the containers should be started in `hostNetwork` mode.                                                                | `false` |
 | `dnsPolicy` | Specifies the [`dnsPolicy`](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/#pod-s-dns-policy) for the pod. | `false` |
-| `hostPort.enabled` | Enable 'hostPort' or not | `false` |
-| `hostPort.port` | Port number | `8123` |
-| `dnsConfig` | Override the default dnsConfig and set your own nameservers or ndots, among other options | `{}` |
-| `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
-| `service.port` | Service port | `8080` |
-| `service.annotations` | Annotations to add to the service | `{}` |
-| `ingress.enabled` | Enable ingress for Home Assistant | `false` |
-| `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
-| `resources` | Resource settings for the container | `{}` |
-| `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
-| `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
-| `affinity` | Affinity settings for controlling pod scheduling | `{}` |
-| `persistence.enabled` | Enables the creation of a Persistent Volume Claim (PVC) for Home Assistant. | `false` |
-| `persistence.accessMode` | The access mode of the PVC. | `ReadWriteOnce` |
-| `persistence.size` | The size of the PVC to create. | `5Gi` |
-| `persistence.storageClass` | The storage class to use for the PVC. If empty, the default storage class is used. | `""` |
-| `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning. | `""` |
-| `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
-| `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
-| `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
-| `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
-| `initContainers` | List of initialization containers | `[]` |
-| `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
-| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `false` |
-| `configuration.trusted_proxies` | List of trusted proxies in CIDR notation | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
-| `configuration.templateConfig` | Template for the `configuration.yaml` file | See Advanced Configuration |
-| `configuration.initScript` | Init script for Home Assistant initialization | See values.yaml for the complete configuration options  |
-| `configuration.initContainer` | Configuration for the init container | See values.yaml for the complete configuration options |
-| `addons.codeserver.enabled` | Enable or disable the code-server addon | `false` |
-| `addons.codeserver.resources` | Resource settings for the code-server container | `{}` |
-| `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
-| `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image | `IfNotPresent` |
-| `addons.codeserver.image.tag` | Tag for the code-server image | `latest released version, automatically updated` |
-| `addons.codeserver.service.type` | Service type for the code-server addon | `ClusterIP` |
-| `addons.codeserver.service.port` | Service port for the code-server addon | `12321` |
-| `addons.codeserver.ingress.enabled` | Enable or disable the ingress for the code-server addon | `false` |
-| `addons.codeserver.ingress.hosts` | Hosts for the code-server addon | `[]` |
-| `addons.codeserver.ingress.tls` | TLS settings for the code-server addon | `[]` |
-| `addons.codeserver.ingress.annotations` | Annotations for the code-server addon | `{}` |
+| `hostPort.enabled` | Enable 'hostPort' or not                                                                                                            | `false` |
+| `hostPort.port` | Port number                                                                                                                         | `8123` |
+| `dnsConfig` | Override the default dnsConfig and set your own nameservers or ndots, among other options                                           | `{}` |
+| `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)                                                                   | `ClusterIP` |
+| `service.port` | Service port                                                                                                                        | `8080` |
+| `service.annotations` | Annotations to add to the service                                                                                                   | `{}` |
+| `ingress.enabled` | Enable ingress for Home Assistant                                                                                                   | `false` |
+| `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true)                                                               | `false` |
+| `resources` | Resource settings for the container                                                                                                 | `{}` |
+| `nodeSelector` | Node selector settings for scheduling the pod on specific nodes                                                                     | `{}` |
+| `tolerations` | Tolerations settings for scheduling the pod based on node taints                                                                    | `[]` |
+| `affinity` | Affinity settings for controlling pod scheduling                                                                                    | `{}` |
+| `persistence.enabled` | Enables the creation of a Persistent Volume Claim (PVC) for Home Assistant.                                                         | `false` |
+| `persistence.accessMode` | The access mode of the PVC.                                                                                                         | `ReadWriteOnce` |
+| `persistence.size` | The size of the PVC to create.                                                                                                      | `5Gi` |
+| `persistence.storageClass` | The storage class to use for the PVC. If empty, the default storage class is used.                                                  | `""` |
+| `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning.                                           | `""` |
+| `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume.                                                             | `{}` |
+| `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume.                                                        | `{}` |
+| `additionalVolumes` | Additional volumes to be mounted in the home assistant container                                                                    | `[]` |
+| `additionalMounts` | Additional volume mounts to be mounted in the home assistant container                                                              | `[]` |
+| `initContainers` | List of initialization containers                                                                                                   | `[]` |
+| `configuration.enabled` | Enable or disable the configuration setup for Home Assistant                                                                        | `false` |
+| `configuration.forceInit` | Force init will set the current configuration file with the default configuration on every start                                    | `false` |
+| `configuration.mergeConfig` | Will merge the current configuration file with the default configuration on every start                                             | `true` |
+| `configuration.trusted_proxies` | List of trusted proxies in CIDR notation                                                                                            | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
+| `configuration.templateConfig` | Template for the `configuration.yaml` file                                                                                          | See Advanced Configuration |
+| `configuration.useExistingConfigMap` | ConfigMap to use for the `configuration.yaml` file                                                                                  | See Advanced Configuration |
+| `configuration.initScript` | Init script for Home Assistant initialization                                                                                       | See values.yaml for the complete configuration options  |
+| `configuration.initContainer` | Configuration for the init container                                                                                                | See values.yaml for the complete configuration options |
+| `addons.codeserver.enabled` | Enable or disable the code-server addon                                                                                             | `false` |
+| `addons.codeserver.resources` | Resource settings for the code-server container                                                                                     | `{}` |
+| `addons.codeserver.image.repository` | Repository for the code-server image                                                                                                | `ghcr.io/coder/code-server` |
+| `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image                                                                                         | `IfNotPresent` |
+| `addons.codeserver.image.tag` | Tag for the code-server image                                                                                                       | `latest released version, automatically updated` |
+| `addons.codeserver.service.type` | Service type for the code-server addon                                                                                              | `ClusterIP` |
+| `addons.codeserver.service.port` | Service port for the code-server addon                                                                                              | `12321` |
+| `addons.codeserver.ingress.enabled` | Enable or disable the ingress for the code-server addon                                                                             | `false` |
+| `addons.codeserver.ingress.hosts` | Hosts for the code-server addon                                                                                                     | `[]` |
+| `addons.codeserver.ingress.tls` | TLS settings for the code-server addon                                                                                              | `[]` |
+| `addons.codeserver.ingress.annotations` | Annotations for the code-server addon                                                                                               | `{}` |
 
 ## Persistence
 
