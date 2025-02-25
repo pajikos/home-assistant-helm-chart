@@ -96,7 +96,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `configuration.mergeConfig` | Will merge the current configuration file with the default configuration on every start                                             | `true` |
 | `configuration.trusted_proxies` | List of trusted proxies in CIDR notation                                                                                            | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
 | `configuration.templateConfig` | Template for the `configuration.yaml` file                                                                                          | See Advanced Configuration |
-| `configuration.useExistingConfigMap` | ConfigMap to use for the `configuration.yaml` file.                                                                                 | See Advanced Configuration |
+| `configuration.useExistingConfigMap` | ConfigMap to use for the `configuration.yaml` file                                                                                 | See Advanced Configuration |
 | `configuration.initScript` | Init script for Home Assistant initialization                                                                                       | See values.yaml for the complete configuration options  |
 | `configuration.initContainer` | Configuration for the init container                                                                                                | See values.yaml for the complete configuration options |
 | `addons.codeserver.enabled` | Enable or disable the code-server addon                                                                                             | `false` |
