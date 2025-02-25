@@ -76,6 +76,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `service.port` | Service port | `8080` |
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
+| `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -153,10 +154,24 @@ persistence:
 
 > **Note**: When specifying an `existingVolume`, ensure that the PV is not already bound to another PVC, as a PV can only be bound to a single PVC at a time.
 
-
 ## Ingress
 
-To enable ingress for Home Assistant, set `ingress.enabled` to `true`. In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
+The chart provides two mutually exclusive ways to configure ingress:
+
+1. `ingress.enabled`: Traditional Kubernetes ingress configuration
+2. `ingress.external`: For scenarios where the ingress is managed externally
+
+Note: These two options cannot be enabled simultaneously. Attempting to set both to `true` will result in a validation error.
+
+Example configuration:
+
+```yaml
+ingress:
+  enabled: true   # Traditional ingress
+  external: false # External ingress
+```
+
+In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
 The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when ingress is not available in your cluster)
 
 ## HostPort and HostNetwork
