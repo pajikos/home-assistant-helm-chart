@@ -229,10 +229,15 @@ Customize Home Assistant's configuration directly through the Helm chart:
 # Configuration for Home Assistant
 configuration:
   # Enable or disable the configuration setup for Home Assistant
-  enabled: true
-  # Force init will merge the current configuration file with the default configuration on every start
+  enabled: false
+  # Force init will set the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
-  forceInit: true
+  forceInit: false
+  # Will merge the current configuration file with the default configuration on every start
+  mergeConfig: true
+  # The name of the ConfigMap to be used. If this value is set, then this ConfigMap will be used for the
+  # configuration.yaml instead of the ConfigMap rendered from templateConfig.
+  useExistingConfigMap: ""
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   trusted_proxies:

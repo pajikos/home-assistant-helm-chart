@@ -167,7 +167,7 @@ configuration:
 
   # Force init will set the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
-  forceInit: true
+  forceInit: false
 
   # Will merge the current configuration file with the default configuration on every start
   mergeConfig: true
