@@ -21,7 +21,11 @@ spec:
       annotations:
         {{- if .Values.configuration.enabled }}
         checksum/init-script: {{ include (print $.Template.BasePath "/configmap-init-script.yaml") . | sha256sum }}
-        checksum/hass-configuration: {{ include (print $.Template.BasePath "/configmap-hass-config.yaml") . | sha256sum }}
+        {{- if .Values.configuration.useExistingConfigMap }}
+        checksum/{{ .Values.configuration.useExistingConfigMap }}: {{ (lookup "v1" "ConfigMap" .Release.Namespace .Values.configuration.useExistingConfigMap).data | toJson | sha256sum }}
+        {{- else }}
+        checksum/hass-configuration: {{ "hass-configuration" | sha256sum }}
+        {{- end }}
         {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
@@ -174,7 +178,7 @@ spec:
           name: init-script
       - name: config-volume
         configMap:
-          name: hass-configuration
+          name: {{ .Values.configuration.useExistingConfigMap | default "hass-configuration" }}
       {{- end }}
       {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}
