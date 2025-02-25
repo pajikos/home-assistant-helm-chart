@@ -222,7 +222,7 @@ configuration:
     # Check if the force init is enabled
     forceInit="{{ .Values.configuration.forceInit }}"
     mergeConfig="{{ .Values.configuration.mergeConfig }}"
-    
+
     if [ "$forceInit" = "true" ]; then
       echo "Force init is enabled, overwriting the configuration file"
       current_time=$(date +%Y%m%d_%H%M%S)
