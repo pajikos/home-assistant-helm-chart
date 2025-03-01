@@ -165,11 +165,13 @@ configuration:
   # Enable or disable the configuration setup for Home Assistant
   enabled: false
 
-  # Force init will set the current configuration file with the default configuration on every start
-  # This is useful when you want to ensure that the configuration file is always up to date
+  # Force initialization will apply configuration settings (coming either from templateConfig or existingConfigMap) to
+  # the current configuration file each time the system starts. Set mergeConfig: false to completely replace the
+  # existing configuration rather than merging the changes with it.
   forceInit: false
 
-  # Will merge the current configuration file with the default configuration on every start
+  # On each system startup, the current configuration file will be automatically merged with configuration settings
+  # coming from either templateConfig or existingConfigMap.
   mergeConfig: true
 
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
@@ -182,7 +184,7 @@ configuration:
 
   # The name of the ConfigMap to be used. If this value is set, then this ConfigMap will be used for the
   # configuration.yaml instead of the ConfigMap rendered from templateConfig.
-  useExistingConfigMap: ""
+  existingConfigMap: ""
 
   # Template for the configuration.yaml file
   # Used the `tpl` function to render the template, so you can use Go template functions
