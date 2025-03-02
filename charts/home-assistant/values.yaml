@@ -155,6 +155,9 @@ tolerations: []
 # Affinity settings for controlling pod scheduling
 affinity: {}
 
+# Set a priorityClassName on Home Assistant pods
+priorityClassName: ""
+
 initContainers: []
   # - name: init-myservice
   #   image: busybox
