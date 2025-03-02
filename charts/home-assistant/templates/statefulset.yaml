@@ -187,6 +187,10 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: {{ include "home-assistant.fullname" . }}
+      {{- with .Values.persistence.annotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       accessModes:
         - {{ .Values.persistence.accessMode }}

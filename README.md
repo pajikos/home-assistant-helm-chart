@@ -88,6 +88,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning. | `""` |
 | `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
+| `persistence.annotations` | Annotations to add to the PVC. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
 | `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
@@ -150,6 +151,18 @@ persistence:
     - key: "failure-domain.beta.kubernetes.io/zone"
       operator: "In"
       values: ["us-west-1a"]
+```
+
+### PVC Annotations
+
+You can add annotations to the PVC by specifying them in the `persistence.annotations` field. This is useful for backup solutions like k8up that use annotations to identify resources for backup.
+
+```yaml
+persistence:
+  enabled: true
+  annotations:
+    k8up.io/backup: "true"
+    another-annotation: "value"
 ```
 
 > **Note**: When specifying an `existingVolume`, ensure that the PV is not already bound to another PVC, as a PV can only be bound to a single PVC at a time.
