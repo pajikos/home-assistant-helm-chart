@@ -81,6 +81,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
 | `affinity` | Affinity settings for controlling pod scheduling | `{}` |
+| `priorityClassName` | Priority class name for Home Assistant pods | `""` |
 | `persistence.enabled` | Enables the creation of a Persistent Volume Claim (PVC) for Home Assistant. | `false` |
 | `persistence.accessMode` | The access mode of the PVC. | `ReadWriteOnce` |
 | `persistence.size` | The size of the PVC to create. | `5Gi` |
