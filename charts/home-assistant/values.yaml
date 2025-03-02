@@ -277,7 +277,7 @@ configuration:
 # Persistence values for the Home Assistant instance
 persistence:
   # Enable or disable persistence
-  enabled: true
+  enabled: false
   # Access mode for the persistent volume claim
   accessMode: ReadWriteOnce
   # Size of the persistent volume claim
@@ -287,9 +287,9 @@ persistence:
   # Name of the existing volume claim for the stateful set, this option can be used to use existing volumes
   existingVolume: ""
   # Annotations to add to the persistent volume claim
-  annotations:
-    k8up.io/backup: "true"
-    another-annotation: "value"
+  annotations: {}
+  #  k8up.io/backup: "true"
+  #  another-annotation: "value"
   ## Persistent Volume selectors
   ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
   matchLabels: {}
