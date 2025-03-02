@@ -1,3 +1,6 @@
 persistence:
   enabled: true
   size: "10Gi"
+  annotations:
+    backup: "true"
+    second-annotation: "another value"
