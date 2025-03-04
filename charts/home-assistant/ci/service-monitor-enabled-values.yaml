@@ -1,0 +1,8 @@
+serviceMonitor:
+  enabled: true
+  scrapeInterval: 15s
+  labels:
+    release: prometheus
+  bearerToken:
+    secretName: ha-prometheus-token
+    secretKey: token

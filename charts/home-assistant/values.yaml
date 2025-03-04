@@ -355,6 +355,12 @@ serviceMonitor:
   enabled: false
   scrapeInterval: 30s
   labels: {}
+  # Bearer token authentication configuration
+  bearerToken: {}
+    # Name of the secret containing the bearer token
+    # secretName: ""
+    # Key in the secret containing the bearer token
+    # secretKey: ""
 
 # Addons configuration for additional services
 addons:
