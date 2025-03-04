@@ -13,6 +13,11 @@ spec:
     - interval: {{ .Values.serviceMonitor.scrapeInterval }}
       port: http
       path: /api/prometheus
+      {{- if and .Values.serviceMonitor.bearerToken (and .Values.serviceMonitor.bearerToken.secretName .Values.serviceMonitor.bearerToken.secretKey) }}
+      bearerTokenSecret:
+        name: {{ .Values.serviceMonitor.bearerToken.secretName }}
+        key: {{ .Values.serviceMonitor.bearerToken.secretKey }}
+      {{- end }}
   namespaceSelector:
     matchNames:
       - {{ .Release.Namespace }}
