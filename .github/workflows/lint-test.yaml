@@ -22,7 +22,7 @@ jobs:
           check-latest: true
 
       - name: Set up chart-testing
-        uses: helm/chart-testing-action@v2.6.1
+        uses: helm/chart-testing-action@v2.7.0
 
       - name: Run chart-testing (list-changed)
         id: list-changed
@@ -38,10 +38,21 @@ jobs:
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
-        uses: helm/kind-action@v1.11.0
+        uses: helm/kind-action@v1.12.0
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
+
+      # Add explicit test for invalid configuration
+      - name: Test invalid ingress configuration
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          if helm template . --set ingress.enabled=true,ingress.external=true > /dev/null 2>&1; then
+            echo "Error: Template validation should have failed when both ingress types are enabled"
+            exit 1
+          else
+            echo "Successfully caught invalid ingress configuration"
+          fi
 
 

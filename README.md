@@ -63,6 +63,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
 | `serviceAccount.name` | The name of the service account to use | `""` |
 | `podAnnotations` | Annotations to add to the pod | `{}` |
+| `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
 | `env` | Environment variables | `[]` |
 | `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
@@ -75,6 +76,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `service.port` | Service port | `8080` |
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
+| `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -87,10 +89,10 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
-| `additionalVolumeMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
+| `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
 | `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
-| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `true` |
+| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `false` |
 | `configuration.trusted_proxies` | List of trusted proxies in CIDR notation | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
 | `configuration.templateConfig` | Template for the `configuration.yaml` file | See Advanced Configuration |
 | `configuration.initScript` | Init script for Home Assistant initialization | See values.yaml for the complete configuration options  |
@@ -152,10 +154,24 @@ persistence:
 
 > **Note**: When specifying an `existingVolume`, ensure that the PV is not already bound to another PVC, as a PV can only be bound to a single PVC at a time.
 
-
 ## Ingress
 
-To enable ingress for Home Assistant, set `ingress.enabled` to `true`. In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
+The chart provides two mutually exclusive ways to configure ingress:
+
+1. `ingress.enabled`: Traditional Kubernetes ingress configuration
+2. `ingress.external`: For scenarios where the ingress is managed externally
+
+Note: These two options cannot be enabled simultaneously. Attempting to set both to `true` will result in a validation error.
+
+Example configuration:
+
+```yaml
+ingress:
+  enabled: true   # Traditional ingress
+  external: false # External ingress
+```
+
+In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
 The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when ingress is not available in your cluster)
 
 ## HostPort and HostNetwork
@@ -172,7 +188,7 @@ The Home Assistant chart supports the following addons:
 
 ## Additional volumes and volume mounts
 
-To add additional volumes and volume mounts, you can use the `additionalVolumes` and `additionalVolumeMounts` values. The default values are `[]`.
+To add additional volumes and volume mounts, you can use the `additionalVolumes` and `additionalMounts` values. The default values are `[]`.
 Example mounting usb devices:
 
 ```yaml

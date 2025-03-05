@@ -130,6 +130,8 @@ service:
 ingress:
   # Enable ingress for home assistant
   enabled: false
+  # Enable external ingress (cannot be true when ingress.enabled is true)
+  external: false
   className: ""
   labels: {}
   annotations:
@@ -176,6 +178,9 @@ initContainers:
     volumeMounts:
       - mountPath: /config
         name: flora-home-assistant
+# Set a priorityClassName on Home Assistant pods
+priorityClassName: ""
+
   # - name: init-myservice
   #   image: busybox
   #   command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
@@ -209,7 +214,8 @@ configuration:
         - name: "Stairs PIR"
           state_topic: "florahome/florasensornode1"
           value_template: "{{ `{{ value_json.motion }}` }}"
-    {{- if .Values.ingress.enabled }}
+
+    {{- if or .Values.ingress.enabled .Values.ingress.external }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
@@ -245,6 +251,12 @@ configuration:
       current_time=$(date +%Y%m%d_%H%M%S)
       echo "Backup the current configuration file to configuration.yaml.$current_time"
       cp /config/configuration.yaml /config/configuration.yaml.$current_time
+      echo "Before cleanup - all backup files:"
+      ls -l /config/configuration.yaml.*
+      echo "Cleaning up - keeping only 10 most recent backups..."
+      ls -t /config/configuration.yaml.* 2>/dev/null | tail -n +11 | xargs -r rm
+      echo "After cleanup - remaining backup files:"
+      ls -l /config/configuration.yaml.*
       echo "The current configuration file will be merged with the default configuration file with this content:"
       cat /config-templates/configuration.yaml
       if [[ ! -s /config/configuration.yaml ]]; then
@@ -402,7 +414,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.96.2"
+      tag: "4.97.2"
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
@@ -429,3 +441,6 @@ addons:
     additionalMounts: []
       # - mountPath: /home/coder/.ssh/id_rsa
       #   name: id-rsa
+
+# Annotations to add to the stateful set
+statefulSetAnnotations: {}

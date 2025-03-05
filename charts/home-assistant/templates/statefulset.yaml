@@ -4,6 +4,10 @@ metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
+{{- if .Values.statefulSetAnnotations }}
+  annotations:
+    {{- toYaml .Values.statefulSetAnnotations | nindent 4 }}
+{{- end }}
 spec:
   serviceName: {{ include "home-assistant.fullname" . }}
   replicas: {{ .Values.replicaCount }}
@@ -162,6 +166,9 @@ spec:
     {{- with .Values.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
     {{- end }}
       volumes:
       {{- if .Values.configuration.enabled }}
