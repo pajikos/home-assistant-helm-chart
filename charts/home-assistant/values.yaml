@@ -115,16 +115,16 @@ service:
   # Annotations to add to the service
   annotations: {}
 
-nodePortService:
-  enabled: true
-  # Define the NodePort service type
-  type: NodePort
-  # Set the nodePort manually or leave it empty to let Kubernetes assign one
-  nodePort: 30080
-  # Define the service port for NodePort (should match the main service port)
-  port: 8123
-  # Additional annotations if needed
-  annotations: {}  
+# nodePortService:
+#   enabled: true
+#   # Define the NodePort service type
+#   type: NodePort
+#   # Set the nodePort manually or leave it empty to let Kubernetes assign one
+#   nodePort: 30080
+#   # Define the service port for NodePort (should match the main service port)
+#   port: 8123
+#   # Additional annotations if needed
+#   annotations: {}  
 
 # Ingress settings
 ingress:
@@ -337,7 +337,14 @@ additionalPorts: []
 #    protocol: TCP
 
 # if you need to expose additional services
-additionalServices: []
+additionalServices:
+  - name: nodeport
+    type: NodePort
+    port: 8123
+    targetPort: http
+    protocol: TCP
+    nodePort: 30080  # Optional: Set manually or let Kubernetes assign one
+    annotations: {}
 #  - name: sia
 #    port: 8124
 #    targetPort: sia
