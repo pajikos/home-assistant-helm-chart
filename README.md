@@ -194,6 +194,30 @@ To enable hostPort, set `hostPort.enabled` to `true`. In addition, you can speci
 To enable hostNetwork, set `hostNetwork` to `true`.
 HostNetwork is required for auto-discovery of Home Assistant, when not using auto-discovery, hostNetwork is not required and not recommended.
 
+## ServiceMonitor
+
+If you have the Prometheus Operator installed, you can enable a ServiceMonitor to scrape Home Assistant metrics by setting `serviceMonitor.enabled` to `true`. This requires the [Prometheus integration](https://www.home-assistant.io/integrations/prometheus/) to be configured in Home Assistant.
+
+```yaml
+serviceMonitor:
+  enabled: true
+  scrapeInterval: 30s
+  labels:
+    release: prometheus
+  # Bearer token authentication configuration (optional)
+  bearerToken:
+    secretName: "prometheus-token"
+    secretKey: "token"
+```
+
+### Bearer Token Authentication
+
+To use bearer token authentication for the ServiceMonitor, simply provide both:
+- `secretName`: The name of the Kubernetes secret containing the token
+- `secretKey`: The key within that secret containing the actual token
+
+This lets you secure the metrics endpoint with a bearer token that Prometheus will use for authentication.
+
 ## Addons
 
 The Home Assistant chart supports the following addons:
