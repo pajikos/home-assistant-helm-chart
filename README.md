@@ -218,6 +218,7 @@ To use bearer token authentication for the ServiceMonitor, simply provide both:
 
 This lets you secure the metrics endpoint with a bearer token that Prometheus will use for authentication.
 
+
 ## Addons
 
 The Home Assistant chart supports the following addons:
