@@ -3,7 +3,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: init-script
-  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
 data:
   init.sh: |
     {{- tpl .Values.configuration.initScript . | nindent 4 }}

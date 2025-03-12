@@ -408,6 +408,60 @@ addons:
     additionalMounts: []
       # - mountPath: /home/coder/.ssh/id_rsa
       #   name: id-rsa
+  matterserver:
+    # Enable or disable the matter-server addon
+    enabled: false
+    # Resource settings for the matter-server container
+    resources: {}
+    # Image settings for the code-server addon
+    image:
+      # Repository for the code-server image
+      repository: ghcr.io/home-assistant-libs/python-matter-server
+      # Image pull policy for the code-server image
+      pullPolicy: IfNotPresent
+      # Tag for the code-server image
+      tag: "7.0.1"
+    # Service settings
+    service:
+      # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
+      type: ClusterIP
+      # Service port
+      port: 5580
+    # if you need any additional volume mounts, you can define them here
+    additionalMounts: []
+      # - mountPath: /home/coder/.ssh/id_rsa
+      #   name: id-rsa
+
+    # Container security context settings
+    securityContext:
+      {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
+
+    livenessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /
+        port: matterserver
+        scheme: HTTP
+      periodSeconds: 20
+      successThreshold: 1
+      timeoutSeconds: 2
+    readinessProbe:
+      failureThreshold: 3
+      httpGet:
+        path: /
+        port: matterserver
+        scheme: HTTP
+      periodSeconds: 10
+      successThreshold: 1
+      timeoutSeconds: 1
+    startupProbe: {}
+
 
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}
