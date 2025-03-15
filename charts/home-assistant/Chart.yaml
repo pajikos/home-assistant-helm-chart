@@ -17,4 +17,4 @@ sources:
 - https://github.com/cdr/code-server
 - https://github.com/pajikos/home-assistant-helm-chart/tree/main/charts/home-assistant
 type: application
-version: 0.2.113
+version: 0.2.114
