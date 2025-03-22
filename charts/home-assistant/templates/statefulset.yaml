@@ -41,7 +41,7 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
     {{- if .Values.dnsConfig }}
-      dnsConfig: 
+      dnsConfig:
         {{- toYaml .Values.dnsConfig | nindent 8 }}
     {{- end }}
       containers:
@@ -119,6 +119,40 @@ spec:
             name: {{ include "home-assistant.fullname" . }}
           {{- if .Values.addons.codeserver.additionalMounts }}
             {{- .Values.addons.codeserver.additionalMounts | toYaml | nindent 10 }}
+          {{- end }}
+        {{- end }}
+        {{- if .Values.addons.matterserver.enabled }}
+        - name: matterserver
+          securityContext:
+            {{- toYaml .Values.addons.matterserver.securityContext | nindent 12 }}
+          image: "{{ .Values.addons.matterserver.image.repository }}:{{ .Values.addons.matterserver.image.tag }}"
+          imagePullPolicy: "{{ .Values.addons.matterserver.image.pullPolicy }}"
+          ports:
+          - containerPort: 5580
+            name: matterserver
+            protocol: TCP
+          {{- with .Values.addons.matterserver.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.addons.matterserver.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.addons.matterserver.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with $.Values.addons.matterserver.startupProbe }}
+          startupProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          - mountPath: /data
+            name: {{ include "home-assistant.fullname" . }}
+            subPath: matterserver
+          {{- if .Values.addons.matterserver.additionalMounts }}
+            {{- .Values.addons.matterserver.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
         {{- end }}
       {{- if or (.Values.configuration.enabled) .Values.initContainers }}
@@ -218,4 +252,4 @@ spec:
       storageClassName: {{ .Values.persistence.storageClass }}
       {{- end }}
   {{- end }}
-  
+
