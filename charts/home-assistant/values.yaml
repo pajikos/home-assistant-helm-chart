@@ -339,8 +339,8 @@ additionalVolumes:
   #  name: usb  
 # if you need any additional volume mounts, you can define them here
 additionalMounts:
-    - mountPath: /dev/usb/zigbee_dongle
-      name: usb
+  - mountPath: /dev/usb/zigbee_dongle
+    name: usb
 
 # if you need to expose additional ports
 additionalPorts: []
