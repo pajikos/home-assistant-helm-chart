@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: 2025.2.5
+appVersion: 2025.3.4
 description: Automatically Updated Helm Chart for Home Assistant
 home: https://github.com/pajikos/home-assistant-helm-chart
 icon: https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Home_Assistant_Logo.svg/519px-Home_Assistant_Logo.svg.png
@@ -17,4 +17,4 @@ sources:
 - https://github.com/cdr/code-server
 - https://github.com/pajikos/home-assistant-helm-chart/tree/main/charts/home-assistant
 type: application
-version: 0.2.110
+version: 0.2.115

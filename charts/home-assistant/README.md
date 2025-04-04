@@ -89,6 +89,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning. | `""` |
 | `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
+| `persistence.annotations` | Annotations to add to the PVC. | `{}` |
 | `additionalVolumes` | Additional volumes to be mounted in the home assistant container | `[]` |
 | `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
@@ -153,6 +154,18 @@ persistence:
       values: ["us-west-1a"]
 ```
 
+### PVC Annotations
+
+You can add annotations to the PVC by specifying them in the `persistence.annotations` field. This is useful for backup solutions like k8up that use annotations to identify resources for backup.
+
+```yaml
+persistence:
+  enabled: true
+  annotations:
+    k8up.io/backup: "true"
+    another-annotation: "value"
+```
+
 > **Note**: When specifying an `existingVolume`, ensure that the PV is not already bound to another PVC, as a PV can only be bound to a single PVC at a time.
 
 ## Ingress
@@ -180,6 +193,31 @@ The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when
 To enable hostPort, set `hostPort.enabled` to `true`. In addition, you can specify the `hostPort.port` value. The default value is `8123`.
 To enable hostNetwork, set `hostNetwork` to `true`.
 HostNetwork is required for auto-discovery of Home Assistant, when not using auto-discovery, hostNetwork is not required and not recommended.
+
+## ServiceMonitor
+
+If you have the Prometheus Operator installed, you can enable a ServiceMonitor to scrape Home Assistant metrics by setting `serviceMonitor.enabled` to `true`. This requires the [Prometheus integration](https://www.home-assistant.io/integrations/prometheus/) to be configured in Home Assistant.
+
+```yaml
+serviceMonitor:
+  enabled: true
+  scrapeInterval: 30s
+  labels:
+    release: prometheus
+  # Bearer token authentication configuration (optional)
+  bearerToken:
+    secretName: "prometheus-token"
+    secretKey: "token"
+```
+
+### Bearer Token Authentication
+
+To use bearer token authentication for the ServiceMonitor, simply provide both:
+- `secretName`: The name of the Kubernetes secret containing the token
+- `secretKey`: The key within that secret containing the actual token
+
+This lets you secure the metrics endpoint with a bearer token that Prometheus will use for authentication.
+
 
 ## Addons
 

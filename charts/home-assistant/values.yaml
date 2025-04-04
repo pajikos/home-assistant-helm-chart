@@ -321,6 +321,10 @@ persistence:
   storageClass: ""
   # Name of the existing volume claim for the stateful set, this option can be used to use existing volumes
   existingVolume: ""
+  # Annotations to add to the persistent volume claim
+  annotations: {}
+  #  k8up.io/backup: "true"
+  #  another-annotation: "value"
   ## Persistent Volume selectors
   ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
   matchLabels: {}
@@ -397,6 +401,12 @@ serviceMonitor:
   enabled: false
   scrapeInterval: 30s
   labels: {}
+  # Bearer token authentication configuration
+  bearerToken: {}
+    # Name of the secret containing the bearer token
+    # secretName: ""
+    # Key in the secret containing the bearer token
+    # secretKey: ""
 
 # Addons configuration for additional services
 addons:
@@ -413,7 +423,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.97.2"
+      tag: "4.98.2"
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
