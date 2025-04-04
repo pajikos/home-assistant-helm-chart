@@ -215,6 +215,11 @@ configuration:
           state_topic: "florahome/florasensornode1"
           value_template: "{{ `{{ value_json.motion }}` }}"
 
+    # ZHA Configuration
+    zha:
+      usb_path: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
+      database_path: /config/zigbee.db      
+
     {{- if or .Values.ingress.enabled .Values.ingress.external }}
     http:
       use_x_forwarded_for: true
