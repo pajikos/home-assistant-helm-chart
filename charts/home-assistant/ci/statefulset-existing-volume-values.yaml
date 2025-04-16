@@ -1,0 +1,9 @@
+# Test values for StatefulSet with an existing volume
+controller:
+  type: StatefulSet
+
+# Enable persistence and specify an existing volume
+persistence:
+  enabled: true
+  size: 1Gi
+  existingVolume: "existing-home-assistant-volume"
