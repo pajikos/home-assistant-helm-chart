@@ -1,0 +1,12 @@
+# Test values for using Deployment instead of StatefulSet
+controller:
+  type: Deployment
+
+# Enable persistence to test PVC creation
+persistence:
+  enabled: true
+  size: 1Gi
+
+# Add some deployment annotations
+deploymentAnnotations:
+  test: "true"

@@ -1,17 +1,15 @@
-{{- include "home-assistant.validateController" . }}
-{{- if eq .Values.controller.type "StatefulSet" }}
+{{- if eq .Values.controller.type "Deployment" }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
-{{- if .Values.statefulSetAnnotations }}
+{{- if .Values.deploymentAnnotations }}
   annotations:
-    {{- toYaml .Values.statefulSetAnnotations | nindent 4 }}
+    {{- toYaml .Values.deploymentAnnotations | nindent 4 }}
 {{- end }}
 spec:
-  serviceName: {{ include "home-assistant.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -184,42 +182,16 @@ spec:
       {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}
         emptyDir: {}
+      {{- else if .Values.persistence.existingClaim }}
+      - name: {{ include "home-assistant.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+      {{- else }}
+      - name: {{ include "home-assistant.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ include "home-assistant.fullname" . }}
       {{- end }}
       {{- if .Values.additionalVolumes }}
         {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
-  {{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "home-assistant.fullname" . }}
-      {{- with .Values.persistence.annotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.accessMode }}
-      {{- if .Values.persistence.existingVolume }}
-      volumeName: {{ .Values.persistence.existingVolume }}
-      {{- end }}
-      {{- if or .Values.persistence.matchLabels (.Values.persistence.matchExpressions) }}
-      selector:
-      {{- if .Values.persistence.matchLabels }}
-        matchLabels:
-        {{ toYaml .Values.persistence.matchLabels | indent 8 }}
-      {{- end -}}
-      {{- if .Values.persistence.matchExpressions }}
-        matchExpressions:
-          {{ toYaml .Values.persistence.matchExpressions | indent 8 }}
-        {{- end -}}
-      {{- end }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.size }}
-      {{- if .Values.persistence.storageClass }}
-      storageClassName: {{ .Values.persistence.storageClass }}
-      {{- end }}
-
-  {{- end }}
 {{- end }}
-
