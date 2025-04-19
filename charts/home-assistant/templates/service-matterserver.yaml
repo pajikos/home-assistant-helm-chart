@@ -1,0 +1,17 @@
+{{- if and .Values.addons.codeserver.enabled  -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-matterserver
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.addons.matterserver.service.type }}
+  ports:
+    - port: {{ .Values.addons.matterserver.service.port }}
+      targetPort: matterserver
+      protocol: TCP
+      name: matterserver
+  selector:
+    {{- include "home-assistant.selectorLabels" . | nindent 4 }}
+{{- end }}
