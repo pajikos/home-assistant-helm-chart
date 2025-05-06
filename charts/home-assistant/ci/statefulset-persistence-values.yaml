@@ -1,0 +1,8 @@
+# Test values for StatefulSet with persistence
+controller:
+  type: StatefulSet
+
+# Enable persistence
+persistence:
+  enabled: true
+  size: 1Gi

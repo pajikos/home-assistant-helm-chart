@@ -7,7 +7,7 @@
 
 ## Introduction
 
-This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager. 
+This chart bootstraps a [Home Assistant](https://home-assistant.io) deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 It is updated **automatically** with each new release of Home Assistant, ensuring you always have access to the latest features and improvements.
 
@@ -16,7 +16,7 @@ It is updated **automatically** with each new release of Home Assistant, ensurin
 - **Automatic Updates**: The chart is updated with each new release of Home Assistant.
 - **Flexibility**: Extensive configuration options to tailor Home Assistant to your needs.
 - **Addons Support**: Extend Home Assistant's functionality with supported addons, such as code-server.
-  
+
 ## Quick Start
 
 To deploy Home Assistant using this Helm chart, follow these steps:
@@ -63,7 +63,9 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `serviceAccount.annotations` | Annotations to add to the service account | `{}` |
 | `serviceAccount.name` | The name of the service account to use | `""` |
 | `podAnnotations` | Annotations to add to the pod | `{}` |
+| `controller.type` | Type of controller to use: StatefulSet or Deployment | `StatefulSet` |
 | `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
+| `deploymentAnnotations` | Annotations to add to the Deployment | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
 | `env` | Environment variables | `[]` |
 | `envFrom` | Use environment variables from ConfigMaps or Secrets | `[]` |
@@ -86,7 +88,8 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `persistence.accessMode` | The access mode of the PVC. | `ReadWriteOnce` |
 | `persistence.size` | The size of the PVC to create. | `5Gi` |
 | `persistence.storageClass` | The storage class to use for the PVC. If empty, the default storage class is used. | `""` |
-| `persistence.existingVolume` | The name of an existing Persistent Volume to bind to. This bypasses dynamic provisioning. | `""` |
+| `persistence.existingVolume` | The name of an existing Persistent Volume to bind to when using StatefulSet. This bypasses dynamic provisioning. | `""` |
+| `persistence.existingClaim` | The name of an existing PVC to use when using Deployment. | `""` |
 | `persistence.matchLabels` | Label selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.matchExpressions` | Expression selectors to apply when binding to an existing Persistent Volume. | `{}` |
 | `persistence.annotations` | Annotations to add to the PVC. | `{}` |
@@ -111,6 +114,21 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.ingress.tls` | TLS settings for the code-server addon | `[]` |
 | `addons.codeserver.ingress.annotations` | Annotations for the code-server addon | `{}` |
 
+## Controller Type
+
+This chart supports two types of controllers for deploying Home Assistant:
+
+1. `StatefulSet` (default): Recommended for production use, especially when persistence is enabled. StatefulSets provide stable network identities and persistent storage that survives pod rescheduling.
+
+2. `Deployment`: Simpler controller type that might be preferred in some scenarios. When using a Deployment with persistence enabled, a separate PVC is created instead of using volumeClaimTemplates.
+
+To specify the controller type, set the `controller.type` value:
+
+```yaml
+controller:
+  type: StatefulSet  # or Deployment
+```
+
 ## Persistence
 
 The default configuration of this chart uses an `emptyDir` volume for persistence, which means that data is lost when the pod is removed. To enable persistent storage that survives pod restarts and redeployments, you can configure the chart to use a Persistent Volume Claim (PVC).
@@ -127,17 +145,45 @@ persistence:
   storageClass: ""
 ```
 
-### Using an Existing Volume
+### Using an Existing Volume or PVC
 
-If you already have a Persistent Volume (PV) that you wish to use, you can specify the name of this existing volume in the `persistence.existingVolume` field. This will direct the chart to use the specified PV, bypassing dynamic volume provisioning.
+Depending on the controller type you're using, you can either bind to an existing Persistent Volume (PV) or use an existing Persistent Volume Claim (PVC):
+
+#### With StatefulSet (default)
+
+If you already have a Persistent Volume (PV) that you wish to use with a StatefulSet, you can specify the name of this existing volume in the `persistence.existingVolume` field. This will direct the chart to use the specified PV, bypassing dynamic volume provisioning.
 
 ```yaml
+controller:
+  type: StatefulSet
 persistence:
   enabled: true
   existingVolume: "my-existing-volume"
 ```
 
-When using an existing volume, ensure that the `accessMode` and `size` specified in the chart values match the capabilities and capacity of the existing PV.
+#### With Deployment
+
+If you're using a Deployment and already have a PVC that you wish to use, you can specify the name of this existing claim in the `persistence.existingClaim` field:
+
+```yaml
+controller:
+  type: Deployment
+persistence:
+  enabled: true
+  existingClaim: "my-existing-pvc"
+```
+
+Alternatively, if you want to bind to a specific PV with a Deployment, you can create a new PVC that binds to the PV by setting `persistence.existingVolume`:
+
+```yaml
+controller:
+  type: Deployment
+persistence:
+  enabled: true
+  existingVolume: "my-existing-volume"
+```
+
+When using an existing volume or claim, ensure that the `accessMode` and `size` specified in the chart values match the capabilities and capacity of the existing PV/PVC.
 
 ### Selectors
 
@@ -245,7 +291,7 @@ additionalMounts:
 
 ```
 
-Note: When mounting usb devices, you need to set the `securityContext.privileged` value to `true`. 
+Note: When mounting usb devices, you need to set the `securityContext.privileged` value to `true`.
 
 ## Advanced Configuration
 

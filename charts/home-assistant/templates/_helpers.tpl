@@ -69,3 +69,12 @@ Validate ingress configuration
 {{- fail "ingress.enabled and ingress.external cannot both be true" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Validate controller type
+*/}}
+{{- define "home-assistant.validateController" -}}
+{{- if not (or (eq .Values.controller.type "StatefulSet") (eq .Values.controller.type "Deployment")) -}}
+{{- fail "controller.type must be either 'StatefulSet' or 'Deployment'" -}}
+{{- end -}}
+{{- end -}}
