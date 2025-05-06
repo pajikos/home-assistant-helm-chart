@@ -352,3 +352,21 @@ This allows for dynamic configuration based on your Helm values.
 
 To enable the code-server addon, set `addons.codeserver.enabled` to `true`. In addition, you can specify the `addons.codeserver.resources` values. The default value is `{}`.
 To be able to access the code-server addon, you need to enable the ingress for the code-server addon by setting `addons.codeserver.ingress.enabled` to `true` or setting `service.type` to `NodePort` or `LoadBalancer`.
+
+## Upgrade Notes (v0.3)
+
+This release adds support for both `StatefulSet` (default/legacy) and `Deployment` controllers, and clarifies persistence usage.
+
+### Key Changes
+- New value: `controller.type`—default remains `StatefulSet` for backward compatibility; use `Deployment` by setting `controller.type: Deployment`.
+- The auto-generated PVC for `controller.type: Deployment` is now named `<fullname>-pvc` (vs. prior defaults for StatefulSet). Update all references if switching controller type!
+- `persistence.existingClaim` is only supported with Deployment; `persistence.existingVolume` with StatefulSet.
+- Manual cleanup may be needed if switching controller kind (e.g. legacy StatefulSet/PVC may remain until manually deleted).
+
+### Migration Guidance
+- If you keep using StatefulSet, no changes required.
+- If switching to Deployment:
+  - Update any automation or manifests to refer to the new PVC name (`-pvc` suffix).
+  - Review and clean up old StatefulSet/volume resources as needed after migration.
+
+See "Controller Type" and "Persistence" sections above for full explanation.

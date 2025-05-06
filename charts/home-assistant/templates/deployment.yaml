@@ -1,4 +1,5 @@
 {{- if eq .Values.controller.type "Deployment" }}
+{{- include "home-assistant.validateController" . | trim }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,7 +87,7 @@ spec:
           {{- end }}
           volumeMounts:
           - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            name: {{ include "home-assistant.fullname" . }}-pvc
           {{- if .Values.additionalMounts }}
             {{- .Values.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
@@ -116,7 +117,7 @@ spec:
           {{- end }}
           volumeMounts:
           - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            name: {{ include "home-assistant.fullname" . }}-pvc
           {{- if .Values.addons.codeserver.additionalMounts }}
             {{- .Values.addons.codeserver.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
@@ -141,7 +142,7 @@ spec:
           {{- end }}
           {{- if .Values.configuration.initContainer.env }}
           env:
-            {{- toYaml .env | nindent 12 }}
+            {{- toYaml .Values.configuration.initContainer.env | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- range .Values.configuration.initContainer.volumeMounts }}
@@ -180,17 +181,17 @@ spec:
           name: hass-configuration
       {{- end }}
       {{- if not .Values.persistence.enabled }}
-      - name: {{ include "home-assistant.fullname" . }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
         emptyDir: {}
-      {{- else if .Values.persistence.existingClaim }}
-      - name: {{ include "home-assistant.fullname" . }}
+    {{- else if .Values.persistence.existingClaim }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
         persistentVolumeClaim:
           claimName: {{ .Values.persistence.existingClaim }}
-      {{- else }}
-      - name: {{ include "home-assistant.fullname" . }}
+    {{- else }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
         persistentVolumeClaim:
-          claimName: {{ include "home-assistant.fullname" . }}
-      {{- end }}
+          claimName: {{ include "home-assistant.fullname" . }}-pvc
+    {{- end }}
       {{- if .Values.additionalVolumes }}
         {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
