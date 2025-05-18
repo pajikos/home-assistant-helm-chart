@@ -339,7 +339,7 @@ persistence:
 # if you need any additional volumes, you can define them here
 additionalVolumes:
   - hostPath:
-      path: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
+      path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
       type: CharDevice
     name: usb
   #- hostPath:
@@ -348,7 +348,7 @@ additionalVolumes:
   #  name: usb  
 # if you need any additional volume mounts, you can define them here
 additionalMounts:
-  - mountPath: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
+  - mountPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
     name: usb
     readOnly: true
 
