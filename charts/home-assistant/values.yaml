@@ -220,8 +220,8 @@ configuration:
           value_template: "{{ `{{ value_json.motion }}` }}"
 
     # ZHA Configuration
-    zha:
-      database_path: /config/zigbee.db      
+    # zha:
+    #   database_path: /config/zigbee.db      
 
     {{- if or .Values.ingress.enabled .Values.ingress.external }}
     http:
