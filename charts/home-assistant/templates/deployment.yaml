@@ -1,17 +1,16 @@
-{{- include "home-assistant.validateController" . }}
-{{- if eq .Values.controller.type "StatefulSet" }}
+{{- if eq .Values.controller.type "Deployment" }}
+{{- include "home-assistant.validateController" . | trim }}
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "home-assistant.fullname" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
-{{- if .Values.statefulSetAnnotations }}
+{{- if .Values.deploymentAnnotations }}
   annotations:
-    {{- toYaml .Values.statefulSetAnnotations | nindent 4 }}
+    {{- toYaml .Values.deploymentAnnotations | nindent 4 }}
 {{- end }}
 spec:
-  serviceName: {{ include "home-assistant.fullname" . }}
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
@@ -88,7 +87,7 @@ spec:
           {{- end }}
           volumeMounts:
           - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            name: {{ include "home-assistant.fullname" . }}-pvc
           {{- if .Values.additionalMounts }}
             {{- .Values.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
@@ -118,7 +117,7 @@ spec:
           {{- end }}
           volumeMounts:
           - mountPath: /config
-            name: {{ include "home-assistant.fullname" . }}
+            name: {{ include "home-assistant.fullname" . }}-pvc
           {{- if .Values.addons.codeserver.additionalMounts }}
             {{- .Values.addons.codeserver.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
@@ -143,7 +142,7 @@ spec:
           {{- end }}
           {{- if .Values.configuration.initContainer.env }}
           env:
-            {{- toYaml .env | nindent 12 }}
+            {{- toYaml .Values.configuration.initContainer.env | nindent 12 }}
           {{- end }}
           volumeMounts:
             {{- range .Values.configuration.initContainer.volumeMounts }}
@@ -182,44 +181,18 @@ spec:
           name: hass-configuration
       {{- end }}
       {{- if not .Values.persistence.enabled }}
-      - name: {{ include "home-assistant.fullname" . }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
         emptyDir: {}
-      {{- end }}
+    {{- else if .Values.persistence.existingClaim }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
+        persistentVolumeClaim:
+          claimName: {{ .Values.persistence.existingClaim }}
+    {{- else }}
+      - name: {{ include "home-assistant.fullname" . }}-pvc
+        persistentVolumeClaim:
+          claimName: {{ include "home-assistant.fullname" . }}-pvc
+    {{- end }}
       {{- if .Values.additionalVolumes }}
         {{- .Values.additionalVolumes | toYaml | nindent 6 }}
       {{- end }}
-  {{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "home-assistant.fullname" . }}
-      {{- with .Values.persistence.annotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-    spec:
-      accessModes:
-        - {{ .Values.persistence.accessMode }}
-      {{- if .Values.persistence.existingVolume }}
-      volumeName: {{ .Values.persistence.existingVolume }}
-      {{- end }}
-      {{- if or .Values.persistence.matchLabels (.Values.persistence.matchExpressions) }}
-      selector:
-      {{- if .Values.persistence.matchLabels }}
-        matchLabels:
-        {{ toYaml .Values.persistence.matchLabels | indent 8 }}
-      {{- end -}}
-      {{- if .Values.persistence.matchExpressions }}
-        matchExpressions:
-          {{ toYaml .Values.persistence.matchExpressions | indent 8 }}
-        {{- end -}}
-      {{- end }}
-      resources:
-        requests:
-          storage: {{ .Values.persistence.size }}
-      {{- if .Values.persistence.storageClass }}
-      storageClassName: {{ .Values.persistence.storageClass }}
-      {{- end }}
-
-  {{- end }}
 {{- end }}
-
