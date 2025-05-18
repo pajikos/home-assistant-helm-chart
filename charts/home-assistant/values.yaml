@@ -342,14 +342,17 @@ additionalVolumes:
       path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
       type: CharDevice
     name: usb
-  #- hostPath:
-  #    path: /dev/usb/zigbee_dongle
-  #    type: CharDevice
-  #  name: usb  
-# if you need any additional volume mounts, you can define them here
+  - hostPath:
+      path: /dev/ttyUSB0
+      type: CharDevice
+    name: ttyusb
+
 additionalMounts:
   - mountPath: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
     name: usb
+    readOnly: true
+  - mountPath: /dev/ttyUSB0
+    name: ttyusb
     readOnly: true
 
 # if you need to expose additional ports
