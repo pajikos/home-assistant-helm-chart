@@ -85,10 +85,10 @@ dnsPolicy: ClusterFirst
 
 # Container security context settings
 securityContext:
-  capabilities:
-    add: ["SYS_RAWIO"]
-  readOnlyRootFilesystem: false
-  #privileged: true
+  # capabilities:
+  #   add: ["SYS_RAWIO"]
+  # readOnlyRootFilesystem: false
+  privileged: true
   # capabilities:
   #   drop:
   #   - ALL
