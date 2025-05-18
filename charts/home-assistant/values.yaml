@@ -326,11 +326,11 @@ persistence:
   # Size of the persistent volume claim
   size: 10Gi
   # Storage class for the persistent volume claim
-  storageClass: "local-path"
+  storageClass: ""
   # Name of the existing volume for the StatefulSet, this option can be used to bind to an existing PV
   existingVolume: ""
   # Name of the existing PVC to use with Deployment, this option can be used to use an existing PVC
-  existingClaim: ""
+  existingClaim: "flora-home-assistant"
   # Annotations to add to the persistent volume claim
   annotations: {}
   #  k8up.io/backup: "true"
