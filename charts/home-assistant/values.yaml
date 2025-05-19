@@ -287,8 +287,10 @@ persistence:
   size: 5Gi
   # Storage class for the persistent volume claim
   storageClass: ""
-  # Name of the existing volume claim for the stateful set, this option can be used to use existing volumes
+  # Name of the existing volume for the StatefulSet, this option can be used to bind to an existing PV
   existingVolume: ""
+  # Name of the existing PVC to use with Deployment, this option can be used to use an existing PVC
+  existingClaim: ""
   # Annotations to add to the persistent volume claim
   annotations: {}
   #  k8up.io/backup: "true"
@@ -381,7 +383,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.97.2"
+      tag: "4.99.4"
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
@@ -463,5 +465,13 @@ addons:
     startupProbe: {}
 
 
+# Controller configuration
+controller:
+  # Type of controller to use: StatefulSet or Deployment
+  type: StatefulSet
+
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}
+
+# Annotations to add to the deployment
+deploymentAnnotations: {}

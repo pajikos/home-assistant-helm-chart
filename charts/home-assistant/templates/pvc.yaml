@@ -1,0 +1,35 @@
+{{- if and (eq .Values.controller.type "Deployment") .Values.persistence.enabled (not .Values.persistence.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-pvc
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+  {{- with .Values.persistence.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - {{ .Values.persistence.accessMode }}
+  {{- if .Values.persistence.existingVolume }}
+  volumeName: {{ .Values.persistence.existingVolume }}
+  {{- end }}
+  {{- if or .Values.persistence.matchLabels (.Values.persistence.matchExpressions) }}
+  selector:
+  {{- if .Values.persistence.matchLabels }}
+    matchLabels:
+    {{ toYaml .Values.persistence.matchLabels | indent 4 }}
+  {{- end -}}
+  {{- if .Values.persistence.matchExpressions }}
+    matchExpressions:
+      {{ toYaml .Values.persistence.matchExpressions | indent 4 }}
+    {{- end -}}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.persistence.size }}
+  {{- if .Values.persistence.storageClass }}
+  storageClassName: {{ .Values.persistence.storageClass }}
+  {{- end }}
+{{- end }}
