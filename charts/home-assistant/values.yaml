@@ -344,13 +344,14 @@ persistence:
 additionalVolumes:
   - hostPath:
       path: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
-      type: CharDevice
+      #type: CharDevice
     name: usb
 
 additionalVolumeMounts:
   - name: usb
-    mountPath: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
-
+    mountPath: /dev/ttyUSB0
+    readOnly: false
+    
 # if you need to expose additional ports
 additionalPorts: []
 #  - name: sia
