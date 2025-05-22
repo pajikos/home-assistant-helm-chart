@@ -346,12 +346,12 @@ persistence:
 additionalVolumes:
   - name: zigbee
     hostPath:
-      path: /dev/ttyUSB0  # <- Use the real device
+      path: /dev/usb/zigbee_dongle
       type: CharDevice
 
 additionalVolumeMounts:
   - name: zigbee
-    mountPath: /dev/ttyUSB0
+    mountPath: /dev/usb/zigbee_dongle
     readOnly: false
     
 # if you need to expose additional ports
