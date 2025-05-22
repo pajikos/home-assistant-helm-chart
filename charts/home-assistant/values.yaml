@@ -219,7 +219,7 @@ configuration:
           state_topic: "florahome/florasensornode1"
           value_template: "{{ `{{ value_json.motion }}` }}"
 
-    ZHA Configuration
+    #ZHA Configuration
     zha:
       database_path: /config/zigbee.db
       usb_path: /dev/ttyUSB0
