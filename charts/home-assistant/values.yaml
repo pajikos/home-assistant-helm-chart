@@ -361,7 +361,9 @@ additionalVolumes:
   #     type: CharDevice
   #   name: usb  
 # if you need any additional volume mounts, you can define them here
-additionalMounts: []
+additionalMounts:
+  - mountPath: /dev/ttyUSB0
+    name: usb
    # - mountPath: /dev/usb/zigbee_dongle
    #   name: usb
     
