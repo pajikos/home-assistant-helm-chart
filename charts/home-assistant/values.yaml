@@ -345,7 +345,7 @@ persistence:
 # if you need any additional volumes, you can define them here
 # if you need any additional volumes, you can define them here
 # if you need any additional volumes, you can define them here
-additionalVolumes
+additionalVolumes:
   - hostPath:
       type: CharDevice
       path: >-
