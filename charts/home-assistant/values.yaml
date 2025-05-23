@@ -349,7 +349,7 @@ additionalVolumes:
   - hostPath:
       type: CharDevice
       path: >-
-        /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
+        /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
     name: usb
   # - hostPath:
   #     path: >-
