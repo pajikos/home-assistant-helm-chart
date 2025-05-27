@@ -345,27 +345,21 @@ persistence:
 # if you need any additional volumes, you can define them here
 # if you need any additional volumes, you can define them here
 # if you need any additional volumes, you can define them here
-additionalVolumes: []
-  # - hostPath:
-  #     type: CharDevice
-  #     path: >-
-  #       /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
-  #   name: usb
-  # - hostPath:
-  #     path: >-
-  #       /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
-  #     type: CharDevice
-  #   name: usb
-  # - hostPath:
-  #     path: /dev/usb/zigbee_dongle
-  #     type: CharDevice
-  #   name: usb  
-# if you need any additional volume mounts, you can define them here
-additionalMounts: []
-  # - mountPath: /dev/ttyUSB0
-  #   name: usb
-  #  # - mountPath: /dev/usb/zigbee_dongle
-  #  #   name: usb
+additionalVolumes:
+  - hostPath:
+      path: /dev/serial/by-id/usb-ITead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_d28fac83e36bef1181df99adc169b110-if00-port0
+      type: CharDevice
+    name: zigbee1
+  - hostPath:
+      path: /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1eb1fc48a838ef118679337af3d9b1e5-if00-port0
+      type: CharDevice
+    name: zigbee2
+
+additionalMounts:
+  - mountPath: /dev/zigbee1
+    name: zigbee1
+  - mountPath: /dev/zigbee2
+    name: zigbee2
     
 # if you need to expose additional ports
 additionalPorts: []
