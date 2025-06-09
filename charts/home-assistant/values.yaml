@@ -183,16 +183,20 @@ initContainers:
       - mountPath: /config
         name: flora-home-assistant
   - name: update-ca-certs
-    image: debian:bullseye
-    command: ["/bin/bash", "-c"]
+    image: alpine:latest
+    command: ["sh", "-c"]
     args:
       - |
         set -e
         echo "Updating CA certificates..."
-        apt-get update && apt-get install -y ca-certificates && update-ca-certificates
+        apk update && apk add ca-certificates
+        # If your cert is mounted as /usr/local/share/ca-certificates/my-ca.crt,
+        # you don’t need to copy it—it’s already there!
+        update-ca-certificates
     volumeMounts:
       - name: ca-certs
-        mountPath: /usr/local/share/ca-certificates/
+        mountPath: /usr/local/share/ca-certificates/my-ca.crt
+        subPath: my-ca.crt
 # Set a priorityClassName on Home Assistant pods
 priorityClassName: ""
 
