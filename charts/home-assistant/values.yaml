@@ -182,7 +182,7 @@ initContainers:
     volumeMounts:
       - mountPath: /config
         name: flora-home-assistant
- - name: update-ca-certs
+  - name: update-ca-certs
     image: debian:bullseye
     command: ["/bin/bash", "-c"]
     args:
