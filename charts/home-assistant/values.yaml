@@ -182,17 +182,17 @@ initContainers:
     volumeMounts:
       - mountPath: /config
         name: flora-home-assistant
-  - name: update-ca-certs
-    image: ghcr.io/home-assistant/home-assistant:latest
+ - name: update-ca-certs
+    image: debian:bullseye
     command: ["/bin/bash", "-c"]
     args:
       - |
         set -e
         echo "Updating CA certificates..."
-        apt-get update && apt-get install -y --no-install-recommends ca-certificates && update-ca-certificates
+        apt-get update && apt-get install -y ca-certificates && update-ca-certificates
     volumeMounts:
-      - name: flora-home-assistant
-        mountPath: /config      
+      - name: ca-certs
+        mountPath: /usr/local/share/ca-certificates/
 # Set a priorityClassName on Home Assistant pods
 priorityClassName: ""
 
