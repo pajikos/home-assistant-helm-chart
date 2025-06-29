@@ -437,3 +437,6 @@ statefulSetAnnotations: {}
 
 # Annotations to add to the deployment
 deploymentAnnotations: {}
+
+# Deployment strategy type (RollingUpdate, Recreate)
+deploymentStrategy: RollingUpdate
