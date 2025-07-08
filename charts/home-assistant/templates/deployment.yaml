@@ -155,7 +155,7 @@ spec:
               {{ end }}
             {{- end }}
             - mountPath: /config
-              name: {{ include "home-assistant.fullname" $ }}-pvc
+              name: {{ include "home-assistant.fullname" . }}-pvc
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
