@@ -1,0 +1,31 @@
+# Test values for extra objects
+extraObjects:
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include "home-assistant.fullname" . }}-extra-config
+    data:
+      custom-config: |
+        test: value
+        environment: ci
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: test-extra-secret
+    type: Opaque
+    stringData:
+      api-key: test-api-key
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: test-extra-service
+    spec:
+      type: ClusterIP
+      ports:
+        - port: 8123
+          targetPort: 8123
+          protocol: TCP
+      selector:
+        app.kubernetes.io/name: home-assistant
+        app.kubernetes.io/instance: test-release

@@ -113,6 +113,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.ingress.hosts` | Hosts for the code-server addon | `[]` |
 | `addons.codeserver.ingress.tls` | TLS settings for the code-server addon | `[]` |
 | `addons.codeserver.ingress.annotations` | Annotations for the code-server addon | `{}` |
+| `extraObjects` | List of extra Kubernetes resources to create alongside the Home Assistant deployment | `[]` |
 
 ## Controller Type
 
@@ -292,6 +293,33 @@ additionalMounts:
 ```
 
 Note: When mounting usb devices, you need to set the `securityContext.privileged` value to `true`.
+
+## Extra Objects
+
+The `extraObjects` parameter allows you to create additional Kubernetes resources alongside your Home Assistant deployment. This is useful for creating ConfigMaps, Secrets and other resources that your setup might need while still managing them through the Helm chart.
+
+Example usage:
+
+```yaml
+extraObjects:
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: {{ include "home-assistant.fullname" . }}-custom-config
+    data:
+      custom.yaml: |
+        setting1: value1
+        setting2: value2
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: my-api-keys
+    type: Opaque
+    stringData:
+      api-key: "api-key"
+      mqtt-password: "password"
+```
 
 ## Advanced Configuration
 
