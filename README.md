@@ -113,6 +113,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.ingress.hosts` | Hosts for the code-server addon | `[]` |
 | `addons.codeserver.ingress.tls` | TLS settings for the code-server addon | `[]` |
 | `addons.codeserver.ingress.annotations` | Annotations for the code-server addon | `{}` |
+| `extraObjects` | List of extra Kubernetes resources to create alongside the Home Assistant deployment | `[]` |
 
 ## Controller Type
 
