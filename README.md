@@ -107,6 +107,9 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
 | `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image | `IfNotPresent` |
 | `addons.codeserver.image.tag` | Tag for the code-server image | `latest released version, automatically updated` |
+| `addons.codeserver.auth.enabled` | Enable or disable authentication for the code-server addon | `true` |
+| `addons.codeserver.auth.existingSecret` | Existing secret containing the password (key: `password`) | `""` |
+| `addons.codeserver.auth.password` | Password for code-server (only used if existingSecret is not set) | `""` |
 | `addons.codeserver.service.type` | Service type for the code-server addon | `ClusterIP` |
 | `addons.codeserver.service.port` | Service port for the code-server addon | `12321` |
 | `addons.codeserver.ingress.enabled` | Enable or disable the ingress for the code-server addon | `false` |
@@ -352,6 +355,53 @@ This allows for dynamic configuration based on your Helm values.
 
 To enable the code-server addon, set `addons.codeserver.enabled` to `true`. In addition, you can specify the `addons.codeserver.resources` values. The default value is `{}`.
 To be able to access the code-server addon, you need to enable the ingress for the code-server addon by setting `addons.codeserver.ingress.enabled` to `true` or setting `service.type` to `NodePort` or `LoadBalancer`.
+
+### Authentication
+
+By default, authentication is enabled for code-server (`addons.codeserver.auth.enabled: true`). You have three options for configuring authentication:
+
+1. **Use an existing Kubernetes secret** (recommended for production):
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+         existingSecret: "my-codeserver-secret"
+   ```
+   The secret should contain a key named `password` with your desired password.
+
+2. **Set a password directly in values**:
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+         password: "my-secure-password"
+   ```
+
+3. **Let code-server generate a random password**:
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+   ```
+   The randomly generated password will be printed in the code-server container logs. You can retrieve it with:
+   ```bash
+   kubectl logs <pod-name> -c codeserver
+   ```
+
+4. **Disable authentication** (not recommended for production):
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: false
+   ```
 
 ## Upgrade Notes (v0.3)
 
