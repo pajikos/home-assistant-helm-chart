@@ -110,7 +110,7 @@ spec:
           - --port
           - "12321"
           - "/config"
-          {{- if .Values.addons.codeserver.auth.enabled }}
+          {{- if and .Values.addons.codeserver.auth.enabled (or .Values.addons.codeserver.auth.existingSecret .Values.addons.codeserver.auth.password) }}
           env:
           {{- if .Values.addons.codeserver.auth.existingSecret }}
           - name: PASSWORD
