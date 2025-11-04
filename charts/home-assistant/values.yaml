@@ -403,7 +403,7 @@ addons:
     # Authentication settings for the code-server addon
     auth:
       # Enable or disable authentication (if disabled, --auth none is used)
-      enabled: true
+      enabled: false
       # Existing secret containing the password
       # The secret should have a key 'password' containing the code-server password
       existingSecret: ""

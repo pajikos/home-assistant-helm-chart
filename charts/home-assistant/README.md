@@ -107,7 +107,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
 | `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image | `IfNotPresent` |
 | `addons.codeserver.image.tag` | Tag for the code-server image | `latest released version, automatically updated` |
-| `addons.codeserver.auth.enabled` | Enable or disable authentication for the code-server addon | `true` |
+| `addons.codeserver.auth.enabled` | Enable or disable authentication for the code-server addon | `false` |
 | `addons.codeserver.auth.existingSecret` | Existing secret containing the password (key: `password`) | `""` |
 | `addons.codeserver.auth.password` | Password for code-server (only used if existingSecret is not set) | `""` |
 | `addons.codeserver.service.type` | Service type for the code-server addon | `ClusterIP` |
@@ -358,7 +358,7 @@ To be able to access the code-server addon, you need to enable the ingress for t
 
 ### Authentication
 
-By default, authentication is enabled for code-server (`addons.codeserver.auth.enabled: true`). You have three options for configuring authentication:
+By default, authentication is disabled for code-server for backward compatibility (`addons.codeserver.auth.enabled: false`). However, it is **strongly recommended** to enable authentication, especially when exposing code-server via ingress or external access. You have three options for configuring authentication:
 
 1. **Use an existing Kubernetes secret** (recommended for production):
    ```yaml
