@@ -1,0 +1,20 @@
+# CI test configuration for code-server addon with authentication disabled
+# This tests backward compatibility for users who want no authentication
+persistence:
+  enabled: true
+  size: 1Gi
+
+addons:
+  codeserver:
+    enabled: true
+    auth:
+      enabled: false
+    service:
+      type: ClusterIP
+    ingress:
+      enabled: true
+      hosts:
+        - host: code-server-test.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific

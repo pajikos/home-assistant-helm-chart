@@ -98,7 +98,11 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           args:
           - --auth
+          {{- if .Values.addons.codeserver.auth.enabled }}
+          - password
+          {{- else }}
           - none
+          {{- end }}
           - --user-data-dir
           - "/config/.vscode"
           - --extensions-dir
@@ -106,6 +110,19 @@ spec:
           - --port
           - "12321"
           - "/config"
+          {{- if and .Values.addons.codeserver.auth.enabled (or .Values.addons.codeserver.auth.existingSecret .Values.addons.codeserver.auth.password) }}
+          env:
+          {{- if .Values.addons.codeserver.auth.existingSecret }}
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.addons.codeserver.auth.existingSecret }}
+                key: password
+          {{- else if .Values.addons.codeserver.auth.password }}
+          - name: PASSWORD
+            value: {{ .Values.addons.codeserver.auth.password | quote }}
+          {{- end }}
+          {{- end }}
           image: "{{ .Values.addons.codeserver.image.repository }}:{{ .Values.addons.codeserver.image.tag }}"
           imagePullPolicy: "{{ .Values.addons.codeserver.image.pullPolicy }}"
           ports:

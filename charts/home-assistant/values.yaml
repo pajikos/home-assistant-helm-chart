@@ -400,6 +400,17 @@ addons:
       pullPolicy: IfNotPresent
       # Tag for the code-server image
       tag: "4.105.1"
+    # Authentication settings for the code-server addon
+    auth:
+      # Enable or disable authentication (if disabled, --auth none is used)
+      enabled: false
+      # Existing secret containing the password
+      # The secret should have a key 'password' containing the code-server password
+      existingSecret: ""
+      # Password for code-server (only used if existingSecret is not set)
+      # If neither existingSecret nor password is set, code-server will generate a random password
+      # which will be printed in the logs
+      password: ""
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
