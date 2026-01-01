@@ -132,6 +132,22 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Additional ingresses for exposing Home Assistant on different paths/hosts
+# Useful for IoT devices that don't support TLS or need specific path routing
+additionalIngresses: []
+#  - name: dlna
+#    className: ""
+#    labels: {}
+#    annotations: {}
+#    rules:
+#      - host: ""  # Optional: omit for path-only routing
+#        paths:
+#          - path: /notify
+#            pathType: Prefix
+#            serviceName: ""  # Optional: defaults to main HA service
+#            servicePort: ""  # Optional: defaults to service.port
+#    tls: []
+
 # Resource settings for the container
 resources:
   {}
