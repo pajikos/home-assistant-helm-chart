@@ -258,7 +258,7 @@ configuration:
         cat /config-templates/configuration.yaml > /config/configuration.yaml
       else
         # Perform the merge operation if /config/configuration.yaml is not empty
-        yq eval-all --inplace 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
+        yq eval-all --inplace --header-preprocess=false 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
       fi
     fi
 
