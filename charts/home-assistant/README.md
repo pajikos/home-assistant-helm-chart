@@ -79,6 +79,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
+| `additionalIngresses` | List of additional ingress configurations | `[]` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -236,6 +237,68 @@ ingress:
 
 In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
 The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when ingress is not available in your cluster)
+
+### Additional Ingresses
+
+For advanced use cases, you can define multiple additional Ingress resources using `additionalIngresses`. This is useful for:
+
+- IoT devices that don't support TLS (e.g., DLNA, Ecowitt weather stations)
+- Exposing specific paths without a hostname requirement
+- Routing to different services/ports
+
+Example configuration:
+
+```yaml
+# First, expose an additional port and service (if needed)
+additionalPorts:
+  - name: dlna
+    containerPort: 5555
+    protocol: TCP
+
+additionalServices:
+  - name: dlna
+    port: 5555
+    targetPort: dlna
+    type: ClusterIP
+    protocol: TCP
+
+# Then create additional ingresses
+additionalIngresses:
+  # Path-only routing (no host) for DLNA devices
+  - name: dlna
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    rules:
+      - paths:
+          - path: /notify
+            pathType: Prefix
+            serviceName: home-assistant-dlna
+            servicePort: 5555
+
+  # IoT device webhook endpoint
+  - name: iot-webhook
+    className: nginx
+    rules:
+      - host: iot.example.local
+        paths:
+          - path: /api/webhook
+            pathType: Prefix
+            # Uses main HA service by default
+```
+
+Each additional ingress supports:
+- `name`: Unique identifier (used in ingress name as `<release>-home-assistant-<name>`)
+- `className`: Ingress class name (optional)
+- `labels`: Additional labels (optional)
+- `annotations`: Ingress annotations (optional)
+- `rules`: List of ingress rules
+  - `host`: Hostname (optional - omit for path-only routing)
+  - `paths`: List of paths
+    - `path`: URL path
+    - `pathType`: `Exact`, `Prefix`, or `ImplementationSpecific`
+    - `serviceName`: Target service (defaults to main Home Assistant service)
+    - `servicePort`: Target port (defaults to `service.port`)
+- `tls`: TLS configuration (optional)
 
 ## HostPort and HostNetwork
 
