@@ -1,0 +1,56 @@
+{{- if and .Values.addons.mqtt.enabled .Values.addons.mqtt.ingress.enabled }}
+{{- $fullName := include "home-assistant.fullname" . -}}
+{{- $svcPort := .Values.addons.mqtt.service.websocketPort -}}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-mqtt
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+  {{- with .Values.addons.mqtt.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.addons.mqtt.ingress.className }}
+  ingressClassName: {{ .Values.addons.mqtt.ingress.className }}
+  {{- end }}
+  {{- if .Values.addons.mqtt.ingress.tls }}
+  tls:
+    {{- range .Values.addons.mqtt.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.addons.mqtt.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-mqtt
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-mqtt
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}

@@ -466,6 +466,43 @@ By default, authentication is disabled for code-server for backward compatibilit
          enabled: false
    ```
 
+## MQTT (Mosquitto)
+
+To enable the Mosquitto MQTT broker addon, set `addons.mqtt.enabled` to `true`. This runs Mosquitto as a sidecar container within the Home Assistant pod.
+
+The addon exposes:
+- **MQTT (TCP)**: Port 1883
+- **MQTT over WebSockets**: Port 9001 (configurable via `addons.mqtt.service.websocketPort`)
+
+### Access
+You can access the MQTT broker via:
+- **Internal Cluster**: `home-assistant-mqtt:1883`
+- **External**: Enable ingress for WebSockets by setting `addons.mqtt.ingress.enabled` to `true`.
+
+### Authentication
+Security configuration is managed via `addons.mqtt.allowAnonymous` and `addons.mqtt.auth`.
+
+1. **Anonymous Access** (default):
+   ```yaml
+   addons:
+     mqtt:
+       enabled: true
+       allowAnonymous: true
+   ```
+
+2. **Username/Password Authentication**:
+   To secure the broker, disable anonymous access and provide credentials. An init container will automatically generate the required password file.
+   ```yaml
+   addons:
+     mqtt:
+       enabled: true
+       allowAnonymous: false
+       auth:
+         enabled: true
+         username: "homeassistant"
+         password: "my-secure-password"
+   ```
+
 ## Upgrade Notes (v0.3)
 
 This release adds support for both `StatefulSet` (default/legacy) and `Deployment` controllers, and clarifies persistence usage.

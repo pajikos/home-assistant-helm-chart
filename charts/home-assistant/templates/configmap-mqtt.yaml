@@ -1,0 +1,27 @@
+{{- if .Values.addons.mqtt.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-mqtt-config
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+data:
+  mosquitto.conf: |
+    persistence true
+    persistence_location /mosquitto/data/
+    log_dest stdout
+
+    # Authentication
+    allow_anonymous {{ .Values.addons.mqtt.allowAnonymous }}
+    {{- if .Values.addons.mqtt.auth.enabled }}
+    password_file /mosquitto/data/passwd
+    {{- end }}
+
+    # MQTT Listener
+    listener 1883
+    protocol mqtt
+
+    # WebSocket Listener
+    listener 9001
+    protocol websockets
+{{- end }}
