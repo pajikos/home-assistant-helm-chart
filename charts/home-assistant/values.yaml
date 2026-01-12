@@ -454,6 +454,58 @@ addons:
       # - mountPath: /home/coder/.ssh/id_rsa
       #   name: id-rsa
 
+  # MQTT (Mosquitto) addon configuration
+  mqtt:
+    # Enable or disable the MQTT addon
+    enabled: false
+    # Allow anonymous access
+    allowAnonymous: true
+    # Authentication settings
+    auth:
+      # Enable authentication
+      enabled: false
+      # Username
+      username: "homeassistant"
+      # Password
+      password: ""
+    # Resource settings for the MQTT container
+    resources: {}
+    # Image settings for the MQTT addon
+    image:
+      # Repository for the MQTT image
+      repository: eclipse-mosquitto
+      # Image pull policy
+      pullPolicy: IfNotPresent
+      # Tag for the MQTT image
+      tag: "2"
+    # Service settings
+    service:
+      # Service type
+      type: ClusterIP
+      # MQTT TCP port
+      port: 1883
+      # MQTT WebSocket port
+      websocketPort: 9001
+      # Annotations
+      annotations: {}
+    # Ingress settings for the MQTT addon (WebSocket)
+    ingress:
+      # Enable or disable the ingress
+      enabled: false
+      # Ingress class name
+      className: ""
+      # Ingress annotations
+      annotations: {}
+      # Ingress hosts configuration
+      hosts:
+        - host: mqtt.example.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      # Ingress TLS configuration
+      tls: []
+
+
 # Controller configuration
 controller:
   # Type of controller to use: StatefulSet or Deployment

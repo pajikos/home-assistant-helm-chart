@@ -1,0 +1,25 @@
+{{- if .Values.addons.mqtt.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "home-assistant.fullname" . }}-mqtt
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+  {{- with .Values.addons.mqtt.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.addons.mqtt.service.type }}
+  ports:
+    - port: {{ .Values.addons.mqtt.service.port }}
+      targetPort: mqtt
+      protocol: TCP
+      name: mqtt
+    - port: {{ .Values.addons.mqtt.service.websocketPort }}
+      targetPort: mqtt-ws
+      protocol: TCP
+      name: mqtt-ws
+  selector:
+    {{- include "home-assistant.selectorLabels" . | nindent 4 }}
+{{- end }}

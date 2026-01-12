@@ -141,6 +141,29 @@ spec:
             {{- .Values.addons.codeserver.additionalMounts | toYaml | nindent 10 }}
           {{- end }}
         {{- end }}
+        {{- if .Values.addons.mqtt.enabled }}
+        - name: mqtt
+          image: "{{ .Values.addons.mqtt.image.repository }}:{{ .Values.addons.mqtt.image.tag }}"
+          imagePullPolicy: "{{ .Values.addons.mqtt.image.pullPolicy }}"
+          ports:
+          - containerPort: {{ .Values.addons.mqtt.service.port }}
+            name: mqtt
+            protocol: TCP
+          - containerPort: {{ .Values.addons.mqtt.service.websocketPort }}
+            name: mqtt-ws
+            protocol: TCP
+          {{- with .Values.addons.mqtt.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+          - mountPath: /mosquitto/config/mosquitto.conf
+            name: mosquitto-config
+            subPath: mosquitto.conf
+          - mountPath: /mosquitto/data
+            name: {{ include "home-assistant.fullname" . }}-pvc
+            subPath: mosquitto-data
+        {{- end }}
       {{- if or (.Values.configuration.enabled) .Values.initContainers }}
       initContainers:
         {{- if .Values.initContainers }}
@@ -174,6 +197,21 @@ spec:
             - mountPath: /config
               name: {{ include "home-assistant.fullname" . }}-pvc
         {{- end }}
+        {{- if and .Values.addons.mqtt.enabled .Values.addons.mqtt.auth.enabled }}
+        - name: init-mqtt-passwd
+          image: "{{ .Values.addons.mqtt.image.repository }}:{{ .Values.addons.mqtt.image.tag }}"
+          imagePullPolicy: "{{ .Values.addons.mqtt.image.pullPolicy }}"
+          command: ["sh", "-c", "mosquitto_passwd -c -b /mosquitto/data/passwd $USERNAME $PASSWORD && chown 1883:1883 /mosquitto/data/passwd"]
+          env:
+          - name: USERNAME
+            value: {{ .Values.addons.mqtt.auth.username | quote }}
+          - name: PASSWORD
+            value: {{ .Values.addons.mqtt.auth.password | quote }}
+          volumeMounts:
+          - mountPath: /mosquitto/data
+            name: {{ include "home-assistant.fullname" . }}-pvc
+            subPath: mosquitto-data
+        {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
@@ -198,6 +236,11 @@ spec:
       - name: config-volume
         configMap:
           name: hass-configuration
+      {{- end }}
+      {{- if .Values.addons.mqtt.enabled }}
+      - name: mosquitto-config
+        configMap:
+          name: {{ include "home-assistant.fullname" . }}-mqtt-config
       {{- end }}
       {{- if not .Values.persistence.enabled }}
       - name: {{ include "home-assistant.fullname" . }}-pvc
