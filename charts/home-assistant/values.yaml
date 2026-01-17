@@ -193,9 +193,16 @@ initContainers: []
 configuration:
   # Enable or disable the configuration setup for Home Assistant
   enabled: false
-  # Force init will merge the current configuration file with the default configuration on every start
-  # This is useful when you want to ensure that the configuration file is always up to date
+
+  # Force initialization will apply configuration settings (coming either from templateConfig or existingConfigMap) to
+  # the current configuration file each time the system starts. Set mergeConfig: false to completely replace the
+  # existing configuration rather than merging the changes with it.
   forceInit: false
+
+  # On each system startup, the current configuration file will be automatically merged with configuration settings
+  # coming from either templateConfig or existingConfigMap.
+  mergeConfig: true
+
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   trusted_proxies:
@@ -203,6 +210,11 @@ configuration:
     - 172.16.0.0/12
     - 192.168.0.0/16
     - 127.0.0.0/8
+
+  # The name of the ConfigMap to be used. If this value is set, then this ConfigMap will be used for the
+  # configuration.yaml instead of the ConfigMap rendered from templateConfig.
+  existingConfigMap: ""
+
   # Template for the configuration.yaml file
   # Used the `tpl` function to render the template, so you can use Go template functions
   templateConfig: |-
@@ -240,6 +252,8 @@ configuration:
 
     # Check if the force init is enabled
     forceInit="{{ .Values.configuration.forceInit }}"
+    mergeConfig="{{ .Values.configuration.mergeConfig }}"
+
     if [ "$forceInit" = "true" ]; then
       echo "Force init is enabled, overwriting the configuration file"
       current_time=$(date +%Y%m%d_%H%M%S)
@@ -251,14 +265,18 @@ configuration:
       ls -t /config/configuration.yaml.* 2>/dev/null | tail -n +11 | xargs -r rm
       echo "After cleanup - remaining backup files:"
       ls -l /config/configuration.yaml.*
-      echo "The current configuration file will be merged with the default configuration file with this content:"
-      cat /config-templates/configuration.yaml
-      if [[ ! -s /config/configuration.yaml ]]; then
-        # If /config/configuration.yaml is empty, use the content of /config-templates/configuration.yaml
-        cat /config-templates/configuration.yaml > /config/configuration.yaml
+      if [ "mergeConfig" = "true" ]; then
+        echo "The current configuration file will be merged with the default configuration file with this content:"
+        cat /config-templates/configuration.yaml
+        if [[ ! -s /config/configuration.yaml ]]; then
+          # If /config/configuration.yaml is empty, use the content of /config-templates/configuration.yaml
+          cat /config-templates/configuration.yaml > /config/configuration.yaml
+        else
+          # Perform the merge operation if /config/configuration.yaml is not empty
+          yq eval-all --inplace 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
+        fi
       else
-        # Perform the merge operation if /config/configuration.yaml is not empty
-        yq eval-all --inplace 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
+        cp /config-templates/configuration.yaml /config/configuration.yaml
       fi
     fi
 
