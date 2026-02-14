@@ -50,6 +50,7 @@ The following table lists the configurable parameters of the Home Assistant char
 
 This document provides detailed configuration options for the Home Assistant Helm chart.
 
+
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
 | `replicaCount` | Number of replicas for the deployment | `1` |
@@ -98,9 +99,11 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `additionalMounts` | Additional volume mounts to be mounted in the home assistant container | `[]` |
 | `initContainers` | List of initialization containers | `[]` |
 | `configuration.enabled` | Enable or disable the configuration setup for Home Assistant | `false` |
-| `configuration.forceInit` | Force init will merge the current configuration file with the default configuration on every start | `false` |
+| `configuration.forceInit` | Force init will set the current configuration file with the default configuration on every start | `false` |
+| `configuration.mergeConfig` | Will merge the current configuration file with the default configuration on every start | `true` |
 | `configuration.trusted_proxies` | List of trusted proxies in CIDR notation | `["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "127.0.0.0/8"]` |
 | `configuration.templateConfig` | Template for the `configuration.yaml` file | See Advanced Configuration |
+| `configuration.useExistingConfigMap` | ConfigMap to use for the `configuration.yaml` file | See Advanced Configuration |
 | `configuration.initScript` | Init script for Home Assistant initialization | See values.yaml for the complete configuration options  |
 | `configuration.initContainer` | Configuration for the init container | See values.yaml for the complete configuration options |
 | `addons.codeserver.enabled` | Enable or disable the code-server addon | `false` |
@@ -380,10 +383,15 @@ Customize Home Assistant's configuration directly through the Helm chart:
 # Configuration for Home Assistant
 configuration:
   # Enable or disable the configuration setup for Home Assistant
-  enabled: true
-  # Force init will merge the current configuration file with the default configuration on every start
+  enabled: false
+  # Force init will set the current configuration file with the default configuration on every start
   # This is useful when you want to ensure that the configuration file is always up to date
-  forceInit: true
+  forceInit: false
+  # Will merge the current configuration file with the default configuration on every start
+  mergeConfig: true
+  # The name of the ConfigMap to be used. If this value is set, then this ConfigMap will be used for the
+  # configuration.yaml instead of the ConfigMap rendered from templateConfig.
+  existingConfigMap: ""
   # List of trusted proxies in the format of CIDR notation in a case of using a reverse proxy
   # Here is the list of the most common private IP ranges, use your list of possible trusted proxies, usually, it's the IP of the reverse proxy
   trusted_proxies:
