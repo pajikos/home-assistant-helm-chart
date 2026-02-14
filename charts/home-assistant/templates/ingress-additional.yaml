@@ -18,6 +18,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
+  namespace: {{ include "home-assistant.namespace" $ }}
   labels:
     {{- include "home-assistant.labels" $ | nindent 4 }}
     {{- with .labels }}
