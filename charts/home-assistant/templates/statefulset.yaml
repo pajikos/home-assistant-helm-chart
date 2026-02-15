@@ -13,6 +13,9 @@ metadata:
 spec:
   serviceName: {{ include "home-assistant.fullname" . }}
   replicas: {{ .Values.replicaCount }}
+  {{- with .Values.podReplacementPolicy }}
+  podReplacementPolicy: {{ . }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "home-assistant.selectorLabels" . | nindent 6 }}

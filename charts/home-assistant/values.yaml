@@ -462,6 +462,13 @@ controller:
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}
 
+# Pod replacement policy for the StatefulSet (requires Kubernetes 1.32+)
+# When set to "Always", a replacement pod is created immediately when a pod is terminating
+# (e.g., due to a node failure), rather than waiting for the terminating pod to fully shut down.
+# Valid values: "" (default Kubernetes behavior), "Always"
+# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#pod-replacement-policy
+podReplacementPolicy: ""
+
 # Annotations to add to the deployment
 deploymentAnnotations: {}
 
