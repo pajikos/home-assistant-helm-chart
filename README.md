@@ -79,6 +79,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
+| `additionalIngresses` | List of additional ingress configurations | `[]` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -107,6 +108,9 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `addons.codeserver.image.repository` | Repository for the code-server image | `ghcr.io/coder/code-server` |
 | `addons.codeserver.image.pullPolicy` | Image pull policy for the code-server image | `IfNotPresent` |
 | `addons.codeserver.image.tag` | Tag for the code-server image | `latest released version, automatically updated` |
+| `addons.codeserver.auth.enabled` | Enable or disable authentication for the code-server addon | `false` |
+| `addons.codeserver.auth.existingSecret` | Existing secret containing the password (key: `password`) | `""` |
+| `addons.codeserver.auth.password` | Password for code-server (only used if existingSecret is not set) | `""` |
 | `addons.codeserver.service.type` | Service type for the code-server addon | `ClusterIP` |
 | `addons.codeserver.service.port` | Service port for the code-server addon | `12321` |
 | `addons.codeserver.ingress.enabled` | Enable or disable the ingress for the code-server addon | `false` |
@@ -234,6 +238,68 @@ ingress:
 In addition, you can specify the `ingress.hosts` and `ingress.tls` values. The default values are `[]` and `[]` respectively.
 The second option is to set `service.type` to `NodePort` or `LoadBalancer` (when ingress is not available in your cluster)
 
+### Additional Ingresses
+
+For advanced use cases, you can define multiple additional Ingress resources using `additionalIngresses`. This is useful for:
+
+- IoT devices that don't support TLS (e.g., DLNA, Ecowitt weather stations)
+- Exposing specific paths without a hostname requirement
+- Routing to different services/ports
+
+Example configuration:
+
+```yaml
+# First, expose an additional port and service (if needed)
+additionalPorts:
+  - name: dlna
+    containerPort: 5555
+    protocol: TCP
+
+additionalServices:
+  - name: dlna
+    port: 5555
+    targetPort: dlna
+    type: ClusterIP
+    protocol: TCP
+
+# Then create additional ingresses
+additionalIngresses:
+  # Path-only routing (no host) for DLNA devices
+  - name: dlna
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    rules:
+      - paths:
+          - path: /notify
+            pathType: Prefix
+            serviceName: home-assistant-dlna
+            servicePort: 5555
+
+  # IoT device webhook endpoint
+  - name: iot-webhook
+    className: nginx
+    rules:
+      - host: iot.example.local
+        paths:
+          - path: /api/webhook
+            pathType: Prefix
+            # Uses main HA service by default
+```
+
+Each additional ingress supports:
+- `name`: Unique identifier (used in ingress name as `<release>-home-assistant-<name>`)
+- `className`: Ingress class name (optional)
+- `labels`: Additional labels (optional)
+- `annotations`: Ingress annotations (optional)
+- `rules`: List of ingress rules
+  - `host`: Hostname (optional - omit for path-only routing)
+  - `paths`: List of paths
+    - `path`: URL path
+    - `pathType`: `Exact`, `Prefix`, or `ImplementationSpecific`
+    - `serviceName`: Target service (defaults to main Home Assistant service)
+    - `servicePort`: Target port (defaults to `service.port`)
+- `tls`: TLS configuration (optional)
+
 ## HostPort and HostNetwork
 
 To enable hostPort, set `hostPort.enabled` to `true`. In addition, you can specify the `hostPort.port` value. The default value is `8123`.
@@ -352,6 +418,53 @@ This allows for dynamic configuration based on your Helm values.
 
 To enable the code-server addon, set `addons.codeserver.enabled` to `true`. In addition, you can specify the `addons.codeserver.resources` values. The default value is `{}`.
 To be able to access the code-server addon, you need to enable the ingress for the code-server addon by setting `addons.codeserver.ingress.enabled` to `true` or setting `service.type` to `NodePort` or `LoadBalancer`.
+
+### Authentication
+
+By default, authentication is disabled for code-server for backward compatibility (`addons.codeserver.auth.enabled: false`). However, it is **strongly recommended** to enable authentication, especially when exposing code-server via ingress or external access. You have three options for configuring authentication:
+
+1. **Use an existing Kubernetes secret** (recommended for production):
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+         existingSecret: "my-codeserver-secret"
+   ```
+   The secret should contain a key named `password` with your desired password.
+
+2. **Set a password directly in values**:
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+         password: "my-secure-password"
+   ```
+
+3. **Let code-server generate a random password**:
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+   ```
+   The randomly generated password will be printed in the code-server container logs. You can retrieve it with:
+   ```bash
+   kubectl logs <pod-name> -c codeserver
+   ```
+
+4. **Disable authentication** (not recommended for production):
+   ```yaml
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: false
+   ```
 
 ## Upgrade Notes (v0.3)
 

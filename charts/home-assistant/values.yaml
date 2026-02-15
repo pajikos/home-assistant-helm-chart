@@ -43,7 +43,7 @@ podSecurityContext:
   # fsGroupChangePolicy: "OnRootMismatch"
 
 # Environment variables
-env:
+env: []
 # - name: TZ
 #   value: Europe/Prague
 # - name: SOME_VAR_FROM_CONFIG_MAP
@@ -152,6 +152,22 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Additional ingresses for exposing Home Assistant on different paths/hosts
+# Useful for IoT devices that don't support TLS or need specific path routing
+additionalIngresses: []
+#  - name: dlna
+#    className: ""
+#    labels: {}
+#    annotations: {}
+#    rules:
+#      - host: ""  # Optional: omit for path-only routing
+#        paths:
+#          - path: /notify
+#            pathType: Prefix
+#            serviceName: ""  # Optional: defaults to main HA service
+#            servicePort: ""  # Optional: defaults to service.port
+#    tls: []
+
 # Resource settings for the container
 resources:
   {}
@@ -188,6 +204,23 @@ priorityClassName: ""
   # - name: init-myservice
   #   image: busybox
   #   command: ['sh', '-c', 'until nslookup myservice; do echo waiting for myservice; sleep 2; done;']
+# Set a priorityClassName on Home Assistant pods
+priorityClassName: ""
+
+initContainers: []
+# Example of integrating a custom component before starting the Home Assistant container
+# Uses emptyDir custom-components, see below
+# - name: init-panasonic-cc
+#   image: alpine/git
+#   command: [ "/bin/sh", "-c" ]
+#   args:
+#   - |
+#     git clone https://github.com/sockless-coding/panasonic_cc.git /git/panasonic_cc
+#     cp -r /git/panasonic_cc/custom_components/panasonic_cc/* /panasonic_cc
+#     chown -R 1000:1000 /panasonic_cc/*
+#   volumeMounts:
+#   - name: custom-components
+#     mountPath: /panasonic_cc
 
 # Configuration for Home Assistant
 configuration:
@@ -343,11 +376,23 @@ persistence:
   matchExpressions: {}
 
 # if you need any additional volumes, you can define them here
-# if you need any additional volumes, you can define them here
-# if you need any additional volumes, you can define them here
 additionalVolumes: []
+  # - name: custom-components
+  #   emptyDir: {}
 
+  # - hostPath:
+  #     path: >-
+  #       /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0
+  #     type: CharDevice
+  #   name: usb
+# if you need any additional volume mounts, you can define them here
 additionalMounts: []
+  # - mountPath: /config/custom_components/panasonic_cc
+  #   name: custom-components
+
+  # - mountPath: /dev/ttyACM0
+  #   name: usb
+
 # if you need to expose additional ports
 additionalPorts: []
 #  - name: sia
@@ -426,7 +471,18 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.99.4"
+      tag: "4.107.0"
+    # Authentication settings for the code-server addon
+    auth:
+      # Enable or disable authentication (if disabled, --auth none is used)
+      enabled: false
+      # Existing secret containing the password
+      # The secret should have a key 'password' containing the code-server password
+      existingSecret: ""
+      # Password for code-server (only used if existingSecret is not set)
+      # If neither existingSecret nor password is set, code-server will generate a random password
+      # which will be printed in the logs
+      password: ""
     # Service settings
     service:
       # Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName)
@@ -464,3 +520,6 @@ statefulSetAnnotations: {}
 
 # Annotations to add to the deployment
 deploymentAnnotations: {}
+
+# Deployment strategy type (RollingUpdate, Recreate)
+deploymentStrategy: RollingUpdate

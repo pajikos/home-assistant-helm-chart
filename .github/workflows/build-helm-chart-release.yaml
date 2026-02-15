@@ -23,7 +23,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
+<<<<<<< HEAD
         uses: actions/checkout@v4
+=======
+        uses: actions/checkout@v6
+>>>>>>> pajikos/main
         with:
           fetch-depth: 0
 
@@ -33,7 +37,11 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       
       - name: Set up Python
+<<<<<<< HEAD
         uses: actions/setup-python@v5
+=======
+        uses: actions/setup-python@v6
+>>>>>>> pajikos/main
         with:
           python-version: 3.x
 

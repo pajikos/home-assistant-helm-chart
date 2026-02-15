@@ -98,7 +98,15 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           args:
           - --auth
+<<<<<<< HEAD
           - none
+=======
+          {{- if .Values.addons.codeserver.auth.enabled }}
+          - password
+          {{- else }}
+          - none
+          {{- end }}
+>>>>>>> pajikos/main
           - --user-data-dir
           - "/config/.vscode"
           - --extensions-dir
@@ -106,6 +114,22 @@ spec:
           - --port
           - "12321"
           - "/config"
+<<<<<<< HEAD
+=======
+          {{- if and .Values.addons.codeserver.auth.enabled (or .Values.addons.codeserver.auth.existingSecret .Values.addons.codeserver.auth.password) }}
+          env:
+          {{- if .Values.addons.codeserver.auth.existingSecret }}
+          - name: PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .Values.addons.codeserver.auth.existingSecret }}
+                key: password
+          {{- else if .Values.addons.codeserver.auth.password }}
+          - name: PASSWORD
+            value: {{ .Values.addons.codeserver.auth.password | quote }}
+          {{- end }}
+          {{- end }}
+>>>>>>> pajikos/main
           image: "{{ .Values.addons.codeserver.image.repository }}:{{ .Values.addons.codeserver.image.tag }}"
           imagePullPolicy: "{{ .Values.addons.codeserver.image.pullPolicy }}"
           ports:

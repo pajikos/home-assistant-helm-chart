@@ -8,7 +8,11 @@ jobs:
   get-version:
     runs-on: ubuntu-latest
     steps:
+<<<<<<< HEAD
       - uses: actions/checkout@v4
+=======
+      - uses: actions/checkout@v6
+>>>>>>> pajikos/main
         with:
           token: ${{ secrets.REPO_SCOPED_TOKEN }}
       - name: Prepare git

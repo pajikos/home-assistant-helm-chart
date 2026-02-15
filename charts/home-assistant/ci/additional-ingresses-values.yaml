@@ -1,0 +1,46 @@
+# Test configuration for additionalIngresses feature
+
+additionalPorts:
+  - name: dlna
+    containerPort: 5555
+    protocol: TCP
+
+additionalServices:
+  - name: dlna
+    port: 5555
+    targetPort: dlna
+    type: ClusterIP
+    protocol: TCP
+
+additionalIngresses:
+  # Test 1: Path-only routing (no host) for DLNA
+  - name: dlna
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    rules:
+      - paths:
+          - path: /notify
+            pathType: Prefix
+            serviceName: home-assistant-dlna
+            servicePort: 5555
+
+  # Test 2: IoT API endpoint with custom host
+  - name: iot-api
+    className: nginx
+    rules:
+      - host: iot.example.local
+        paths:
+          - path: /api/
+            pathType: Prefix
+
+  # Test 3: Alternative domain with TLS
+  - name: alt-domain
+    rules:
+      - host: ha-alt.example.local
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+    tls:
+      - secretName: ha-alt-tls
+        hosts:
+          - ha-alt.example.local

@@ -3,7 +3,11 @@ startupProbe:
   periodSeconds: 5
   timeoutSeconds: 1
   successThreshold: 1
+<<<<<<< HEAD
   failureThreshold: 1
+=======
+  failureThreshold: 30
+>>>>>>> pajikos/main
   httpGet:
     scheme: HTTP
     path: /
