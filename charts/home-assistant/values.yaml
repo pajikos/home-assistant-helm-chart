@@ -462,6 +462,8 @@ addons:
 controller:
   # Type of controller to use: StatefulSet or Deployment
   type: StatefulSet
+  # Labels to add to the controller
+  labels: {}
 
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}

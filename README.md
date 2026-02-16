@@ -65,6 +65,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `commonLabels` | Labels to add to all resources | `{}` |
 | `podAnnotations` | Annotations to add to the pod | `{}` |
 | `controller.type` | Type of controller to use: StatefulSet or Deployment | `StatefulSet` |
+| `controller.labels` | Labels to add to the controller | `{}` |
 | `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `deploymentAnnotations` | Annotations to add to the Deployment | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
