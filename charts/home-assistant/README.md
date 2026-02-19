@@ -52,6 +52,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 
 | Parameter | Description | Default |
 | --------- | ----------- | ------- |
+| `namespaceOverride` | Override the namespace | `.Release.Namespace` |
 | `replicaCount` | Number of replicas for the deployment | `1` |
 | `image.repository` | Repository for the Home Assistant image | `ghcr.io/home-assistant/home-assistant` |
 | `image.pullPolicy` | Image pull policy | `IfNotPresent` |
