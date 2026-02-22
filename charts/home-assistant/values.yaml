@@ -31,6 +31,10 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
 
+# Labels to add to all resources
+commonLabels: {}
+  # app.kubernetes.io/part-of: home-automation
+
 # Annotations to add to the pod
 podAnnotations: {}
 
@@ -458,6 +462,8 @@ addons:
 controller:
   # Type of controller to use: StatefulSet or Deployment
   type: StatefulSet
+  # Labels to add to the controller
+  labels: {}
 
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}
