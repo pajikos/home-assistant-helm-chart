@@ -3,7 +3,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: hass-configuration
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ include "home-assistant.namespace" . }}
 data:
   configuration.yaml: |
     {{- tpl .Values.configuration.templateConfig . | nindent 4 }}
