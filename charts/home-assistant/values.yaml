@@ -213,6 +213,10 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
 
+    {{- if .Values.serviceMonitor.enabled }}
+    prometheus:
+    {{- end }}
+
     {{- if or .Values.ingress.enabled .Values.ingress.external }}
     http:
       use_x_forwarded_for: true
@@ -419,7 +423,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.109.5"
+      tag: "4.107.0"
     # Authentication settings for the code-server addon
     auth:
       # Enable or disable authentication (if disabled, --auth none is used)
