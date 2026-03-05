@@ -397,7 +397,8 @@ startupProbe: {}
   #   port: http
 
 serviceMonitor:
-  # requires HA integration:  https://www.home-assistant.io/integrations/prometheus/
+  # Enabling this automatically enables the Prometheus integration with default configuration.
+  # See https://www.home-assistant.io/integrations/prometheus/ for details.
   enabled: false
   scrapeInterval: 30s
   labels: {}
