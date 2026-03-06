@@ -35,7 +35,7 @@ spec:
     {{- end }}
     {{- if .Values.hostname }}
       hostname: {{ .Values.hostname }}
-    {{- end}}
+    {{- end }}
     {{- if .Values.dnsPolicy }}
       dnsPolicy: {{ .Values.dnsPolicy }}
     {{- end }}
