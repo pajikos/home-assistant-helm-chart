@@ -36,6 +36,9 @@ spec:
     {{- if .Values.hostNetwork }}
       hostNetwork: true
     {{- end }}
+    {{- if .Values.hostname }}
+      hostname: {{ .Values.hostname | quote }}
+    {{- end }}
     {{- if .Values.dnsPolicy }}
       dnsPolicy: {{ .Values.dnsPolicy }}
     {{- end }}
