@@ -1,0 +1,15 @@
+# Test values for common labels and controller labels on StatefulSet resources
+commonLabels:
+  part-of: home-automation
+  component: home-assistant
+
+controller:
+  labels:
+    maintenance-group: longhorn
+
+configuration:
+  enabled: true
+
+persistence:
+  enabled: true
+  size: 1Gi

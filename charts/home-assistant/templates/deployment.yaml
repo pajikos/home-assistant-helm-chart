@@ -24,7 +24,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "home-assistant.selectorLabels" . | nindent 8 }}
+        {{- include "home-assistant.podLabels" . | nindent 8 }}
       annotations:
         {{- if .Values.configuration.enabled }}
         checksum/init-script: {{ include (print $.Template.BasePath "/configmap-init-script.yaml") . | sha256sum }}
