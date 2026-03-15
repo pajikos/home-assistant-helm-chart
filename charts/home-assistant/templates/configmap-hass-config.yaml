@@ -4,6 +4,8 @@ kind: ConfigMap
 metadata:
   name: hass-configuration
   namespace: {{ include "home-assistant.namespace" . }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
 data:
   configuration.yaml: |
     {{- tpl .Values.configuration.templateConfig . | nindent 4 }}
