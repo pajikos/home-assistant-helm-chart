@@ -113,6 +113,8 @@ service:
   port: 8080
   # Annotations to add to the service
   annotations: {}
+  # if type is nodePort, you can specify the node port to use in 30000-32767 range
+  # nodePort: 30080
 
 # Ingress settings
 ingress:
