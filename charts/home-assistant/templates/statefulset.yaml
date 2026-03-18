@@ -219,8 +219,6 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: {{ include "home-assistant.fullname" . }}
-      labels:
-        {{- include "home-assistant.labels" . | nindent 8 }}
       {{- with .Values.persistence.annotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
