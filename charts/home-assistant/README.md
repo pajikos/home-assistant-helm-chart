@@ -316,6 +316,8 @@ If you have the Prometheus Operator installed, you can enable a ServiceMonitor t
 ```yaml
 serviceMonitor:
   enabled: true
+  # Set custom namespace for serviceMonitor resource deployment (optional)
+  namespace: "monitoring"
   scrapeInterval: 30s
   labels:
     release: prometheus
