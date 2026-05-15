@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ include "home-assistant.fullname" . }}
-  {{- if not .Values.serviceMonitor.customNamespace }}
+  {{- if not .Values.serviceMonitor.namespace }}
   namespace: {{ include "home-assistant.namespace" . }}
   {{- else }}
   namespace: {{ .Values.serviceMonitor.namespace }}
