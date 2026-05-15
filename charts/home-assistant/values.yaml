@@ -407,6 +407,8 @@ serviceMonitor:
   # Enabling this automatically enables the Prometheus integration with default configuration.
   # See https://www.home-assistant.io/integrations/prometheus/ for details.
   enabled: false
+  # Set custom namespace for serviceMonitor resource deployment
+  # customNamespace: ""
   scrapeInterval: 30s
   labels: {}
   # Bearer token authentication configuration
