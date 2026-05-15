@@ -222,10 +222,10 @@ configuration:
 
     {{- if .Values.serviceMonitor.enabled }}
     prometheus:
-    {{- if or 
+    {{- if or
       (not .Values.serviceMonitor.bearerToken)
       (not .Values.serviceMonitor.bearerToken.secretName)
-      (not .Values.serviceMonitor.bearerToken.secretKey) 
+      (not .Values.serviceMonitor.bearerToken.secretKey)
     }}
       requires_auth: false
     {{- end }}
