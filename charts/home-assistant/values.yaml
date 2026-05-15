@@ -222,6 +222,13 @@ configuration:
 
     {{- if .Values.serviceMonitor.enabled }}
     prometheus:
+    {{- if or 
+      (not .Values.serviceMonitor.bearerToken)
+      (not .Values.serviceMonitor.bearerToken.secretName)
+      (not .Values.serviceMonitor.bearerToken.secretKey) 
+    }}
+      requires_auth: false
+    {{- end }}
     {{- end }}
 
     {{- if or .Values.ingress.enabled .Values.ingress.external }}
