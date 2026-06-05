@@ -143,6 +143,29 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
+# Gateway API HTTPRoute settings (alternative to ingress)
+# Requires the Gateway API CRDs and a Gateway controller installed in the cluster
+httpRoute:
+  # Enable HTTPRoute for Home Assistant
+  enabled: false
+  # Labels to add to the HTTPRoute
+  labels: {}
+  # Annotations to add to the HTTPRoute
+  annotations: {}
+  # Parent Gateways this route attaches to (required when enabled)
+  parentRefs: []
+  #  - name: example-gateway
+  #    namespace: gateway-system
+  #    sectionName: https
+  # Hostnames matched by this route (optional; omit to match all)
+  hostnames: []
+  #  - home-assistant.example.com
+  # Route match rules (optional; defaults to a single PathPrefix "/" match)
+  matches: []
+  #  - path:
+  #      type: PathPrefix
+  #      value: /
+
 # Additional ingresses for exposing Home Assistant on different paths/hosts
 # Useful for IoT devices that don't support TLS or need specific path routing
 additionalIngresses: []

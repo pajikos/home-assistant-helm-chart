@@ -83,6 +83,10 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
 | `additionalIngresses` | List of additional ingress configurations | `[]` |
+| `httpRoute.enabled` | Enable Gateway API HTTPRoute for Home Assistant | `false` |
+| `httpRoute.parentRefs` | Parent Gateways the HTTPRoute attaches to | `[]` |
+| `httpRoute.hostnames` | Hostnames matched by the HTTPRoute | `[]` |
+| `httpRoute.matches` | Route match rules (defaults to a PathPrefix `/` match) | `[]` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -302,6 +306,44 @@ Each additional ingress supports:
     - `serviceName`: Target service (defaults to main Home Assistant service)
     - `servicePort`: Target port (defaults to `service.port`)
 - `tls`: TLS configuration (optional)
+
+## HTTPRoute (Gateway API)
+
+As an alternative to a traditional Ingress, the chart can expose Home Assistant
+through a [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute`. This
+requires the Gateway API CRDs and a Gateway controller to be installed in the
+cluster, and an existing `Gateway` to attach to.
+
+`httpRoute.enabled` is an independent toggle, so it can be used on its own or
+alongside `ingress.enabled` during a migration.
+
+Example configuration:
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: example-gateway
+      namespace: gateway-system
+      sectionName: https
+  hostnames:
+    - home-assistant.example.com
+```
+
+The route forwards traffic to the main Home Assistant service on
+`service.port`. When `httpRoute.matches` is empty a single `PathPrefix: /`
+match is generated; set it to define custom path matching, for example:
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: example-gateway
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+```
 
 ## HostPort and HostNetwork
 
