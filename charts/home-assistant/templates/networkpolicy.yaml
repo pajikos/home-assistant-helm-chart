@@ -15,9 +15,13 @@ spec:
     {{- toYaml .Values.networkPolicy.ingress | nindent 4 }}
   {{- end }}
   policyTypes:
+  {{- if .Values.networkPolicy.egress }}
     - Egress
+  {{- end }}
+  {{- if .Values.networkPolicy.ingress }}
     - Ingress
+  {{- end }}
   podSelector:
     matchLabels:
-      {{- include "home-assistant.selectorLabels" $ | nindent 4 }}
+      {{- include "home-assistant.selectorLabels" $ | nindent 6 }}
 {{- end }}
