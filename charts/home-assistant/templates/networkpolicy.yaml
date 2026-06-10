@@ -3,6 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: {{ include "home-assistant.fullname" . }}
+  namespace: {{ include "home-assistant.namespace" . }}
   labels:
     {{- include "home-assistant.labels" . | nindent 4 }}
 spec:
@@ -15,11 +16,15 @@ spec:
     {{- toYaml .Values.networkPolicy.ingress | nindent 4 }}
   {{- end }}
   policyTypes:
-  {{- if .Values.networkPolicy.egress }}
+  {{- if .Values.networkPolicy.policyTypes }}
+    {{- toYaml .Values.networkPolicy.policyTypes | nindent 4 }}
+  {{- else }}
+  {{-   if .Values.networkPolicy.egress }}
     - Egress
-  {{- end }}
-  {{- if .Values.networkPolicy.ingress }}
+  {{-   end }}
+  {{-   if .Values.networkPolicy.ingress }}
     - Ingress
+  {{-   end }}
   {{- end }}
   podSelector:
     matchLabels:
