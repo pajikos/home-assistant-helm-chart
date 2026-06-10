@@ -167,6 +167,30 @@ httpRoute:
   #      type: PathPrefix
   #      value: /
 
+# -- Define network policy targeting managed pod
+networkPolicy:
+  enabled: false
+  # -- If cilium flavor is defined, fill definition here
+  cilium:
+    egress:
+    - toPorts:
+      - ports:
+        - port: "1883"
+          protocol: TCP
+        - port: "8883"
+          protocol: TCP
+    ingress: {}
+  # -- Choose policy flavor in 'kubernetes', 'cilium'
+  flavor: kubernetes
+  # -- If kubernetes flavor is defined, fill definition here
+  ingress: {}
+  egress:
+  - ports:
+    - port: 1883
+      protocol: TCP
+    - port: 8883
+      protocol: TCP
+
 # Additional ingresses for exposing Home Assistant on different paths/hosts
 # Useful for IoT devices that don't support TLS or need specific path routing
 additionalIngresses: []
