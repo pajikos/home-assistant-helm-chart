@@ -144,7 +144,8 @@ ingress:
   #      - chart-example.local
 
 # Gateway API HTTPRoute settings (alternative to ingress)
-# Requires the Gateway API CRDs and a Gateway controller installed in the cluster
+# This chart does not install the Gateway API CRDs or a Gateway controller;
+# both must already be present in the cluster (see the chart README).
 httpRoute:
   # Enable HTTPRoute for Home Assistant
   enabled: false

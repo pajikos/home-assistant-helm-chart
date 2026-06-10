@@ -310,12 +310,26 @@ Each additional ingress supports:
 ## HTTPRoute (Gateway API)
 
 As an alternative to a traditional Ingress, the chart can expose Home Assistant
-through a [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute`. This
-requires the Gateway API CRDs and a Gateway controller to be installed in the
-cluster, and an existing `Gateway` to attach to.
+through a [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute`.
 
-`httpRoute.enabled` is an independent toggle, so it can be used on its own or
-alongside `ingress.enabled` during a migration.
+`httpRoute.enabled` is an independent toggle (disabled by default), so it can be
+used on its own or alongside `ingress.enabled` during a migration.
+
+### Prerequisites
+
+This chart only renders an `HTTPRoute`; it does **not** bundle the Gateway API
+CRDs or a Gateway controller. Those are cluster infrastructure that must be
+installed separately before enabling `httpRoute`:
+
+1. Install the Gateway API CRDs, for example:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+   ```
+
+2. Install a Gateway controller (for example [Envoy Gateway](https://gateway.envoyproxy.io/),
+   NGINX Gateway Fabric, or Istio) and create a `Gateway` for the `HTTPRoute` to
+   attach to via `httpRoute.parentRefs`.
 
 Example configuration:
 
