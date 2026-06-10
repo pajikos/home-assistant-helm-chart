@@ -88,6 +88,12 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
 | `affinity` | Affinity settings for controlling pod scheduling | `{}` |
 | `priorityClassName` | Priority class name for Home Assistant pods | `""` |
+| `networkPolicy.cilium.egress` | Cilium network policy egress https://docs.cilium.io/en/stable/security/policy/ | `[]` |
+| `networkPolicy.cilium.ingress` | Cilium network policy ingress https://docs.cilium.io/en/stable/security/policy/ | `[]` |
+| `networkPolicy.egress`  | Kubernetes egress spec https://kubernetes.io/docs/concepts/services-networking/network-policies/ | `[]` |
+| `networkPolicy.enabled` | Enable network policy management | `false` |
+| `networkPolicy.flavor` | Network policy mode in kubernetes, cilium | `kubernetes` |
+| `networkPolicy.ingress`  | Kubernetes ingress spec https://kubernetes.io/docs/concepts/services-networking/network-policies/| `[]` |
 | `persistence.enabled` | Enables the creation of a Persistent Volume Claim (PVC) for Home Assistant. | `false` |
 | `persistence.accessMode` | The access mode of the PVC. | `ReadWriteOnce` |
 | `persistence.size` | The size of the PVC to create. | `5Gi` |
