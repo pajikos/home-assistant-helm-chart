@@ -148,6 +148,7 @@ networkPolicy:
   enabled: false
   # -- If cilium flavor is defined, fill definition here
   cilium:
+    # -- Cilium egress rules:
     egress: []
     # - toPorts:
     #   - ports:
@@ -155,6 +156,10 @@ networkPolicy:
     #       protocol: TCP
     #     - port: "8883"
     #       protocol: TCP
+    enableDefaultDeny: {}
+      # egress: true
+      # ingress: true
+    # -- Cilium ingress rules
     ingress:
     - toPorts:
       - ports:
