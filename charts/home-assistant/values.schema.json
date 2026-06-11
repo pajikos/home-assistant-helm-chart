@@ -13,18 +13,17 @@
           "type": "string",
           "enum": ["kubernetes", "cilium"]
         },
-        "policyTypes": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "enum": ["Ingress", "Egress"]
-          }
-        },
         "ingress": {
           "type": "array"
         },
         "egress": {
           "type": "array"
+        },
+        "policyTypes": {
+          "type": "array",
+          "items": {
+            "enum": ["Ingress", "Egress"]
+          }
         },
         "cilium": {
           "type": "object",
@@ -35,6 +34,18 @@
             },
             "egress": {
               "type": "array"
+            },
+            "enableDefaultDeny": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "ingress": {
+                  "type": "boolean"
+                },
+                "egress": {
+                  "type": "boolean"
+                }
+              }
             }
           }
         }
