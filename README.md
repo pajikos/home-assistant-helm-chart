@@ -84,6 +84,10 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
 | `additionalIngresses` | List of additional ingress configurations | `[]` |
+| `httpRoute.enabled` | Enable Gateway API HTTPRoute for Home Assistant | `false` |
+| `httpRoute.parentRefs` | Parent Gateways the HTTPRoute attaches to | `[]` |
+| `httpRoute.hostnames` | Hostnames matched by the HTTPRoute | `[]` |
+| `httpRoute.matches` | Route match rules (defaults to a PathPrefix `/` match) | `[]` |
 | `resources` | Resource settings for the container | `{}` |
 | `nodeSelector` | Node selector settings for scheduling the pod on specific nodes | `{}` |
 | `tolerations` | Tolerations settings for scheduling the pod based on node taints | `[]` |
@@ -304,6 +308,65 @@ Each additional ingress supports:
     - `servicePort`: Target port (defaults to `service.port`)
 - `tls`: TLS configuration (optional)
 
+## HTTPRoute (Gateway API)
+
+As an alternative to a traditional Ingress, the chart can expose Home Assistant
+through a [Gateway API](https://gateway-api.sigs.k8s.io/) `HTTPRoute`.
+
+`httpRoute.enabled` is an independent toggle (disabled by default), so it can be
+used on its own or alongside `ingress.enabled` during a migration.
+
+### Prerequisites
+
+This chart only renders an `HTTPRoute`; it does **not** bundle the Gateway API
+CRDs or a Gateway controller. Those are cluster infrastructure that must be
+installed separately before enabling `httpRoute`:
+
+1. Install the Gateway API CRDs, for example:
+
+   ```bash
+   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+   ```
+
+2. Install a Gateway controller (for example [Envoy Gateway](https://gateway.envoyproxy.io/),
+   NGINX Gateway Fabric, or Istio) and create a `Gateway` for the `HTTPRoute` to
+   attach to via `httpRoute.parentRefs`.
+
+Example configuration:
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: example-gateway
+      namespace: gateway-system
+      sectionName: https
+  hostnames:
+    - home-assistant.example.com
+```
+
+`httpRoute.parentRefs` is required when `httpRoute.enabled` is `true`: the chart
+fails the render with a clear message if it is left empty, since a route with no
+`parentRefs` would not attach to any Gateway. Enabling `httpRoute` also emits the
+reverse-proxy `http:` block (`use_x_forwarded_for` / `trusted_proxies`) in the
+managed `configuration.yaml`, the same as `ingress`, so client IPs are handled
+correctly behind the Gateway.
+
+The route forwards traffic to the main Home Assistant service on
+`service.port`. When `httpRoute.matches` is empty a single `PathPrefix: /`
+match is generated; set it to define custom path matching, for example:
+
+```yaml
+httpRoute:
+  enabled: true
+  parentRefs:
+    - name: example-gateway
+  matches:
+    - path:
+        type: PathPrefix
+        value: /
+```
+
 ## HostPort and HostNetwork
 
 To enable hostPort, set `hostPort.enabled` to `true`. In addition, you can specify the `hostPort.port` value. The default value is `8123`.
@@ -398,7 +461,7 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
 
-    {{- if .Values.ingress.enabled }}
+    {{- if or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
