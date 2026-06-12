@@ -106,6 +106,15 @@ Validate ingress configuration
 {{- end -}}
 
 {{/*
+Validate HTTPRoute configuration
+*/}}
+{{- define "home-assistant.validateHTTPRoute" -}}
+{{- if and .Values.httpRoute.enabled (not .Values.httpRoute.parentRefs) -}}
+{{- fail "httpRoute.enabled is true but httpRoute.parentRefs is empty; set at least one parentRef so the HTTPRoute attaches to a Gateway" -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Validate controller type
 */}}
 {{- define "home-assistant.validateController" -}}

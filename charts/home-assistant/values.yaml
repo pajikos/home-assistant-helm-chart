@@ -248,7 +248,7 @@ configuration:
     prometheus:
     {{- end }}
 
-    {{- if or .Values.ingress.enabled .Values.ingress.external }}
+    {{- if or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:

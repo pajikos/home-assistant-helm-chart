@@ -344,6 +344,13 @@ httpRoute:
     - home-assistant.example.com
 ```
 
+`httpRoute.parentRefs` is required when `httpRoute.enabled` is `true`: the chart
+fails the render with a clear message if it is left empty, since a route with no
+`parentRefs` would not attach to any Gateway. Enabling `httpRoute` also emits the
+reverse-proxy `http:` block (`use_x_forwarded_for` / `trusted_proxies`) in the
+managed `configuration.yaml`, the same as `ingress`, so client IPs are handled
+correctly behind the Gateway.
+
 The route forwards traffic to the main Home Assistant service on
 `service.port`. When `httpRoute.matches` is empty a single `PathPrefix: /`
 match is generated; set it to define custom path matching, for example:
@@ -453,7 +460,7 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
 
-    {{- if .Values.ingress.enabled }}
+    {{- if or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
