@@ -3,6 +3,7 @@
 ![Latest Released Version](https://img.shields.io/github/v/tag/pajikos/home-assistant-helm-chart?sort=semver)
 ![Helm Chart Release](https://github.com/pajikos/home-assistant-helm-chart/actions/workflows/build-helm-chart-release.yaml/badge.svg)
 ![Auto-update latest HA version](https://github.com/pajikos/home-assistant-helm-chart/actions/workflows/check_ha_release.yml/badge.svg)
+![Chart Downloads](https://img.shields.io/endpoint?url=https%3A%2F%2Fpajikos.github.io%2Fhome-assistant-helm-chart%2Fstats%2Fdownloads-badge.json)
 [![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/helm-hass)](https://artifacthub.io/packages/search?repo=helm-hass)
 
 ## Introduction
