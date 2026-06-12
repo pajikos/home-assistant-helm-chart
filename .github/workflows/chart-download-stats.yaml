@@ -1,0 +1,71 @@
+name: Chart Download Stats
+
+on:
+  schedule:
+    - cron: "23 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: gh-pages-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.x"
+
+      - name: Generate download stats
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python .github/scripts/chart_download_stats.py --repo "$GITHUB_REPOSITORY" --output generated-stats
+
+      - name: Checkout GitHub Pages branch
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+          path: gh-pages
+          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+
+      - name: Publish stats to GitHub Pages
+        working-directory: gh-pages
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          mkdir -p stats
+          cp ../generated-stats/stats/downloads.json stats/downloads.json
+          cp ../generated-stats/stats/downloads-badge.json stats/downloads-badge.json
+          cp ../generated-stats/stats/index.html stats/index.html
+          touch .nojekyll
+
+          git add .nojekyll stats/downloads.json stats/downloads-badge.json stats/index.html
+          if git diff --cached --quiet; then
+            echo "No stats changes to publish."
+            exit 0
+          fi
+
+          git commit -m "Update chart download stats"
+
+          for attempt in 1 2; do
+            git pull --rebase origin gh-pages
+            if git push origin HEAD:gh-pages; then
+              exit 0
+            fi
+
+            if [ "$attempt" = "2" ]; then
+              exit 1
+            fi
+
+            git fetch origin gh-pages
+            git rebase origin/gh-pages
+          done

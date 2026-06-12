@@ -1,0 +1,51 @@
+[
+  {
+    "tag_name": "home-assistant-0.3.64",
+    "assets": [
+      {
+        "name": "home-assistant-0.3.64.tgz",
+        "download_count": 745
+      },
+      {
+        "name": "home-assistant-0.3.64.prov",
+        "download_count": 999
+      }
+    ]
+  },
+  {
+    "tag_name": "home-assistant-0.3.63",
+    "assets": [
+      {
+        "name": "home-assistant-0.3.63.tgz",
+        "download_count": 1662
+      }
+    ]
+  },
+  {
+    "tag_name": "home-assistant-0.2.102",
+    "assets": [
+      {
+        "name": "home-assistant-0.2.102.tgz",
+        "download_count": 53037
+      }
+    ]
+  },
+  {
+    "tag_name": "<script>alert(1)</script>",
+    "assets": [
+      {
+        "name": "home-assistant-0.3.65.tgz",
+        "download_count": 1
+      }
+    ]
+  },
+  {
+    "tag_name": "not-a-chart",
+    "assets": [
+      {
+        "name": "not-home-assistant-1.0.0.tgz",
+        "download_count": 99
+      }
+    ]
+  }
+]
