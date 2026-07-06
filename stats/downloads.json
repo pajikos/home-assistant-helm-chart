@@ -1,69 +1,69 @@
 {
-  "generatedAt": "2026-07-05T07:44:36Z",
-  "totalDownloads": 510995,
+  "generatedAt": "2026-07-06T08:45:25Z",
+  "totalDownloads": 513185,
   "releaseCount": 210,
   "latestVersion": "0.3.69",
-  "latestVersionDownloads": 388,
+  "latestVersionDownloads": 800,
   "versions": [
     {
       "version": "0.3.69",
       "assetName": "home-assistant-0.3.69.tgz",
       "tagName": "home-assistant-0.3.69",
-      "downloadCount": 388
+      "downloadCount": 800
     },
     {
       "version": "0.3.68",
       "assetName": "home-assistant-0.3.68.tgz",
       "tagName": "home-assistant-0.3.68",
-      "downloadCount": 978
+      "downloadCount": 1495
     },
     {
       "version": "0.3.67",
       "assetName": "home-assistant-0.3.67.tgz",
       "tagName": "home-assistant-0.3.67",
-      "downloadCount": 7960
+      "downloadCount": 8160
     },
     {
       "version": "0.3.66",
       "assetName": "home-assistant-0.3.66.tgz",
       "tagName": "home-assistant-0.3.66",
-      "downloadCount": 3909
+      "downloadCount": 3948
     },
     {
       "version": "0.3.65",
       "assetName": "home-assistant-0.3.65.tgz",
       "tagName": "home-assistant-0.3.65",
-      "downloadCount": 844
+      "downloadCount": 848
     },
     {
       "version": "0.3.64",
       "assetName": "home-assistant-0.3.64.tgz",
       "tagName": "home-assistant-0.3.64",
-      "downloadCount": 1247
+      "downloadCount": 1250
     },
     {
       "version": "0.3.63",
       "assetName": "home-assistant-0.3.63.tgz",
       "tagName": "home-assistant-0.3.63",
-      "downloadCount": 2109
+      "downloadCount": 2166
     },
     {
       "version": "0.3.62",
       "assetName": "home-assistant-0.3.62.tgz",
       "tagName": "home-assistant-0.3.62",
-      "downloadCount": 1305
+      "downloadCount": 1308
     },
     {
       "version": "0.3.61",
       "assetName": "home-assistant-0.3.61.tgz",
       "tagName": "home-assistant-0.3.61",
-      "downloadCount": 6290
+      "downloadCount": 6299
     },
     {
       "version": "0.3.60",
       "assetName": "home-assistant-0.3.60.tgz",
       "tagName": "home-assistant-0.3.60",
-      "downloadCount": 2967
+      "downloadCount": 2974
     },
     {
       "version": "0.3.59",
@@ -75,61 +75,61 @@
       "version": "0.3.58",
       "assetName": "home-assistant-0.3.58.tgz",
       "tagName": "home-assistant-0.3.58",
-      "downloadCount": 3939
+      "downloadCount": 3949
     },
     {
       "version": "0.3.57",
       "assetName": "home-assistant-0.3.57.tgz",
       "tagName": "home-assistant-0.3.57",
-      "downloadCount": 2375
+      "downloadCount": 2404
     },
     {
       "version": "0.3.56",
       "assetName": "home-assistant-0.3.56.tgz",
       "tagName": "home-assistant-0.3.56",
-      "downloadCount": 8125
+      "downloadCount": 8132
     },
     {
       "version": "0.3.55",
       "assetName": "home-assistant-0.3.55.tgz",
       "tagName": "home-assistant-0.3.55",
-      "downloadCount": 3681
+      "downloadCount": 3702
     },
     {
       "version": "0.3.54",
       "assetName": "home-assistant-0.3.54.tgz",
       "tagName": "home-assistant-0.3.54",
-      "downloadCount": 3984
+      "downloadCount": 3997
     },
     {
       "version": "0.3.53",
       "assetName": "home-assistant-0.3.53.tgz",
       "tagName": "home-assistant-0.3.53",
-      "downloadCount": 5750
+      "downloadCount": 5758
     },
     {
       "version": "0.3.52",
       "assetName": "home-assistant-0.3.52.tgz",
       "tagName": "home-assistant-0.3.52",
-      "downloadCount": 38006
+      "downloadCount": 38013
     },
     {
       "version": "0.3.51",
       "assetName": "home-assistant-0.3.51.tgz",
       "tagName": "home-assistant-0.3.51",
-      "downloadCount": 8022
+      "downloadCount": 8055
     },
     {
       "version": "0.3.50",
       "assetName": "home-assistant-0.3.50.tgz",
       "tagName": "home-assistant-0.3.50",
-      "downloadCount": 1242
+      "downloadCount": 1243
     },
     {
       "version": "0.3.49",
       "assetName": "home-assistant-0.3.49.tgz",
       "tagName": "home-assistant-0.3.49",
-      "downloadCount": 1481
+      "downloadCount": 1499
     },
     {
       "version": "0.3.48",
@@ -141,79 +141,79 @@
       "version": "0.3.47",
       "assetName": "home-assistant-0.3.47.tgz",
       "tagName": "home-assistant-0.3.47",
-      "downloadCount": 3981
+      "downloadCount": 3985
     },
     {
       "version": "0.3.46",
       "assetName": "home-assistant-0.3.46.tgz",
       "tagName": "home-assistant-0.3.46",
-      "downloadCount": 4477
+      "downloadCount": 4479
     },
     {
       "version": "0.3.45",
       "assetName": "home-assistant-0.3.45.tgz",
       "tagName": "home-assistant-0.3.45",
-      "downloadCount": 5977
+      "downloadCount": 5983
     },
     {
       "version": "0.3.44",
       "assetName": "home-assistant-0.3.44.tgz",
       "tagName": "home-assistant-0.3.44",
-      "downloadCount": 3175
+      "downloadCount": 3179
     },
     {
       "version": "0.3.43",
       "assetName": "home-assistant-0.3.43.tgz",
       "tagName": "home-assistant-0.3.43",
-      "downloadCount": 3056
+      "downloadCount": 3057
     },
     {
       "version": "0.3.42",
       "assetName": "home-assistant-0.3.42.tgz",
       "tagName": "home-assistant-0.3.42",
-      "downloadCount": 1625
+      "downloadCount": 1628
     },
     {
       "version": "0.3.41",
       "assetName": "home-assistant-0.3.41.tgz",
       "tagName": "home-assistant-0.3.41",
-      "downloadCount": 7850
+      "downloadCount": 7854
     },
     {
       "version": "0.3.40",
       "assetName": "home-assistant-0.3.40.tgz",
       "tagName": "home-assistant-0.3.40",
-      "downloadCount": 3947
+      "downloadCount": 3949
     },
     {
       "version": "0.3.39",
       "assetName": "home-assistant-0.3.39.tgz",
       "tagName": "home-assistant-0.3.39",
-      "downloadCount": 2024
+      "downloadCount": 2026
     },
     {
       "version": "0.3.38",
       "assetName": "home-assistant-0.3.38.tgz",
       "tagName": "home-assistant-0.3.38",
-      "downloadCount": 3361
+      "downloadCount": 3364
     },
     {
       "version": "0.3.37",
       "assetName": "home-assistant-0.3.37.tgz",
       "tagName": "home-assistant-0.3.37",
-      "downloadCount": 5145
+      "downloadCount": 5149
     },
     {
       "version": "0.3.36",
       "assetName": "home-assistant-0.3.36.tgz",
       "tagName": "home-assistant-0.3.36",
-      "downloadCount": 4960
+      "downloadCount": 4970
     },
     {
       "version": "0.3.35",
       "assetName": "home-assistant-0.3.35.tgz",
       "tagName": "home-assistant-0.3.35",
-      "downloadCount": 4842
+      "downloadCount": 4848
     },
     {
       "version": "0.3.34",
@@ -225,55 +225,55 @@
       "version": "0.3.33",
       "assetName": "home-assistant-0.3.33.tgz",
       "tagName": "home-assistant-0.3.33",
-      "downloadCount": 4491
+      "downloadCount": 4492
     },
     {
       "version": "0.3.32",
       "assetName": "home-assistant-0.3.32.tgz",
       "tagName": "home-assistant-0.3.32",
-      "downloadCount": 20168
+      "downloadCount": 20862
     },
     {
       "version": "0.3.31",
       "assetName": "home-assistant-0.3.31.tgz",
       "tagName": "home-assistant-0.3.31",
-      "downloadCount": 2580
+      "downloadCount": 2583
     },
     {
       "version": "0.3.30",
       "assetName": "home-assistant-0.3.30.tgz",
       "tagName": "home-assistant-0.3.30",
-      "downloadCount": 3558
+      "downloadCount": 3560
     },
     {
       "version": "0.3.29",
       "assetName": "home-assistant-0.3.29.tgz",
       "tagName": "home-assistant-0.3.29",
-      "downloadCount": 1156
+      "downloadCount": 1157
     },
     {
       "version": "0.3.28",
       "assetName": "home-assistant-0.3.28.tgz",
       "tagName": "home-assistant-0.3.28",
-      "downloadCount": 819
+      "downloadCount": 820
     },
     {
       "version": "0.3.27",
       "assetName": "home-assistant-0.3.27.tgz",
       "tagName": "home-assistant-0.3.27",
-      "downloadCount": 7026
+      "downloadCount": 7027
     },
     {
       "version": "0.3.26",
       "assetName": "home-assistant-0.3.26.tgz",
       "tagName": "home-assistant-0.3.26",
-      "downloadCount": 3720
+      "downloadCount": 3721
     },
     {
       "version": "0.3.25",
       "assetName": "home-assistant-0.3.25.tgz",
       "tagName": "home-assistant-0.3.25",
-      "downloadCount": 1313
+      "downloadCount": 1314
     },
     {
       "version": "0.3.24",
@@ -327,25 +327,25 @@
       "version": "0.3.16",
       "assetName": "home-assistant-0.3.16.tgz",
       "tagName": "home-assistant-0.3.16",
-      "downloadCount": 2417
+      "downloadCount": 2418
     },
     {
       "version": "0.3.15",
       "assetName": "home-assistant-0.3.15.tgz",
       "tagName": "home-assistant-0.3.15",
-      "downloadCount": 2990
+      "downloadCount": 2995
     },
     {
       "version": "0.3.14",
       "assetName": "home-assistant-0.3.14.tgz",
       "tagName": "home-assistant-0.3.14",
-      "downloadCount": 3005
+      "downloadCount": 3008
     },
     {
       "version": "0.3.13",
       "assetName": "home-assistant-0.3.13.tgz",
       "tagName": "home-assistant-0.3.13",
-      "downloadCount": 2979
+      "downloadCount": 2980
     },
     {
       "version": "0.3.12",
@@ -357,13 +357,13 @@
       "version": "0.3.11",
       "assetName": "home-assistant-0.3.11.tgz",
       "tagName": "home-assistant-0.3.11",
-      "downloadCount": 4311
+      "downloadCount": 4316
     },
     {
       "version": "0.3.10",
       "assetName": "home-assistant-0.3.10.tgz",
       "tagName": "home-assistant-0.3.10",
-      "downloadCount": 9927
+      "downloadCount": 9934
     },
     {
       "version": "0.3.9",
@@ -387,19 +387,19 @@
       "version": "0.3.6",
       "assetName": "home-assistant-0.3.6.tgz",
       "tagName": "home-assistant-0.3.6",
-      "downloadCount": 8610
+      "downloadCount": 8612
     },
     {
       "version": "0.3.5",
       "assetName": "home-assistant-0.3.5.tgz",
       "tagName": "home-assistant-0.3.5",
-      "downloadCount": 2049
+      "downloadCount": 2050
     },
     {
       "version": "0.3.4",
       "assetName": "home-assistant-0.3.4.tgz",
       "tagName": "home-assistant-0.3.4",
-      "downloadCount": 11532
+      "downloadCount": 11534
     },
     {
       "version": "0.3.3",
@@ -429,7 +429,7 @@
       "version": "0.2.119",
       "assetName": "home-assistant-0.2.119.tgz",
       "tagName": "home-assistant-0.2.119",
-      "downloadCount": 7568
+      "downloadCount": 7569
     },
     {
       "version": "0.2.118",
@@ -447,7 +447,7 @@
       "version": "0.2.116",
       "assetName": "home-assistant-0.2.116.tgz",
       "tagName": "home-assistant-0.2.116",
-      "downloadCount": 15196
+      "downloadCount": 15199
     },
     {
       "version": "0.2.115",
@@ -459,7 +459,7 @@
       "version": "0.2.114",
       "assetName": "home-assistant-0.2.114.tgz",
       "tagName": "home-assistant-0.2.114",
-      "downloadCount": 4179
+      "downloadCount": 4181
     },
     {
       "version": "0.2.113",
@@ -483,7 +483,7 @@
       "version": "0.2.110",
       "assetName": "home-assistant-0.2.110.tgz",
       "tagName": "home-assistant-0.2.110",
-      "downloadCount": 3066
+      "downloadCount": 3067
     },
     {
       "version": "0.2.109",
@@ -615,7 +615,7 @@
       "version": "0.2.88",
       "assetName": "home-assistant-0.2.88.tgz",
       "tagName": "home-assistant-0.2.88",
-      "downloadCount": 1759
+      "downloadCount": 1760
     },
     {
       "version": "0.2.87",
@@ -705,7 +705,7 @@
       "version": "0.2.73",
       "assetName": "home-assistant-0.2.73.tgz",
       "tagName": "home-assistant-0.2.73",
-      "downloadCount": 1371
+      "downloadCount": 1372
     },
     {
       "version": "0.2.72",
@@ -1273,7 +1273,7 @@
     },
     {
       "version": "0.3.52",
-      "downloadCount": 38006
+      "downloadCount": 38013
     },
     {
       "version": "0.2.87",
@@ -1281,15 +1281,15 @@
     },
     {
       "version": "0.3.32",
-      "downloadCount": 20168
+      "downloadCount": 20862
     },
     {
       "version": "0.2.116",
-      "downloadCount": 15196
+      "downloadCount": 15199
     },
     {
       "version": "0.3.4",
-      "downloadCount": 11532
+      "downloadCount": 11534
     },
     {
       "version": "0.2.60",
@@ -1297,15 +1297,15 @@
     },
     {
       "version": "0.3.10",
-      "downloadCount": 9927
+      "downloadCount": 9934
     },
     {
       "version": "0.3.6",
-      "downloadCount": 8610
+      "downloadCount": 8612
     },
     {
-      "version": "0.3.56",
-      "downloadCount": 8125
+      "version": "0.3.67",
+      "downloadCount": 8160
     }
   ]
 }
