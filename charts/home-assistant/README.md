@@ -79,6 +79,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `hostPort.port` | Port number | `8123` |
 | `dnsConfig` | Override the default dnsConfig and set your own nameservers or ndots, among other options | `{}` |
 | `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
+| service.nodePort | Sets a fixed NodePort (30000-32767). Only used when service.type is NodePort. | nil |
 | `service.port` | Service port | `8080` |
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
