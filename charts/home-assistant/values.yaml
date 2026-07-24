@@ -455,7 +455,7 @@ addons:
       # Image pull policy for the code-server image
       pullPolicy: IfNotPresent
       # Tag for the code-server image
-      tag: "4.123.0"
+      tag: "4.130.0"
     # Authentication settings for the code-server addon
     auth:
       # Enable or disable authentication (if disabled, --auth none is used)
