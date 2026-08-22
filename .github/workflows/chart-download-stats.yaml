@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python
         uses: actions/setup-python@v6
@@ -30,7 +30,7 @@ jobs:
         run: python .github/scripts/chart_download_stats.py --repo "$GITHUB_REPOSITORY" --output generated-stats
 
       - name: Checkout GitHub Pages branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: gh-pages
           path: gh-pages
