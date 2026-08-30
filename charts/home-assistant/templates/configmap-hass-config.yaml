@@ -9,4 +9,8 @@ metadata:
 data:
   configuration.yaml: |
     {{- tpl .Values.configuration.templateConfig . | nindent 4 }}
+  {{- if and (not (include "home-assistant.httpYamlSupported" .)) (or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled) }}
+  http-storage.json: |
+    {{- tpl .Values.configuration.httpStorageTemplate . | nindent 4 }}
+  {{- end }}
 {{- end -}}

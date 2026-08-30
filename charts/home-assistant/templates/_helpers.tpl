@@ -122,3 +122,20 @@ Validate controller type
 {{- fail "controller.type must be either 'StatefulSet' or 'Deployment'" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Whether the deployed Home Assistant version still supports the http: block in
+configuration.yaml. HA 2026.8 deprecated it (removed in 2027.2); since then the
+http settings live in /config/.storage/http and are managed from the UI.
+Returns "true" for semver image tags older than 2026.8; non-semver tags
+(latest, stable, ...) are treated as current, i.e. 2026.8+.
+*/}}
+{{- define "home-assistant.httpYamlSupported" -}}
+{{- $tag := .Values.image.tag | default .Chart.AppVersion -}}
+{{- $ver := regexFind "^v?[0-9]+\\.[0-9]+(\\.[0-9]+)?" $tag -}}
+{{- if $ver -}}
+{{- $ver = trimPrefix "v" $ver -}}
+{{- if not (regexMatch "^[0-9]+\\.[0-9]+\\.[0-9]+$" $ver) -}}{{- $ver = printf "%s.0" $ver -}}{{- end -}}
+{{- if semverCompare "< 2026.8.0" $ver -}}true{{- end -}}
+{{- end -}}
+{{- end -}}

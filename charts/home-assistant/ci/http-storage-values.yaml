@@ -1,0 +1,7 @@
+# Test seeding of /config/.storage/http (http settings are UI-managed since HA 2026.8)
+ingress:
+  external: true
+configuration:
+  enabled: true
+  trusted_proxies:
+    - 10.100.0.0/16
