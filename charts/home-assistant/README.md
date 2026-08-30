@@ -490,10 +490,12 @@ version (taken from `image.tag`, or the chart `appVersion` when the tag is unset
 
 - **2026.8 and newer** (including non-semver tags such as `stable`): when `ingress` or
   `httpRoute` is enabled, the init script seeds `/config/.storage/http` with
-  `use_x_forwarded_for` and `configuration.trusted_proxies` on fresh installs only.
-  It never touches an existing `/config/.storage/http` or a `configuration.yaml` that
-  still contains an `http:` block, so settings changed from the UI are preserved and
-  upgraded installations are left to Home Assistant's own one-time import.
+  `use_x_forwarded_for` and `configuration.trusted_proxies`, but only on a genuinely
+  fresh install: the script just created `configuration.yaml` and the created file has
+  no `http:` block. Any pre-existing configuration (including `http` settings loaded
+  via packages or includes) and any existing `/config/.storage/http` are left alone,
+  so settings changed from the UI are preserved and upgraded installations are left
+  to Home Assistant's own one-time import.
 - **Older than 2026.8**: the `http:` block is rendered into `configuration.yaml`
   as before.
 

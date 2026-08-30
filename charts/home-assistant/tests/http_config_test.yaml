@@ -96,6 +96,16 @@ tests:
           path: data["http-storage.json"]
           pattern: '"use_x_forwarded_for": true'
 
+  - it: handles an unquoted numeric image tag
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: 2026.8
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+
   # --- old HA (image tag < 2026.8): unchanged behavior, yaml block only ---
   - it: keeps the http yaml block and no storage seed for pre-2026.8 tags
     set:

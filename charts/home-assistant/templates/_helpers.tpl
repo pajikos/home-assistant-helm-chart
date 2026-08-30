@@ -131,7 +131,7 @@ Returns "true" for semver image tags older than 2026.8; non-semver tags
 (latest, stable, ...) are treated as current, i.e. 2026.8+.
 */}}
 {{- define "home-assistant.httpYamlSupported" -}}
-{{- $tag := .Values.image.tag | default .Chart.AppVersion -}}
+{{- $tag := .Values.image.tag | default .Chart.AppVersion | toString -}}
 {{- $ver := regexFind "^v?[0-9]+\\.[0-9]+(\\.[0-9]+)?" $tag -}}
 {{- if $ver -}}
 {{- $ver = trimPrefix "v" $ver -}}

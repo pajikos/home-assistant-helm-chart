@@ -115,6 +115,24 @@ if run_init "$CASE"; then pass "init script exits 0"; else fail "init script exi
 grep -q "use_x_forwarded_for: true" "$CASE/out/configuration.yaml" \
   && pass "old HA keeps the http yaml block" || fail "http yaml block missing on old HA"
 
+echo "==> case 5: pre-existing configuration.yaml skips seeding even without an http block"
+CASE="$WORKDIR/existing-config"
+render "$CASE"
+mkdir -p "$CASE/config"
+printf 'default_config:\n' > "$CASE/config/configuration.yaml"
+if run_init "$CASE"; then pass "init script exits 0"; else fail "init script exited non-zero"; fi
+[ ! -f "$CASE/out/.storage/http" ] && pass "seeding skipped for pre-existing configuration" \
+  || fail "storage seeded despite pre-existing configuration.yaml (http may be configured via packages or includes)"
+
+echo "==> case 6: fresh install with a custom templateConfig containing http skips seeding"
+CASE="$WORKDIR/custom-template"
+render "$CASE"
+printf 'default_config:\nhttp:\n  use_x_forwarded_for: true\n' > "$CASE/config-templates/configuration.yaml"
+mkdir -p "$CASE/config"
+if run_init "$CASE"; then pass "init script exits 0"; else fail "init script exited non-zero"; fi
+[ ! -f "$CASE/out/.storage/http" ] && pass "seeding skipped for custom template with http block" \
+  || fail "storage seeded despite http block in the config template"
+
 echo
 if [ "$FAILURES" -gt 0 ]; then
   echo "$FAILURES assertion(s) failed"
