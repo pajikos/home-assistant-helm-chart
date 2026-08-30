@@ -507,6 +507,10 @@ Notes for existing installations:
   chart does not edit that file.
 - On 2026.8+, changing `configuration.trusted_proxies` in values affects only fresh
   installations. On a running instance, update the proxies from the UI.
+- If you override `configuration.initScript` with a copy predating the seeding logic,
+  fresh installs on 2026.8+ get no trusted proxies at all (the `http:` block is no
+  longer rendered): port the "Seed the http settings storage" section from the default
+  script into your override.
 
 
 ## code-server
