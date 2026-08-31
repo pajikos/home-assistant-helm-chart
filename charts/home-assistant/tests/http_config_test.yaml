@@ -1,0 +1,145 @@
+suite: http configuration for HA 2026.8+ (issue 187)
+templates:
+  - templates/configmap-hass-config.yaml
+tests:
+  # --- current HA (chart appVersion >= 2026.8): storage seed, no yaml block ---
+  - it: renders http-storage.json instead of the http yaml block with ingress enabled
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+    asserts:
+      - notMatchRegex:
+          path: data["configuration.yaml"]
+          pattern: "use_x_forwarded_for"
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"trusted_proxies": \["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8"\]'
+
+  - it: pins the 2026.8 storage schema fields
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"version": 2'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"minor_version": 2'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"key": "http"'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"yaml_migration_done": true'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"pending": null'
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"created_at": null'
+
+  - it: renders http-storage.json for external ingress
+    set:
+      configuration.enabled: true
+      ingress.external: true
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+
+  - it: renders http-storage.json for httpRoute
+    set:
+      configuration.enabled: true
+      httpRoute.enabled: true
+      httpRoute.parentRefs:
+        - name: example-gateway
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+
+  - it: renders custom trusted proxies into http-storage.json
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      configuration.trusted_proxies:
+        - 10.100.0.0/16
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"trusted_proxies": \["10.100.0.0/16"\]'
+
+  - it: treats a non-semver image tag as current HA
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: stable
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+      - notMatchRegex:
+          path: data["configuration.yaml"]
+          pattern: "use_x_forwarded_for"
+
+  - it: treats a two-part 2026.8 tag as current HA
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: "2026.8"
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+
+  - it: handles an unquoted numeric image tag
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: 2026.8
+    asserts:
+      - matchRegex:
+          path: data["http-storage.json"]
+          pattern: '"use_x_forwarded_for": true'
+
+  # --- old HA (image tag < 2026.8): unchanged behavior, yaml block only ---
+  - it: keeps the http yaml block and no storage seed for pre-2026.8 tags
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: 2026.7.4
+    asserts:
+      - matchRegex:
+          path: data["configuration.yaml"]
+          pattern: "use_x_forwarded_for: true"
+      - notExists:
+          path: data["http-storage.json"]
+
+  - it: renders custom trusted proxies into the yaml block for pre-2026.8 tags
+    set:
+      configuration.enabled: true
+      ingress.enabled: true
+      image.tag: 2025.12.1
+      configuration.trusted_proxies:
+        - 10.100.0.0/16
+    asserts:
+      - matchRegex:
+          path: data["configuration.yaml"]
+          pattern: "- 10.100.0.0/16"
+      - notExists:
+          path: data["http-storage.json"]
+
+  # --- no reverse proxy: no http config at all ---
+  - it: renders neither http yaml block nor storage seed without ingress or httpRoute
+    set:
+      configuration.enabled: true
+    asserts:
+      - notMatchRegex:
+          path: data["configuration.yaml"]
+          pattern: "use_x_forwarded_for"
+      - notExists:
+          path: data["http-storage.json"]

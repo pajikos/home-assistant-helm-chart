@@ -248,7 +248,7 @@ configuration:
     prometheus:
     {{- end }}
 
-    {{- if or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled }}
+    {{- if and (include "home-assistant.httpYamlSupported" .) (or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled) }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
@@ -264,6 +264,37 @@ configuration:
     script: !include scripts.yaml
     scene: !include scenes.yaml
 
+  # Template for the /config/.storage/http file used by Home Assistant 2026.8+,
+  # where the http settings (trusted proxies, X-Forwarded-For) are managed from the UI
+  # instead of the http block in configuration.yaml (removed in HA 2027.2).
+  # Rendered with the `tpl` function and copied by the init script on fresh installs only,
+  # so settings changed later from the UI are never overwritten.
+  httpStorageTemplate: |-
+    {
+      "version": 2,
+      "minor_version": 2,
+      "key": "http",
+      "data": {
+        "stable": {
+          "server_port": 8123,
+          "ssl_profile": "modern",
+          "cors_allowed_origins": [
+            "https://cast.home-assistant.io"
+          ],
+          "use_x_forwarded_for": true,
+          "trusted_proxies": {{ .Values.configuration.trusted_proxies | toJson }},
+          "use_x_frame_options": true,
+          "ip_ban_enabled": true,
+          "login_attempts_threshold": -1,
+          "created_at": null,
+          "error": null,
+          "error_message": null
+        },
+        "pending": null,
+        "yaml_migration_done": true
+      }
+    }
+
   # Init script for the Home Assistant initialization, you can use Go template functions
   # Script is executed before the Home Assistant container starts and is used to prepare the configuration
   # Will be executed only if the configuration.enabled is set to true
@@ -275,6 +306,7 @@ configuration:
     if [ ! -f /config/configuration.yaml ]; then
       echo "Configuration file not found, creating a new one"
       cp /config-templates/configuration.yaml /config/configuration.yaml
+      config_created="true"
     fi
 
     # Check if the force init is enabled
@@ -298,6 +330,26 @@ configuration:
       else
         # Perform the merge operation if /config/configuration.yaml is not empty
         yq eval-all --inplace --header-preprocess=false 'select(fileIndex == 0) *d select(fileIndex == 1)' /config/configuration.yaml /config-templates/configuration.yaml
+      fi
+    fi
+
+    # Seed the http settings storage (managed from the UI since HA 2026.8), but only on a
+    # genuinely fresh install: the configuration file was just created by this script and
+    # contains no http block (a template with one is imported by Home Assistant itself).
+    # A pre-existing configuration may set up http in ways not visible here (packages,
+    # includes), so it is left alone entirely, as is an existing storage file.
+    # A failure here must never block the pod start, so errors only log a warning.
+    if [ "$config_created" = "true" ] && [ -f /config-templates/http-storage.json ] && [ ! -f /config/.storage/http ]; then
+      has_http=$(yq 'has("http")' /config/configuration.yaml 2>/dev/null) || has_http="unknown"
+      if [ "$has_http" = "false" ]; then
+        echo "Seeding /config/.storage/http with the reverse proxy configuration"
+        mkdir -p /config/.storage
+        if yq -o=json '.data.stable.created_at = now' /config-templates/http-storage.json > /config/.storage/http.tmp; then
+          mv /config/.storage/http.tmp /config/.storage/http
+        else
+          echo "WARNING: could not render /config/.storage/http, configure the http settings from the UI"
+          rm -f /config/.storage/http.tmp
+        fi
       fi
     fi
 

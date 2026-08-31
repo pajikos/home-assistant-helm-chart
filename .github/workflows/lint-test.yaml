@@ -36,6 +36,16 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct lint --target-branch ${{ github.event.repository.default_branch }} --check-version-increment=false
 
+      - name: Run helm unittest
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm plugin install https://github.com/helm-unittest/helm-unittest --version v1.1.2 --verify=false
+          helm unittest charts/home-assistant
+
+      - name: Run init-script tests
+        if: steps.list-changed.outputs.changed == 'true'
+        run: tests/init-script/test.sh
+
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
         uses: helm/kind-action@v1.14.0
