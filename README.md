@@ -347,10 +347,11 @@ httpRoute:
 
 `httpRoute.parentRefs` is required when `httpRoute.enabled` is `true`: the chart
 fails the render with a clear message if it is left empty, since a route with no
-`parentRefs` would not attach to any Gateway. Enabling `httpRoute` also emits the
-reverse-proxy `http:` block (`use_x_forwarded_for` / `trusted_proxies`) in the
-managed `configuration.yaml`, the same as `ingress`, so client IPs are handled
-correctly behind the Gateway.
+`parentRefs` would not attach to any Gateway. Enabling `httpRoute` also applies the
+reverse-proxy settings (`use_x_forwarded_for` / `trusted_proxies`), the same as
+`ingress`, so client IPs are handled correctly behind the Gateway. See
+[HTTP settings and reverse proxies](#http-settings-and-reverse-proxies-home-assistant-20268)
+for how these are applied per Home Assistant version.
 
 The route forwards traffic to the main Home Assistant service on
 `service.port`. When `httpRoute.matches` is empty a single `PathPrefix: /`
@@ -461,7 +462,7 @@ configuration:
     # Loads default set of integrations. Do not remove.
     default_config:
 
-    {{- if or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled }}
+    {{- if and (include "home-assistant.httpYamlSupported" .) (or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled) }}
     http:
       use_x_forwarded_for: true
       trusted_proxies:
@@ -479,6 +480,37 @@ configuration:
 ```
 
 This allows for dynamic configuration based on your Helm values.
+
+### HTTP settings and reverse proxies (Home Assistant 2026.8+)
+
+Home Assistant 2026.8 deprecated the `http:` block in `configuration.yaml` (it stops
+working in 2027.2). The settings now live in `/config/.storage/http` and are managed
+from the UI under Settings > System > Network. The chart handles this by Home Assistant
+version (taken from `image.tag`, or the chart `appVersion` when the tag is unset):
+
+- **2026.8 and newer** (including non-semver tags such as `stable`): when `ingress` or
+  `httpRoute` is enabled, the init script seeds `/config/.storage/http` with
+  `use_x_forwarded_for` and `configuration.trusted_proxies`, but only on a genuinely
+  fresh install: the script just created `configuration.yaml` and the created file has
+  no `http:` block. Any pre-existing configuration (including `http` settings loaded
+  via packages or includes) and any existing `/config/.storage/http` are left alone,
+  so settings changed from the UI are preserved and upgraded installations are left
+  to Home Assistant's own one-time import.
+- **Older than 2026.8**: the `http:` block is rendered into `configuration.yaml`
+  as before.
+
+Notes for existing installations:
+
+- After upgrading to 2026.8, Home Assistant imports your `http:` block into the UI once
+  and raises a repair issue. Verify the imported values under Settings > System >
+  Network, then delete the `http:` block from your `/config/configuration.yaml`; the
+  chart does not edit that file.
+- On 2026.8+, changing `configuration.trusted_proxies` in values affects only fresh
+  installations. On a running instance, update the proxies from the UI.
+- If you override `configuration.initScript` with a copy predating the seeding logic,
+  fresh installs on 2026.8+ get no trusted proxies at all (the `http:` block is no
+  longer rendered): port the "Seed the http settings storage" section from the default
+  script into your override.
 
 
 ## code-server
