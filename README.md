@@ -28,6 +28,14 @@ $ helm repo update
 $ helm install home-assistant pajikos/home-assistant
 ```
 
+The chart is also published as an OCI artifact to GitHub Container Registry, so it can be installed without adding a repository:
+
+```console
+$ helm install home-assistant oci://ghcr.io/pajikos/charts/home-assistant
+```
+
+Add `--version <chart version>` to either command to pin a specific release.
+
 This will deploy Home Assistant with the default configuration. See the [Configuration](#configuration) section for details on customizing the deployment.
 
 
