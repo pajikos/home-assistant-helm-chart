@@ -30,6 +30,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7
         with:
+          # Check out the branch tip, not the sha pinned at dispatch time. The
+          # HA bump workflow dispatches this one right after pushing, and GitHub
+          # sometimes resolves the ref to the pre-push commit, which makes the
+          # release commit below fail with a non-fast-forward push (issue #194).
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - name: Configure Git
