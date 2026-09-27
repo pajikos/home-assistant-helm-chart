@@ -1,0 +1,8 @@
+configuration:
+  enabled: true
+serviceMonitor:
+  enabled: true
+  namespace: monitoring
+  bearerToken:
+    secretName: prometheus-token
+    secretKey: token

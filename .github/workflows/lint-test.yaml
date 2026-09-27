@@ -36,6 +36,20 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: ct lint --target-branch ${{ github.event.repository.default_branch }} --check-version-increment=false
 
+      - name: Test ServiceMonitor
+        if: steps.list-changed.outputs.changed == 'true'
+        run: |
+          helm template home-assistant charts/home-assistant --namespace home-assistant -f charts/home-assistant/ci/service-monitor-auth.yaml > /tmp/service-monitor-auth.yaml
+          grep -q 'namespace: monitoring' /tmp/service-monitor-auth.yaml
+          grep -q '      - home-assistant' /tmp/service-monitor-auth.yaml
+          grep -q 'requires_auth: true' /tmp/service-monitor-auth.yaml
+          grep -q 'bearerTokenSecret:' /tmp/service-monitor-auth.yaml
+
+          helm template home-assistant charts/home-assistant --namespace home-assistant -f charts/home-assistant/ci/service-monitor-no-auth.yaml > /tmp/service-monitor-no-auth.yaml
+          grep -q 'namespace: monitoring' /tmp/service-monitor-no-auth.yaml
+          grep -q '      - home-assistant' /tmp/service-monitor-no-auth.yaml
+          grep -q 'requires_auth: false' /tmp/service-monitor-no-auth.yaml
+
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
         uses: helm/kind-action@v1.14.0
