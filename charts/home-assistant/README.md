@@ -151,7 +151,7 @@ controller:
   type: StatefulSet  # or Deployment
 ```
 
-Every image or chart update creates a new revision of the controller (a ReplicaSet for a Deployment, a ControllerRevision for a StatefulSet). Kubernetes keeps the last 10 by default. If you run the chart through a GitOps tool such as ArgoCD, these old revisions show up in the application tree; set `controller.revisionHistoryLimit` to keep fewer of them:
+Every change to the pod template, such as an image bump, creates a new revision of the controller (a ReplicaSet for a Deployment, a ControllerRevision for a StatefulSet). Kubernetes keeps the last 10 by default. If you run the chart through a GitOps tool such as ArgoCD, these old revisions show up in the application tree; set `controller.revisionHistoryLimit` to keep fewer of them:
 
 ```yaml
 controller:
