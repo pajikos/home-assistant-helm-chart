@@ -76,6 +76,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `podAnnotations` | Annotations to add to the pod | `{}` |
 | `controller.type` | Type of controller to use: StatefulSet or Deployment | `StatefulSet` |
 | `controller.labels` | Labels to add to the controller | `{}` |
+| `controller.revisionHistoryLimit` | Number of old ReplicaSets (Deployment) or ControllerRevisions (StatefulSet) to keep for rollbacks. Unset keeps the Kubernetes default of 10 | `nil` |
 | `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `deploymentAnnotations` | Annotations to add to the Deployment | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
@@ -87,6 +88,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `hostPort.port` | Port number | `8123` |
 | `dnsConfig` | Override the default dnsConfig and set your own nameservers or ndots, among other options | `{}` |
 | `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
+| service.nodePort | Sets a fixed NodePort (30000-32767). Only used when service.type is NodePort. | nil |
 | `service.port` | Service port | `8080` |
 | `service.annotations` | Annotations to add to the service | `{}` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
@@ -147,6 +149,13 @@ To specify the controller type, set the `controller.type` value:
 ```yaml
 controller:
   type: StatefulSet  # or Deployment
+```
+
+Every change to the pod template, such as an image bump, creates a new revision of the controller (a ReplicaSet for a Deployment, a ControllerRevision for a StatefulSet). Kubernetes keeps the last 10 by default. If you run the chart through a GitOps tool such as ArgoCD, these old revisions show up in the application tree; set `controller.revisionHistoryLimit` to keep fewer of them:
+
+```yaml
+controller:
+  revisionHistoryLimit: 3
 ```
 
 ## Persistence
@@ -572,6 +581,44 @@ By default, authentication is disabled for code-server for backward compatibilit
        auth:
          enabled: false
    ```
+
+### File permissions on `/config`
+
+The Home Assistant container runs as root, while the code-server image runs as user `1000` (`coder`). Both mount the same `/config` volume, so on storage that enforces ownership (NFS, Ceph RBD, hostPath and most other backends) files created by Home Assistant are owned by root and code-server cannot write to them. The symptom is a read-only editor or "permission denied" when saving, typically on volumes migrated from an existing installation. See [#130](https://github.com/pajikos/home-assistant-helm-chart/issues/130).
+
+The chart applies `securityContext` to both containers, so there are two ways to line the users up:
+
+1. **Run code-server as root as well** (simplest). Home Assistant keeps working, and code-server gets full access to `/config`. Only do this with authentication enabled and the addon not exposed publicly:
+   ```yaml
+   securityContext:
+     runAsUser: 0
+     runAsGroup: 0
+   addons:
+     codeserver:
+       enabled: true
+       auth:
+         enabled: true
+         existingSecret: "my-codeserver-secret"
+   ```
+
+2. **Run both containers as `1000` and fix ownership once with an init container**. Home Assistant can run as a non-root user, but note that some integrations that need raw device or network access may stop working:
+   ```yaml
+   securityContext:
+     runAsUser: 1000
+     runAsGroup: 1000
+   podSecurityContext:
+     fsGroup: 1000
+   initContainers:
+     - name: fix-permissions
+       image: busybox
+       command: ['sh', '-c', 'chown -R 1000:1000 /config']
+       securityContext:
+         runAsUser: 0
+       volumeMounts:
+         - name: home-assistant   # the volume is named after the release fullname
+           mountPath: /config
+   ```
+   Replace `home-assistant` with the release fullname if you install the chart under a different release name.
 
 ## Upgrade Notes (v0.3)
 
