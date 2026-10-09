@@ -76,6 +76,7 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `podAnnotations` | Annotations to add to the pod | `{}` |
 | `controller.type` | Type of controller to use: StatefulSet or Deployment | `StatefulSet` |
 | `controller.labels` | Labels to add to the controller | `{}` |
+| `controller.revisionHistoryLimit` | Number of old ReplicaSets (Deployment) or ControllerRevisions (StatefulSet) to keep for rollbacks. Unset keeps the Kubernetes default of 10 | `nil` |
 | `statefulSetAnnotations` | Annotations to add to the StatefulSet | `{}` |
 | `deploymentAnnotations` | Annotations to add to the Deployment | `{}` |
 | `podSecurityContext` | Pod security context settings | `{}` |
@@ -148,6 +149,13 @@ To specify the controller type, set the `controller.type` value:
 ```yaml
 controller:
   type: StatefulSet  # or Deployment
+```
+
+Every change to the pod template, such as an image bump, creates a new revision of the controller (a ReplicaSet for a Deployment, a ControllerRevision for a StatefulSet). Kubernetes keeps the last 10 by default. If you run the chart through a GitOps tool such as ArgoCD, these old revisions show up in the application tree; set `controller.revisionHistoryLimit` to keep fewer of them:
+
+```yaml
+controller:
+  revisionHistoryLimit: 3
 ```
 
 ## Persistence

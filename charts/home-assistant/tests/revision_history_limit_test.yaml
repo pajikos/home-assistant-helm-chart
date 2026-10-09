@@ -1,0 +1,77 @@
+suite: controller.revisionHistoryLimit (issue 175)
+templates:
+  - templates/statefulset.yaml
+  - templates/deployment.yaml
+tests:
+  - it: does not render revisionHistoryLimit on the StatefulSet by default
+    template: templates/statefulset.yaml
+    asserts:
+      - isKind:
+          of: StatefulSet
+      - notExists:
+          path: spec.revisionHistoryLimit
+
+  - it: renders revisionHistoryLimit on the StatefulSet when set
+    template: templates/statefulset.yaml
+    set:
+      controller.revisionHistoryLimit: 3
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 3
+
+  - it: does not render revisionHistoryLimit on the Deployment by default
+    template: templates/deployment.yaml
+    set:
+      controller.type: Deployment
+    asserts:
+      - isKind:
+          of: Deployment
+      - notExists:
+          path: spec.revisionHistoryLimit
+
+  - it: renders revisionHistoryLimit on the Deployment when set
+    template: templates/deployment.yaml
+    set:
+      controller.type: Deployment
+      controller.revisionHistoryLimit: 3
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 3
+
+  - it: renders revisionHistoryLimit 0 when explicitly set to zero
+    template: templates/statefulset.yaml
+    set:
+      controller.revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+
+  - it: renders revisionHistoryLimit 0 on the Deployment when explicitly set to zero
+    template: templates/deployment.yaml
+    set:
+      controller.type: Deployment
+      controller.revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+
+  - it: does not render revisionHistoryLimit on the StatefulSet when set to null
+    template: templates/statefulset.yaml
+    set:
+      controller.revisionHistoryLimit: null
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
+
+  - it: does not render revisionHistoryLimit on the Deployment when set to null
+    template: templates/deployment.yaml
+    set:
+      controller.type: Deployment
+      controller.revisionHistoryLimit: null
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
