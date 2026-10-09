@@ -1,0 +1,3 @@
+# Test values for controller.revisionHistoryLimit (issue 175)
+controller:
+  revisionHistoryLimit: 3

@@ -17,6 +17,9 @@ metadata:
 spec:
   serviceName: {{ include "home-assistant.fullname" . }}
   replicas: {{ .Values.replicaCount }}
+  {{- if not (kindIs "invalid" .Values.controller.revisionHistoryLimit) }}
+  revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit }}
+  {{- end }}
   {{- with .Values.podReplacementPolicy }}
   podReplacementPolicy: {{ . }}
   {{- end }}

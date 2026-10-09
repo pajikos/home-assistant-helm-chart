@@ -554,6 +554,9 @@ controller:
   type: StatefulSet
   # Labels to add to the controller
   labels: {}
+  # Number of old ReplicaSets (Deployment) or ControllerRevisions (StatefulSet)
+  # to keep for rollbacks. Unset keeps the Kubernetes default of 10.
+  # revisionHistoryLimit: 3
 
 # Annotations to add to the stateful set
 statefulSetAnnotations: {}
