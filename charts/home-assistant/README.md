@@ -89,6 +89,8 @@ This document provides detailed configuration options for the Home Assistant Hel
 | `service.type` | Service type (ClusterIP, NodePort, LoadBalancer, or ExternalName) | `ClusterIP` |
 | `service.port` | Service port | `8080` |
 | `service.annotations` | Annotations to add to the service | `{}` |
+| `serviceMonitor.namespace` | Namespace for the ServiceMonitor; defaults to `namespaceOverride` or the Helm release namespace | `""` (Home Assistant namespace) |
+| `serviceMonitor.requiresAuth` | Require authentication for the Home Assistant Prometheus endpoint; set to `false` to disable it | `true` |
 | `ingress.enabled` | Enable ingress for Home Assistant | `false` |
 | `ingress.external` | Enable external ingress (cannot be true when ingress.enabled is true) | `false` |
 | `additionalIngresses` | List of additional ingress configurations | `[]` |
@@ -389,6 +391,10 @@ If you have the Prometheus Operator installed, you can enable a ServiceMonitor t
 ```yaml
 serviceMonitor:
   enabled: true
+  # Set a custom namespace for the ServiceMonitor (optional)
+  namespace: "monitoring"
+  # Authentication is required by default; set to false to disable it
+  requiresAuth: true
   scrapeInterval: 30s
   labels:
     release: prometheus
@@ -397,6 +403,15 @@ serviceMonitor:
     secretName: "prometheus-token"
     secretKey: "token"
 ```
+
+Authentication is required by default. To expose the Prometheus endpoint without authentication, explicitly set `requiresAuth` to `false`:
+
+```yaml
+serviceMonitor:
+  requiresAuth: false
+```
+
+This allows scraping without a bearer token. Keep `requiresAuth` enabled when the endpoint should remain protected.
 
 ### Bearer Token Authentication
 

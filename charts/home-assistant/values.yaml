@@ -246,6 +246,7 @@ configuration:
 
     {{- if .Values.serviceMonitor.enabled }}
     prometheus:
+      requires_auth: {{ .Values.serviceMonitor.requiresAuth }}
     {{- end }}
 
     {{- if and (include "home-assistant.httpYamlSupported" .) (or .Values.ingress.enabled .Values.ingress.external .Values.httpRoute.enabled) }}
@@ -483,6 +484,10 @@ serviceMonitor:
   # Enabling this automatically enables the Prometheus integration with default configuration.
   # See https://www.home-assistant.io/integrations/prometheus/ for details.
   enabled: false
+  # Whether the Prometheus integration requires bearer token authentication
+  requiresAuth: true
+  # Set custom namespace for serviceMonitor resource deployment
+  # namespace: ""
   scrapeInterval: 30s
   labels: {}
   # Bearer token authentication configuration
