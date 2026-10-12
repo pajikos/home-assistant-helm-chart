@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "type": "object",
+  "properties": {
+    "networkPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "flavor": {
+          "type": "string",
+          "enum": ["kubernetes", "cilium"]
+        },
+        "ingress": {
+          "type": "array"
+        },
+        "egress": {
+          "type": "array"
+        },
+        "policyTypes": {
+          "type": "array",
+          "items": {
+            "enum": ["Ingress", "Egress"]
+          }
+        },
+        "cilium": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "ingress": {
+              "type": "array"
+            },
+            "egress": {
+              "type": "array"
+            },
+            "enableDefaultDeny": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "ingress": {
+                  "type": "boolean"
+                },
+                "egress": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "enabled",
+        "flavor"
+      ]
+    }
+  }
+}
