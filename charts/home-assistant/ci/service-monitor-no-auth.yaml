@@ -1,0 +1,6 @@
+configuration:
+  enabled: true
+serviceMonitor:
+  enabled: true
+  namespace: monitoring
+  requiresAuth: false
