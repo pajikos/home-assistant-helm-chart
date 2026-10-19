@@ -1,0 +1,51 @@
+suite: pod template labels
+templates:
+  - templates/statefulset.yaml
+  - templates/deployment.yaml
+tests:
+  - it: does not put version-dependent labels on the StatefulSet pod template
+    template: templates/statefulset.yaml
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - notExists:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: home-assistant
+
+  - it: does not put version-dependent labels on the Deployment pod template
+    template: templates/deployment.yaml
+    set:
+      controller.type: Deployment
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - notExists:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+
+  - it: keeps chart labels on the StatefulSet itself
+    template: templates/statefulset.yaml
+    asserts:
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: renders commonLabels on the pod template
+    template: templates/statefulset.yaml
+    set:
+      commonLabels:
+        app.kubernetes.io/part-of: home-automation
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/part-of"]
+          value: home-automation
+
+  - it: does not let commonLabels override selector labels on the pod template
+    template: templates/statefulset.yaml
+    set:
+      commonLabels:
+        app.kubernetes.io/name: other
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: home-assistant
