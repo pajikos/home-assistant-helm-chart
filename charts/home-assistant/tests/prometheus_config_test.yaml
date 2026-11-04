@@ -1,0 +1,22 @@
+suite: Prometheus configuration rendering
+templates:
+  - templates/configmap-hass-config.yaml
+tests:
+  - it: requires authentication by default without a bearer token
+    set:
+      configuration.enabled: true
+      serviceMonitor.enabled: true
+    asserts:
+      - matchRegex:
+          path: data["configuration.yaml"]
+          pattern: "requires_auth: true"
+
+  - it: allows explicitly disabling Prometheus authentication
+    set:
+      configuration.enabled: true
+      serviceMonitor.enabled: true
+      serviceMonitor.requiresAuth: false
+    asserts:
+      - matchRegex:
+          path: data["configuration.yaml"]
+          pattern: "requires_auth: false"
