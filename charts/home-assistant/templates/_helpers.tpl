@@ -68,11 +68,14 @@ Common labels with user overrides
 {{- end -}}
 
 {{/*
-Pod labels with selector labels taking precedence
+Pod labels: commonLabels plus selector labels, which take precedence.
+Version-dependent labels are left out so a chart bump does not restart the pod.
 */}}
 {{- define "home-assistant.podLabels" -}}
 {{- $labels := dict -}}
-{{- $labels = mergeOverwrite $labels (include "home-assistant.labels" . | fromYaml) -}}
+{{- with .Values.commonLabels -}}
+{{- $labels = mergeOverwrite $labels . -}}
+{{- end -}}
 {{- $labels = mergeOverwrite $labels (include "home-assistant.selectorLabels" . | fromYaml) -}}
 {{- toYaml $labels -}}
 {{- end }}
