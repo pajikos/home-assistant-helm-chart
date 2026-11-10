@@ -1,0 +1,32 @@
+{{- if and .Values.networkPolicy.enabled (eq .Values.networkPolicy.flavor "cilium") }}
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: {{ include "home-assistant.fullname" . }}
+  namespace: {{ include "home-assistant.namespace" . }}
+  labels:
+    {{- include "home-assistant.labels" . | nindent 4 }}
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: '{{ include "home-assistant.name" . }}'
+      k8s:app.kubernetes.io/instance: '{{ .Release.Name }}'
+  {{- if and .Values.networkPolicy.cilium .Values.networkPolicy.cilium.egress }}
+  egress:
+    {{- toYaml .Values.networkPolicy.cilium.egress | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.networkPolicy.cilium .Values.networkPolicy.cilium.enableDefaultDeny }}
+  enableDefaultDeny:
+    {{- toYaml .Values.networkPolicy.cilium.enableDefaultDeny | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.networkPolicy.cilium .Values.networkPolicy.cilium.ingress }}
+  ingress:
+    {{- toYaml .Values.networkPolicy.cilium.ingress | nindent 4 }}
+  {{- end }}
+{{- $hasIngress := gt (len (default (list) .Values.networkPolicy.cilium.ingress)) 0 }}
+{{- $hasEgress := gt (len (default (list) .Values.networkPolicy.cilium.egress)) 0 }}
+{{- $hasDefaultDeny := gt (len (default (dict) .Values.networkPolicy.cilium.enableDefaultDeny)) 0 }}
+{{-   if not (or $hasIngress $hasEgress $hasDefaultDeny) }}
+{{-     fail "networkPolicy.cilium: you must set at least of one theses properties ingress, egress ou enableDefaultDeny" }}
+{{-   end }}
+{{- end }}
