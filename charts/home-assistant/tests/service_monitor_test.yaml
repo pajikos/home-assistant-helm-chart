@@ -1,0 +1,61 @@
+suite: ServiceMonitor rendering
+templates:
+  - templates/service-monitor.yaml
+tests:
+  - it: renders the ServiceMonitor in a custom namespace while selecting the release namespace
+    release:
+      namespace: home-assistant
+    set:
+      serviceMonitor.enabled: true
+      serviceMonitor.namespace: monitoring
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+      - equal:
+          path: spec.namespaceSelector.matchNames[0]
+          value: home-assistant
+
+  - it: defaults the ServiceMonitor namespace to the release namespace
+    release:
+      namespace: home-assistant
+    set:
+      serviceMonitor.enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: home-assistant
+
+  - it: uses namespaceOverride when the ServiceMonitor namespace is not set
+    release:
+      namespace: home-assistant
+    set:
+      namespaceOverride: ha-override
+      serviceMonitor.enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: ha-override
+      - equal:
+          path: spec.namespaceSelector.matchNames[0]
+          value: ha-override
+
+  - it: references the configured bearer token secret
+    set:
+      serviceMonitor.enabled: true
+      serviceMonitor.bearerToken.secretName: prometheus-token
+      serviceMonitor.bearerToken.secretKey: token
+    asserts:
+      - equal:
+          path: spec.endpoints[0].bearerTokenSecret.name
+          value: prometheus-token
+      - equal:
+          path: spec.endpoints[0].bearerTokenSecret.key
+          value: token
+
+  - it: omits bearer token configuration when unconfigured
+    set:
+      serviceMonitor.enabled: true
+    asserts:
+      - notExists:
+          path: spec.endpoints[0].bearerTokenSecret
