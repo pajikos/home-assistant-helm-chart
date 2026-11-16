@@ -2,6 +2,8 @@ suite: pod template labels
 templates:
   - templates/statefulset.yaml
   - templates/deployment.yaml
+  - templates/configmap-init-script.yaml
+  - templates/configmap-hass-config.yaml
 tests:
   - it: does not put version-dependent labels on the StatefulSet pod template
     template: templates/statefulset.yaml
@@ -49,3 +51,50 @@ tests:
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/name"]
           value: home-assistant
+
+
+  - it: keeps config checksums stable across chart bumps on the StatefulSet
+    template: templates/statefulset.yaml
+    chart:
+      version: 9.9.9
+      appVersion: 2099.1.1
+    set:
+      configuration.enabled: true
+      configuration.initScript: echo init
+      configuration.templateConfig: "default_config:"
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["checksum/init-script"]
+          value: d24d9fa12594827a737ef01a2600fe2b064fb274ac1dc3c0437d03e58eda1164
+      - equal:
+          path: spec.template.metadata.annotations["checksum/hass-configuration"]
+          value: 227be2923c4217cf8d2e8585abbf9dbcd30baf6d68b0a57b7ca1c7649dec1079
+
+  - it: keeps config checksums stable across chart bumps on the Deployment
+    template: templates/deployment.yaml
+    chart:
+      version: 9.9.9
+      appVersion: 2099.1.1
+    set:
+      controller.type: Deployment
+      configuration.enabled: true
+      configuration.initScript: echo init
+      configuration.templateConfig: "default_config:"
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["checksum/init-script"]
+          value: d24d9fa12594827a737ef01a2600fe2b064fb274ac1dc3c0437d03e58eda1164
+      - equal:
+          path: spec.template.metadata.annotations["checksum/hass-configuration"]
+          value: 227be2923c4217cf8d2e8585abbf9dbcd30baf6d68b0a57b7ca1c7649dec1079
+
+  - it: changes the config checksum when the configuration data changes
+    template: templates/statefulset.yaml
+    set:
+      configuration.enabled: true
+      configuration.initScript: echo init
+      configuration.templateConfig: "homeassistant:"
+    asserts:
+      - notEqual:
+          path: spec.template.metadata.annotations["checksum/hass-configuration"]
+          value: 227be2923c4217cf8d2e8585abbf9dbcd30baf6d68b0a57b7ca1c7649dec1079
