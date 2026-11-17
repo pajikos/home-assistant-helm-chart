@@ -30,8 +30,8 @@ spec:
         {{- include "home-assistant.podLabels" . | nindent 8 }}
       annotations:
         {{- if .Values.configuration.enabled }}
-        checksum/init-script: {{ include (print $.Template.BasePath "/configmap-init-script.yaml") . | sha256sum }}
-        checksum/hass-configuration: {{ include (print $.Template.BasePath "/configmap-hass-config.yaml") . | sha256sum }}
+        checksum/init-script: {{ include (print $.Template.BasePath "/configmap-init-script.yaml") . | fromYaml | dig "data" (dict) | toYaml | sha256sum }}
+        checksum/hass-configuration: {{ include (print $.Template.BasePath "/configmap-hass-config.yaml") . | fromYaml | dig "data" (dict) | toYaml | sha256sum }}
         {{- end }}
       {{- with .Values.podAnnotations }}
         {{- toYaml . | nindent 8 }}
