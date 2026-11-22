@@ -203,6 +203,8 @@ networkPolicy:
   #     protocol: TCP
   #   - port: 8883
   #     protocol: TCP
+  # -- Explicit policyTypes, e.g. to express default-deny with empty rule lists
+  policyTypes: []
 
 # Additional ingresses for exposing Home Assistant on different paths/hosts
 # Useful for IoT devices that don't support TLS or need specific path routing
