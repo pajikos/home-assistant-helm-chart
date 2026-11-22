@@ -182,6 +182,7 @@ networkPolicy:
     #       protocol: TCP
     #     - port: "8883"
     #       protocol: TCP
+    # -- Cilium enableDefaultDeny (requires Cilium >= 1.16)
     enableDefaultDeny: {}
       # egress: true
       # ingress: true
