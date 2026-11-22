@@ -491,9 +491,9 @@ networkPolicy:
           k8s:io.kubernetes.pod.namespace: nodered
 ```
 
-Exemple with simple Kubernetes with minimal filtering
+Example of a simple Kubernetes policy with minimal filtering
 
-```
+```yaml
 networkPolicy:
   enabled: true
   ingress:
