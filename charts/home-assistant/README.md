@@ -408,9 +408,9 @@ Two flavors are available, Kubernetes native policy or Cilium CNI policy; you ca
 
 Default values for network policy consist only in ingress flow allowed for http port.
 
-Exemple of fully enforced Cilium with DNS filtering, allowing NodeRED ingress and MQTT egress
+Example of fully enforced Cilium with DNS filtering, allowing NodeRED ingress and MQTT egress
 
-```
+```yaml
 networkPolicy:
   enabled: true
   flavor: cilium
