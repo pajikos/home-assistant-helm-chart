@@ -1,3 +1,2 @@
 networkPolicy:
   enabled: true
-  flavor: cilium
