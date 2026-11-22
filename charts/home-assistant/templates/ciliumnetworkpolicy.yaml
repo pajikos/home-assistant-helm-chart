@@ -23,10 +23,11 @@ spec:
   ingress:
     {{- toYaml .Values.networkPolicy.cilium.ingress | nindent 4 }}
   {{- end }}
-{{- $hasIngress := gt (len (default (list) .Values.networkPolicy.cilium.ingress)) 0 }}
-{{- $hasEgress := gt (len (default (list) .Values.networkPolicy.cilium.egress)) 0 }}
-{{- $hasDefaultDeny := gt (len (default (dict) .Values.networkPolicy.cilium.enableDefaultDeny)) 0 }}
-{{-   if not (or $hasIngress $hasEgress $hasDefaultDeny) }}
-{{-     fail "networkPolicy.cilium: you must set at least of one theses properties ingress, egress ou enableDefaultDeny" }}
-{{-   end }}
+{{- $cilium := default (dict) .Values.networkPolicy.cilium }}
+{{- $hasIngress := gt (len (default (list) $cilium.ingress)) 0 }}
+{{- $hasEgress := gt (len (default (list) $cilium.egress)) 0 }}
+{{- $hasDefaultDeny := gt (len (default (dict) $cilium.enableDefaultDeny)) 0 }}
+{{- if not (or $hasIngress $hasEgress $hasDefaultDeny) }}
+{{- fail "networkPolicy.cilium: at least one of ingress, egress or enableDefaultDeny must be set (an empty CiliumNetworkPolicy would silently allow all traffic)" }}
+{{- end }}
 {{- end }}
