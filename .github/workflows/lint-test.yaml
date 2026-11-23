@@ -58,6 +58,10 @@ jobs:
         if: steps.list-changed.outputs.changed == 'true'
         run: kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Install Cilium CRDs
+        if: steps.list-changed.outputs.changed == 'true'
+        run: kubectl apply -f https://raw.githubusercontent.com/cilium/cilium/v1.16.5/pkg/k8s/apis/cilium.io/client/crds/v2/ciliumnetworkpolicies.yaml
+
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
         run: ct install --target-branch ${{ github.event.repository.default_branch }}
